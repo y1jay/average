@@ -1,0 +1,6 @@
+module Pods_average_averageTests {
+  umbrella header "Pods-average-averageTests-umbrella.h"
+
+  export *
+  module * { export * }
+}
