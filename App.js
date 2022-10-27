@@ -16,6 +16,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // import messaging from '@react-native-firebase/messaging';
 // import NaviController from '~/Navigations/NaviController';
+import Login from './src/screen/user/MEMB01';
 
 const App = () => {
 	if (Platform.OS === "android") {
@@ -66,6 +67,7 @@ const App = () => {
 					barStyle={StatusBarStyle}
 					backgroundColor={"transparent"}
 				/>
+				<Login/>
 				{/* <NaviController /> */}
 			</SafeAreaView>
 			{/* ios 키보드 영역 */}
