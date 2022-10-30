@@ -17,54 +17,56 @@ import {
 	ActivityIndicator,
 } from 'react-native';
 
+// 공통 컴포넌트 선언
+import commonStyles from '../../Components/Style';
+
 export default ({navigation}) => {
     const test = ''
     return(
-	<View style={styles.body}>
-		<View style={styles.loginTopArea}><Text>로그인 화면입니다</Text></View>
-		<Pressable 
-			onPress={() => {alert('애플')}}
-			style={styles.loginBtn}>
-			<Text>애플</Text>
-		</Pressable>
-		<Pressable 
-			onPress={() => {}}
-			style={styles.loginBtn}>
-			<Text>네이버</Text>
-		</Pressable>
-		<Pressable 
-			onPress={() => {}}
-			style={styles.loginBtn}>
-			<Text>카카오</Text>
-		</Pressable>
-		<Pressable 
-			onPress={() => {}}
-			style={styles.loginBtn}>
-			<Text>인스타</Text>
-		</Pressable>
+	<View style={commonStyles.body}>
+		<View style={commonStyles.loginTopArea}>
+			<Image style={commonStyles.loginTopLogo} source={require('../../Images/Logo_lightgray.png')}/>
+			<Text style={commonStyles.loginTopText}>로그인</Text>
+		</View>
+		<Text style={commonStyles.loginExplain}>SNS 계정으로 로그인</Text>
+		<View style={commonStyles.loginSnsArea}>
+			<Pressable 
+				onPress={() => {}}
+				style={commonStyles.loginSnsBtn}>
+				<ImageBackground 
+					style={[commonStyles.loginSnsBtn, commonStyles.wh_100, {marginBottom: 0}]}
+					source={require('../../Images/Insta_bg.png')} 
+					resizeMode="cover">
+					<Image style={commonStyles.loginSnsBtnIcon} source={require('../../Images/Insta_icon.png')}/>
+					<Text style={commonStyles.loginSnsBtnText}>인스타로 시작하기</Text>
+				</ImageBackground>
+			</Pressable>
+			<Pressable 
+				onPress={() => {}}
+				style={[commonStyles.loginSnsBtn, {backgroundColor: '#F9E000'}]}>
+				<Image style={commonStyles.loginSnsBtnIcon} source={require('../../Images/Kakao_icon.png')}/>
+				<Text style={[commonStyles.loginSnsBtnText, {color: '#191600'}]}>카카오로 시작하기</Text>
+			</Pressable>
+			<Pressable 
+				onPress={() => {}}
+				style={[commonStyles.loginSnsBtn, {backgroundColor: '#212121'}]}>
+				<Image style={commonStyles.loginSnsBtnIcon} source={require('../../Images/Naver_icon.png')}/>
+				<Text style={commonStyles.loginSnsBtnText}>네이버로 시작하기</Text>
+			</Pressable>
+			<Pressable 
+				onPress={() => {alert('애플')}}
+				style={[commonStyles.loginSnsBtn, {backgroundColor: '#03CF5D'}]}>
+				<Image style={commonStyles.loginSnsBtnIcon} source={require('../../Images/Apple_icon.png')}/>
+				<Text style={commonStyles.loginSnsBtnText}>애플로 시작하기</Text>
+			</Pressable>
+		</View>
+		<View style={commonStyles.customerServiceArea}>
+			<Pressable 
+				onPress={() => {alert('카카오채널')}}
+				style={commonStyles.customerService}>
+				<Text>고객센터</Text>
+			</Pressable>
+		</View>
 	</View>
 	)
 }
-
-
-const styles = StyleSheet.create({
-	body: {
-		width: '100%',
-		borderWidth: 1,
-		borderColor: 'red',
-		flexGrow: 1,
-	},
-	loginTopArea: {
-		width: '100%',
-		flexGrow: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	},
-	loginBtn: {
-		width: '100%',
-		height: '15%',
-		borderWidth: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
-	}
-})

@@ -11,7 +11,11 @@ import {
 	Button,
 	Alert,
 	AppRegistry,
+	Image,
+	Pressable
 } from "react-native";
+
+import commonStyles from './src/Components/Style';
 // import {UserContextProvider} from '~/Contexts/UserContext';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 // import messaging from '@react-native-firebase/messaging';
@@ -68,6 +72,26 @@ const App = () => {
 					backgroundColor={"transparent"}
 				/>
 				<Login/>
+				<View style={commonStyles.bottomNav}>
+					<Pressable 
+						onPress={() => {alert('채팅으로 이동')}}
+						style={commonStyles.bottomNavBtn}>
+						<Image source={require('./src/Images/Chat_icon.png')}/>
+					</Pressable>
+					<Pressable
+						onPress={() => {alert('홈으로 이동')}} 
+						style={commonStyles.bottomNavBtn}>
+						<Image source={require('./src/Images/Home_icon.png')}/>
+					</Pressable>
+					<Pressable 
+						onPress={() => {alert('내정보로 이동')}} 
+						style={commonStyles.bottomNavBtn}>
+						<Image source={require('./src/Images/My_icon.png')}/>
+					</Pressable>
+				</View>
+				<View style={commonStyles.bannerArea}>
+					<Text style={commonStyles.textWhite}>배너 광고</Text>
+				</View>
 				{/* <NaviController /> */}
 			</SafeAreaView>
 			{/* ios 키보드 영역 */}
@@ -77,3 +101,5 @@ const App = () => {
 };
 
 export default App;
+
+
