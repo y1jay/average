@@ -49,13 +49,13 @@ export default ({navigation}) => {
 			</Pressable>
 			<Pressable 
 				onPress={() => {}}
-				style={[commonStyles.loginSnsBtn, {backgroundColor: '#212121'}]}>
+				style={[commonStyles.loginSnsBtn, {backgroundColor: '#03CF5D'}]}>
 				<Image style={commonStyles.loginSnsBtnIcon} source={require('../../Images/Naver_icon.png')}/>
 				<Text style={commonStyles.loginSnsBtnText}>네이버로 시작하기</Text>
 			</Pressable>
 			<Pressable 
 				onPress={() => {alert('애플')}}
-				style={[commonStyles.loginSnsBtn, {backgroundColor: '#03CF5D'}]}>
+				style={[commonStyles.loginSnsBtn, {backgroundColor: '#212121'}]}>
 				<Image style={commonStyles.loginSnsBtnIcon} source={require('../../Images/Apple_icon.png')}/>
 				<Text style={commonStyles.loginSnsBtnText}>애플로 시작하기</Text>
 			</Pressable>

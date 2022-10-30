@@ -80,7 +80,7 @@ const App = () => {
 					</Pressable>
 					<Pressable
 						onPress={() => {alert('홈으로 이동')}} 
-						style={commonStyles.bottomNavBtn}>
+						style={[commonStyles.bottomNavBtn, commonStyles.bottomNavBtnHere]}>
 						<Image source={require('./src/Images/Home_icon.png')}/>
 					</Pressable>
 					<Pressable 

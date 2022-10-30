@@ -44,6 +44,9 @@ export default StyleSheet.create({
         justifyContent: 'center',
         opacity: 0.3
     },
+    bottomNavBtnHere: {
+        opacity:1,
+    },
 
     // MEMB01 | 로그인
     loginTopArea: {
