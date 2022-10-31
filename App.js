@@ -1,6 +1,5 @@
 import "react-native-gesture-handler";
 import React, { Fragment, useEffect, useState, useCallback } from "react";
-//import {StyleSheet, View, Image, Text} from 'react-native';
 import {
 	SafeAreaView,
 	StatusBar,
@@ -10,19 +9,16 @@ import {
 	KeyboardEvent,
 	Button,
 	Alert,
-	AppRegistry,
 	Image,
 	Pressable
 } from "react-native";
 
 import commonStyles from './src/Components/Style';
-// import {UserContextProvider} from '~/Contexts/UserContext';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-// import messaging from '@react-native-firebase/messaging';
-// import NaviController from '~/Navigations/NaviController';
 import Login from './src/screen/user/MEMB01';
+import NavigationContainer from './src/Navigations/NavigationContainer';
+import MainNavigation from './src/Navigations/MainNavigation';
 
-const App = () => {
+const App = ({navigation}) => {
 	if (Platform.OS === "android") {
 		StatusBar.setTranslucent(true);
 		StatusBar.setBackgroundColor("transparent");
@@ -71,28 +67,11 @@ const App = () => {
 					barStyle={StatusBarStyle}
 					backgroundColor={"transparent"}
 				/>
-				<Login/>
-				<View style={commonStyles.bottomNav}>
-					<Pressable 
-						onPress={() => {alert('채팅으로 이동')}}
-						style={commonStyles.bottomNavBtn}>
-						<Image source={require('./src/Images/Chat_icon.png')}/>
-					</Pressable>
-					<Pressable
-						onPress={() => {alert('홈으로 이동')}} 
-						style={[commonStyles.bottomNavBtn, commonStyles.bottomNavBtnHere]}>
-						<Image source={require('./src/Images/Home_icon.png')}/>
-					</Pressable>
-					<Pressable 
-						onPress={() => {alert('내정보로 이동')}} 
-						style={commonStyles.bottomNavBtn}>
-						<Image source={require('./src/Images/My_icon.png')}/>
-					</Pressable>
-				</View>
+				
+				<NavigationContainer/>
 				<View style={commonStyles.bannerArea}>
 					<Text style={commonStyles.textWhite}>배너 광고</Text>
 				</View>
-				{/* <NaviController /> */}
 			</SafeAreaView>
 			{/* ios 키보드 영역 */}
 			{/* </UserContextProvider> */}

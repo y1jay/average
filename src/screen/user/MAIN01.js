@@ -19,5 +19,5 @@ import {
 
 export default ({navigation}) => {
     const test = ''
-    return(<View><Text>TEST</Text></View>)
+    return(<View><Text>메인 화면</Text></View>)
 }
