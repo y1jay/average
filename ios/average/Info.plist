@@ -51,5 +51,27 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+  <key>CFBundleURLTypes</key>
+  <array>
+      <dict>
+      <key>CFBundleTypeRole</key>
+      <string>Editor</string>
+      <key>CFBundleURLSchemes</key>
+      <array>
+      <!-- 네이티브 앱 키를 kakao 텍스트를 포함하여 작성한다 -->
+          <string>kakao2f7f82bc9fb8305b12908c3695eb1e11</string>
+      </array>
+      </dict>
+  </array>
+
+  <key>KAKAO_APP_KEY</key>
+  <!-- 네이티브 앱 키를 작성한다 -->
+  <string>2f7f82bc9fb8305b12908c3695eb1e11</string>
+  <key>LSApplicationQueriesSchemes</key>
+  <array>
+      <string>kakaokompassauth</string>
+      <string>storykompassauth</string>
+      <string>kakaolink</string>
+  </array>
 </dict>
 </plist>
