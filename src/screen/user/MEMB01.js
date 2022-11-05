@@ -16,7 +16,8 @@ import {
 	Platform,
 	ActivityIndicator,
 } from "react-native";
-// import InstagramLogin from "react-native-instagram-login";
+
+import InstagramLogin from "react-native-instagram-login";
 
 import {
 	KakaoOAuthToken,
@@ -37,7 +38,9 @@ export default ({ navigation }) => {
 		// 	setToken("");
 		// });
 	};
-
+	// const instagramLogin = () => {
+	// 	instagramLogin;
+	// };
 	const signInWithKakao = async () => {
 		const token = await login();
 		const rr = await KakaoProfile();
@@ -75,7 +78,7 @@ export default ({ navigation }) => {
 			<View style={commonStyles.loginSnsArea}>
 				<Pressable
 					onPress={() => {
-						// InstagramLogin.show();
+						instagramLogin.show();
 					}}
 					style={commonStyles.loginSnsBtn}
 				>
@@ -162,6 +165,15 @@ export default ({ navigation }) => {
 					<Text>고객센터</Text>
 				</Pressable>
 			</View>
+			<InstagramLogin
+				ref={(ref) => (instagramLogin = ref)}
+				appId="669887911519201"
+				appSecret="ac5a8b96d11bfe8914e500998c5a1a1a"
+				redirectUrl="com.average://"
+				scopes={["user_profile", "user_media"]}
+				onLoginSuccess={(data) => console.log(data, "ssss")}
+				onLoginFailure={(data) => console.log(data, "fff")}
+			/>
 		</View>
 	);
 };
