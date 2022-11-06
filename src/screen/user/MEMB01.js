@@ -20,12 +20,11 @@ import {
 import InstagramLogin from "react-native-instagram-login";
 
 import {
-	KakaoOAuthToken,
-	KakaoProfile,
-	getProfile as getKakaoProfile,
+	getProfile,
 	login,
 	logout,
 	unlink,
+	loginWithKakaoAccount,
 } from "@react-native-seoul/kakao-login";
 // 공통 컴포넌트 선언
 import commonStyles from "../../Components/Style";
@@ -43,22 +42,29 @@ export default ({ navigation }) => {
 	// };
 	const signInWithKakao = async () => {
 		const token = await login();
-		const rr = await KakaoProfile();
 		// setResult(JSON.stringify(token));
-		console.log(rr);
+		// console.log(rr);
 	};
-
+	const getPP = async () => {
+		await getProfile()
+			.then((res) => {
+				console.log(res);
+			})
+			.catch((e) => {
+				console.log(e, "e");
+			});
+	};
 	const signOutWithKakao = async () => {
 		const message = await logout();
 
 		setResult(message);
 	};
 
-	const getKakaoProfile = async () => {
-		const profile = await KakaoProfile.getProfile();
+	// const getKakaoProfile = async () => {
+	// 	const profile = await KakaoProfile.getProfile();
 
-		setResult(JSON.stringify(profile));
-	};
+	// 	setResult(JSON.stringify(profile));
+	// };
 
 	const unlinkKakao = async () => {
 		const message = await KakaoProfile.unlink();
@@ -123,7 +129,9 @@ export default ({ navigation }) => {
 					</Text>
 				</Pressable>
 				<Pressable
-					onPress={() => {}}
+					onPress={() => {
+						getPP();
+					}}
 					style={[
 						commonStyles.loginSnsBtn,
 						{ backgroundColor: "#03CF5D" },
