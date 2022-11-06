@@ -16,7 +16,8 @@ import {
 	Platform,
 	ActivityIndicator,
 } from "react-native";
-
+import axios from "axios";
+import config from "../../Libs/Config";
 import InstagramLogin from "react-native-instagram-login";
 
 import {
@@ -28,9 +29,11 @@ import {
 } from "@react-native-seoul/kakao-login";
 // 공통 컴포넌트 선언
 import commonStyles from "../../Components/Style";
+import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
 export default ({ navigation }) => {
 	const [token, setToken] = useState("");
+	const [userId, setUserId] = useState("");
 	const test = "";
 	const tokenClear = () => {
 		// CookieManager.clearAll(true).then((res) => {
@@ -42,9 +45,33 @@ export default ({ navigation }) => {
 	// };
 	const signInWithKakao = async () => {
 		const token = await login();
+		setToken(token.idToken);
 		// setResult(JSON.stringify(token));
-		// console.log(rr);
+		if (token.idToken) {
+			const profile = await getProfile();
+			setUserId(profile.id);
+			if (profile.id) {
+				signIn("kakao");
+			}
+		}
 	};
+	const signIn = async (type) => {
+		await axios
+			.post(`${config.apiUrl}/user/member/signIn`, {
+				token: token,
+				state_code: 20,
+				uid: userId,
+				join_type: type,
+				free_count: 0,
+			})
+			.then((res) => {
+				console.log(res, "!@!@!@");
+			})
+			.catch((e) => {
+				console.log(e, "e");
+			});
+	};
+
 	const getPP = async () => {
 		await getProfile()
 			.then((res) => {
