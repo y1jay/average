@@ -167,10 +167,10 @@ export default ({ navigation }) => {
 			</View>
 			<InstagramLogin
 				ref={(ref) => (instagramLogin = ref)}
-				appId="669887911519201"
-				appSecret="ac5a8b96d11bfe8914e500998c5a1a1a"
-				redirectUrl="com.average://"
-				scopes={["user_profile", "user_media"]}
+				appId="1532465443936934"
+				appSecret="5b7811d0ef4ccbf83379ca6bb078dfba"
+				redirectUrl="https://google.com/"
+				scopes={["email", "user_media"]}
 				onLoginSuccess={(data) => console.log(data, "ssss")}
 				onLoginFailure={(data) => console.log(data, "fff")}
 			/>
