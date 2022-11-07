@@ -32,8 +32,8 @@ import commonStyles from "../../Components/Style";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
 export default ({ navigation }) => {
-	const [token, setToken] = useState("");
-	const [userId, setUserId] = useState("");
+	// const [token, setToken] = useState("");
+	// const [userId, setUserId] = useState("");
 	const test = "";
 	const tokenClear = () => {
 		// CookieManager.clearAll(true).then((res) => {
@@ -45,23 +45,27 @@ export default ({ navigation }) => {
 	// };
 	const signInWithKakao = async () => {
 		const token = await login();
-		console.log(token, "!@#!@#");
-		setToken(token.accessToken);
 		// setResult(JSON.stringify(token));
 		if (token.accessToken) {
 			const profile = await getProfile();
-			setUserId(profile.id);
 			if (profile.id) {
-				signIn("kakao");
+				signIn("kakao", token.accessToken, profile.id);
 			}
 		}
 	};
-	const signIn = async (type) => {
+	const signInWithInstagram = async (data) => {
+		if (data.access_token) {
+			if (data.user_id) {
+				signIn("instagram", data.access_token, data.user_id);
+			}
+		}
+	};
+	const signIn = async (type, token, uid) => {
 		await axios
 			.post(`${config.apiUrl}/user/member/signIn`, {
 				token: token,
 				state_code: 20,
-				uid: userId,
+				uid: uid,
 				join_type: type,
 				free_count: 0,
 			})
@@ -73,15 +77,6 @@ export default ({ navigation }) => {
 			});
 	};
 
-	const getPP = async () => {
-		await getProfile()
-			.then((res) => {
-				console.log(res);
-			})
-			.catch((e) => {
-				console.log(e, "e");
-			});
-	};
 	const signOutWithKakao = async () => {
 		const message = await logout();
 
@@ -93,17 +88,6 @@ export default ({ navigation }) => {
 
 	// 	setResult(JSON.stringify(profile));
 	// };
-	const signInWithInstagram = async (data) => {
-		console.log(data.access_token, "bbbb");
-		setToken(data.access_token);
-		// setResult(JSON.stringify(token));
-		if (data.access_token) {
-			setUserId(data.user_id);
-			if (data.user_id) {
-				signIn("instagram");
-			}
-		}
-	};
 
 	const unlinkKakao = async () => {
 		const message = await KakaoProfile.unlink();
