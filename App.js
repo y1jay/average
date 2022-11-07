@@ -18,6 +18,11 @@ import Login from './src/screen/user/MEMB01';
 import NavigationContainer from './src/Navigations/NavigationContainer';
 import MainNavigation from './src/Navigations/MainNavigation';
 
+// 안드로이드 시스템 바 제거
+import SystemNavigationBar from 'react-native-system-navigation-bar';
+
+SystemNavigationBar.stickyImmersive();
+
 const App = ({navigation}) => {
 	if (Platform.OS === "android") {
 		StatusBar.setTranslucent(true);
