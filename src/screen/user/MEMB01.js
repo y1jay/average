@@ -70,7 +70,10 @@ export default ({ navigation }) => {
 				free_count: 0,
 			})
 			.then((res) => {
-				console.log(res.data.CODE, "!@!@!@");
+				console.log(res.data.CODE, "로그인 성공");
+				if(res.data.CODE == 20) {
+					navigation.navigate('MAIN01', {screen: 'MAIN01'})
+				}
 			})
 			.catch((e) => {
 				console.log(e, "e");

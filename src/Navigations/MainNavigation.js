@@ -46,7 +46,7 @@ const config = {
 export default () => {
 	return (
 		<BottomTab.Navigator 
-		
+		initialRouteName="MAIN01"
 		screenOptions={{
 			"tabBarShowLabel": false, headerShown: false}}>
 				{/* 인트로/스플래시 화면 */}
