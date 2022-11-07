@@ -21,7 +21,6 @@ import MainNavigation from "./src/Navigations/MainNavigation";
 
 // 안드로이드 시스템 바 제거
 import SystemNavigationBar from "react-native-system-navigation-bar";
-
 const App = ({ navigation }) => {
 	if (Platform.OS === "android") {
 		StatusBar.setTranslucent(true);
