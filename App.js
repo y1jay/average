@@ -10,23 +10,23 @@ import {
 	Button,
 	Alert,
 	Image,
-	Pressable
+	Pressable,
+	Platform,
 } from "react-native";
 
-import commonStyles from './src/Components/Style';
-import Login from './src/screen/user/MEMB01';
-import NavigationContainer from './src/Navigations/NavigationContainer';
-import MainNavigation from './src/Navigations/MainNavigation';
+import commonStyles from "./src/Components/Style";
+import Login from "./src/screen/user/MEMB01";
+import NavigationContainer from "./src/Navigations/NavigationContainer";
+import MainNavigation from "./src/Navigations/MainNavigation";
 
 // 안드로이드 시스템 바 제거
-import SystemNavigationBar from 'react-native-system-navigation-bar';
+import SystemNavigationBar from "react-native-system-navigation-bar";
 
-SystemNavigationBar.stickyImmersive();
-
-const App = ({navigation}) => {
+const App = ({ navigation }) => {
 	if (Platform.OS === "android") {
 		StatusBar.setTranslucent(true);
 		StatusBar.setBackgroundColor("transparent");
+		SystemNavigationBar.stickyImmersive();
 	}
 
 	const StatusBarStyle =
@@ -72,8 +72,8 @@ const App = ({navigation}) => {
 					barStyle={StatusBarStyle}
 					backgroundColor={"transparent"}
 				/>
-				
-				<NavigationContainer/>
+
+				<NavigationContainer />
 				<View style={commonStyles.bannerArea}>
 					<Text style={commonStyles.textWhite}>배너 광고</Text>
 				</View>
@@ -85,5 +85,3 @@ const App = ({navigation}) => {
 };
 
 export default App;
-
-

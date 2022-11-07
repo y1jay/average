@@ -48,7 +48,7 @@ export default ({ navigation }) => {
 		console.log(token, "!@#!@#");
 		setToken(token.accessToken);
 		// setResult(JSON.stringify(token));
-		if (token.idToken) {
+		if (token.accessToken) {
 			const profile = await getProfile();
 			setUserId(profile.id);
 			if (profile.id) {
@@ -93,6 +93,17 @@ export default ({ navigation }) => {
 
 	// 	setResult(JSON.stringify(profile));
 	// };
+	const signInWithInstagram = async (data) => {
+		console.log(data.access_token, "bbbb");
+		setToken(data.access_token);
+		// setResult(JSON.stringify(token));
+		if (data.access_token) {
+			setUserId(data.user_id);
+			if (data.user_id) {
+				signIn("instagram");
+			}
+		}
+	};
 
 	const unlinkKakao = async () => {
 		const message = await KakaoProfile.unlink();
@@ -206,9 +217,12 @@ export default ({ navigation }) => {
 				appId="1532465443936934"
 				appSecret="5b7811d0ef4ccbf83379ca6bb078dfba"
 				redirectUrl="https://google.com/"
-				scopes={["email", "user_media"]}
-				onLoginSuccess={(data) => console.log(data, "ssss")}
-				onLoginFailure={(data) => console.log(data, "fff")}
+				// scopes={["email", "user_media"]}
+				onLoginSuccess={(data) => {
+					console.log("AAAAA", data);
+					signInWithInstagram(data);
+				}}
+				onLoginFailure={(data) => console.log(data, "로그인 실패 처리")}
 			/>
 		</View>
 	);
