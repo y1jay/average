@@ -1,5 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:ns1="urn:oasis:names:tc:xliff:document:1.2">
+    <string-array name="com_kakao_accounts_array">
+        <item>@string/com_kakao_kakaotalk_account</item>
+        <item>@string/com_kakao_other_kakaoaccount</item>
+        <item>@string/com_kakao_account_cancel</item>
+    </string-array>
     <string msgid="5976598919945601918" name="abc_action_bar_home_description">"홈으로 이동"</string>
     <string msgid="8388173803310557296" name="abc_action_bar_up_description">"위로 이동"</string>
     <string msgid="3937310113216875497" name="abc_action_menu_overflow_description">"추가 옵션"</string>
@@ -27,6 +32,40 @@
     <string msgid="8875138169939072951" name="abc_shareactionprovider_share_with">"공유 대상:"</string>
     <string msgid="9055268688411532828" name="abc_shareactionprovider_share_with_application">"<ns1:g id="APPLICATION_NAME">%s</ns1:g>과(와) 공유"</string>
     <string msgid="1656852541809559762" name="abc_toolbar_collapse_description">"접기"</string>
+    <string name="auth_code_cancel">Auth code 요청 중 뒤로가기 또는 동의안함 버튼을 클릭하였습니다.</string>
+    <string name="button_for_ssl_go_back">뒤로</string>
+    <string name="button_for_ssl_go_forward">계속</string>
+    <string name="com_kakao_account_cancel">취소</string>
+    <string name="com_kakao_account_cancel_tts">취소, 버튼</string>
+    <string name="com_kakao_cancel_button">취소</string>
+    <string name="com_kakao_confirm_logout">이 앱을 로그아웃 하시겠습니까?</string>
+    <string name="com_kakao_confirm_unlink">이 앱을 탈퇴하시겠습니까?</string>
+    <string name="com_kakao_kakaostory_account">카카오스토리로 간편로그인</string>
+    <string name="com_kakao_kakaostory_account_tts">카카오스토리로 간편로그인, 버튼</string>
+    <string name="com_kakao_kakaotalk_account">카카오톡으로 간편로그인</string>
+    <string name="com_kakao_kakaotalk_account_tts">카카오톡으로 간편로그인, 버튼</string>
+    <string name="com_kakao_login_button">카카오계정으로 로그인</string>
+    <string name="com_kakao_login_button_tts">카카오계정으로 로그인, 버튼</string>
+    <string name="com_kakao_login_image_tts">카카오계정으로 로그인 이미지</string>
+    <string name="com_kakao_logout_button">로그아웃</string>
+    <string name="com_kakao_ok_button">확인</string>
+    <string name="com_kakao_other_kakaoaccount">다른 카카오계정으로 로그인</string>
+    <string name="com_kakao_other_kakaoaccount_tts">다른 카카오계정으로 로그인, 버튼</string>
+    <string name="com_kakao_profile_nickname">닉네임</string>
+    <string name="com_kakao_profile_userId">카카오 사용자 ID</string>
+    <string name="com_kakao_talk_chooser_text">어떤 카카오톡 앱을 사용하시겠습니까?</string>
+    <string name="com_kakao_tokeninfo_button">토큰정보</string>
+    <string name="com_kakao_unlink_button">탈퇴</string>
+    <string msgid="3260749812566568062" name="copy_toast_msg">"클립보드에 링크 복사됨"</string>
+    <string name="core_com_kakao_sdk_loading">로딩중…</string>
+    <string msgid="4566929209979330987" name="fallback_menu_item_copy_link">"링크 복사"</string>
+    <string msgid="3413186855122069269" name="fallback_menu_item_open_in_browser">"브라우저에서 열기"</string>
+    <string msgid="7145444925855055364" name="fallback_menu_item_share_link">"링크 공유"</string>
+    <string name="image_upload_chooser_text">이미지를 어떻게 업로드하시겠습니까?</string>
+    <string name="log_in_text">로그인</string>
+    <string name="login_method">로그인 방법</string>
+    <string name="message_for_ssl_warning">사이트의 보안 인증서에 문제가 있습니다.</string>
     <string msgid="6264217191555673260" name="search_menu_title">"검색"</string>
     <string msgid="6277540029070332960" name="status_bar_notification_info_overflow">"999+"</string>
+    <string name="title_for_ssl_warning">보안 경고</string>
 </resources>

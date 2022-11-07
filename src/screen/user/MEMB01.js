@@ -45,7 +45,8 @@ export default ({ navigation }) => {
 	// };
 	const signInWithKakao = async () => {
 		const token = await login();
-		setToken(token.idToken);
+		console.log(token, "!@#!@#");
+		setToken(token.accessToken);
 		// setResult(JSON.stringify(token));
 		if (token.idToken) {
 			const profile = await getProfile();
@@ -65,7 +66,7 @@ export default ({ navigation }) => {
 				free_count: 0,
 			})
 			.then((res) => {
-				console.log(res, "!@!@!@");
+				console.log(res.data.CODE, "!@!@!@");
 			})
 			.catch((e) => {
 				console.log(e, "e");
