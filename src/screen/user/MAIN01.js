@@ -7,34 +7,40 @@ import {
 	Text,
 	useColorScheme,
 	View,
-	Button,
-	ImageBackground,
-	Image,
-	Pressable,
-	Modal,
-	FlatList,
-	Platform,
-	ActivityIndicator,
+	Dimensions,
 } from 'react-native';
 
 import Swiper from 'react-native-swiper'
 
 export default ({navigation}) => {
+	const winWidth = Dimensions.get("window").width;
+
+	useEffect(() => {
+
+	},[])
+
     return(
 	<View style={styles.body}>
 		<Swiper 
-		style={[styles.wrapper]} 
+		style={[styles.wrapper, {borderWidth: 1}]} 
 		showsButtons={false} 
-		loop={false} 
-		index={1}
+		// loop={false} 
+		index={0}
 		onIndexChanged={() => {}}
 		showsPagination={false}
+		width={winWidth*0.9}
+		// overflow={'visible'}
+		scrollViewStyle={{overflow: 'visible'}} removeClippedSubviews={false}
 		>
-			<View style={styles.slide1}>
-			<Text style={styles.text}>오늘뭐하지</Text>
+			<View style={styles.slide}>
+				<View style={styles.slide1}>
+					<Text style={styles.text}>오늘뭐하지</Text>
+				</View>
 			</View>
-			<View style={styles.slide2}>
-			<Text style={styles.text}>오늘뭐먹지</Text>
+			<View style={styles.slide}>
+				<View style={styles.slide2}>
+					<Text style={styles.text}>오늘뭐먹지</Text>
+				</View>
 			</View>
       	</Swiper>
 	</View>
@@ -46,25 +52,21 @@ const styles = StyleSheet.create({
 		width: '100%',
 		height: '100%',
 		alignItems: 'center',
-		overflow: 'visible'
 	},
-	wrapper: {
-		width: '180%',
-	},
-	slide1: {
-		width: '90%',
+	slide: {
 		flex: 1,
 		justifyContent: 'center',
-		alignItems: 'center',
+		alignItems: 'flex-start',
+	},
+	slide1: {
+		width: '95%',
+		height: '100%',
 		backgroundColor: '#CAE8B2',
 	},
 	slide2: {
-		width: '90%',
-		flex: 1,
-		justifyContent: 'center',
-		alignItems: 'center',
+		width: '95%',
+		height: '100%',
 		backgroundColor: '#F6EF50',
-		left: '-10%',
 	},
 		text: {
 		color: '#fff',
