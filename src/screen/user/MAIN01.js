@@ -16,33 +16,33 @@ export default ({navigation}) => {
 	const winWidth = Dimensions.get("window").width;
 
 	const bgColorList = ['#CAE8B2', '#F6EF50'];
-	const [bgColorIndex, setBbgColorIndex] = useState(true)
+	const [swipeIndex, setSwipeIndex] = useState(0)
 
     return(
 	<AnimatedBackgroundColorView  
-		color={bgColorList[bgColorIndex ? 0 : 1]}
-		initialColor={bgColorList[bgColorIndex ? 1 : 0]}
-		duration={300}
+		color={bgColorList[swipeIndex]}
+		initialColor={swipeIndex == 0 ? bgColorList[1] : bgColorList[0]}
+		duration={500}
 		style={styles.body}
 		>
 		<Swiper 
-		style={[styles.wrapper, {borderWidth: 1}]} 
+		style={[styles.wrapper]} 
 		showsButtons={false} 
 		loop={false} 
 		index={0}
-		onIndexChanged={() => {setBbgColorIndex(!bgColorIndex)}}
+		onIndexChanged={(index) => {setSwipeIndex(index)}}
 		showsPagination={false}
 		width={winWidth*0.9}
 		// overflow={'visible'}
 		scrollViewStyle={{overflow: 'visible'}} removeClippedSubviews={false}
 		>
-			<View style={styles.slide}>
-				<View style={styles.slide1}>
+			<View style={styles.slideItem}>
+				<View style={styles.contentsArea}>
 					<Text style={styles.text}>오늘뭐하지</Text>
 				</View>
 			</View>
-			<View style={styles.slide}>
-				<View style={styles.slide2}>
+			<View style={styles.slideItem}>
+				<View style={styles.contentsArea}>
 					<Text style={styles.text}>오늘뭐먹지</Text>
 				</View>
 			</View>
@@ -56,31 +56,22 @@ const styles = StyleSheet.create({
 	// #F6EF50
 	body: {
 		flex: 1,
-		width: '100%',
-		height: '100%',
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
-	slide: {
+	slideItem: {
 		marginTop: '10%',
 		height: '90%',
 		// flex: 1,
 		justifyContent: 'center',
 		alignItems: 'flex-start',
-		// backgroundColor: '#fff',
 	},
-	slide1: {
+	contentsArea: {
 		width: '92%',
 		height: '90%',
-		borderWidth:1
+		backgroundColor: '#fff',
+		borderRadius: 10,
+		alignItems:'center',
+		justifyContent: 'center'
 	},
-	slide2: {
-		width: '92%',
-		height: '90%',
-		borderWidth:1
-	},
-		text: {
-		fontSize: 30,
-		fontWeight: 'bold'
-	}
   })
