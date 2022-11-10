@@ -19,7 +19,7 @@ import {
 import axios from "axios";
 import config from "../../Libs/Config";
 import InstagramLogin from "react-native-instagram-login";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
 	getProfile,
 	login,
@@ -32,17 +32,6 @@ import commonStyles from "../../Components/Style";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
 export default ({ navigation }) => {
-	// const [token, setToken] = useState("");
-	// const [userId, setUserId] = useState("");
-	const test = "";
-	const tokenClear = () => {
-		// CookieManager.clearAll(true).then((res) => {
-		// 	setToken("");
-		// });
-	};
-	// const instagramLogin = () => {
-	// 	instagramLogin;
-	// };
 	const signInWithKakao = async () => {
 		const token = await login();
 		// setResult(JSON.stringify(token));
@@ -54,6 +43,7 @@ export default ({ navigation }) => {
 		}
 	};
 	const signInWithInstagram = async (data) => {
+		console.log(data.user_id, "!@!@");
 		if (data.access_token) {
 			if (data.user_id) {
 				signIn("instagram", data.access_token, data.user_id);
@@ -67,16 +57,66 @@ export default ({ navigation }) => {
 				state_code: 20,
 				uid: uid,
 				join_type: type,
-				free_count: 0,
 			})
-			.then((res) => {
+			.then(async (res) => {
 				console.log(res.data.CODE, "로그인 성공");
-				if(res.data.CODE == 20) {
-					navigation.navigate('MAIN01', {screen: 'MAIN01'})
+				if (res.data.CODE == 10) {
+					// ERROR ERROR ERROR ERROR ERROR
+				} else {
+					logIn(token, uid, type);
 				}
 			})
 			.catch((e) => {
 				console.log(e, "e");
+			});
+	};
+	const logIn = async (token, uid, type) => {
+		console.log(uid, "uid", type, "type");
+		await axios
+			.get(`${config.apiUrl}/user/member/userLogIn`, {
+				params: { uid: uid, join_type: type },
+			})
+			.then(async (res) => {
+				console.log(res.data.DATA.paid_count, "로그인 성공");
+				const asnycUser = await AsyncStorage.getItem("userInfo");
+				const userInfo = JSON.parse(asnycUser);
+				if (userInfo.token != token) {
+					tokenSetting = await axios.post(
+						`${config.apiUrl}/user/member/userTokenSetting`,
+						{
+							uid: uid,
+							join_type: type,
+							token: token,
+							member_idx: userInfo.member_idx,
+						}
+					);
+				}
+				if (res.data.CODE == 20) {
+					const userInfo = res.data.DATA;
+					await AsyncStorage.setItem(
+						"userInfo",
+						`{"free_count":"${userInfo.free_count}"
+						,"paid_count":"${userInfo.paid_count}"
+						,"join_type":"${userInfo.join_type}"
+						,"member_idx":"${userInfo.member_idx}"
+						,"state_code":"${userInfo.state_code}"
+						,"token":"${token}"}`
+					);
+					if (
+						tokenSetting.data.CODE == 10 ||
+						tokenSetting.data.CODE == 0
+					) {
+						// ERROR ERROR ERROR 후처리 요망 (알러트창)
+						await AsyncStorage.removeItem("userInfo");
+					} else {
+						await navigation.navigate("MAIN01", {
+							screen: "MAIN01",
+						});
+					}
+				}
+			})
+			.catch((e) => {
+				console.log(e, "e2");
 			});
 	};
 
