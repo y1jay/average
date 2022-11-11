@@ -16,16 +16,20 @@ import { AnimatedBackgroundColorView } from "react-native-animated-background-co
 
 export default ({ navigation }) => {
 	const winWidth = Dimensions.get("window").width;
+	const width = winWidth * 0.85;
 
-	const bgColorList = ["#CAE8B2", "#F6EF50"];
+	const bgColorList = ["rgba(228, 244, 217, 1)", "#FBF7A7"];
 	const [swipeIndex, setSwipeIndex] = useState(0);
 
-	// useEffect(async () => {}, []);
+	useEffect(() => {
+		console.log(bgColorList[swipeIndex]);
+	}, [swipeIndex]);
 
 	return (
 		<AnimatedBackgroundColorView
 			color={bgColorList[swipeIndex]}
-			initialColor={swipeIndex == 0 ? bgColorList[1] : bgColorList[0]}
+			//   initialColor={swipeIndex == 0 ? bgColorList[1] : bgColorList[0]}
+			initialColor={"rgba(228, 244, 217, 1)"}
 			duration={1000}
 			style={styles.body}
 		>
@@ -38,12 +42,13 @@ export default ({ navigation }) => {
 					setSwipeIndex(index);
 				}}
 				showsPagination={false}
-				width={winWidth * 0.9}
+				width={width}
 				// overflow={'visible'}
+				loadMinimal={true}
 				scrollViewStyle={{ overflow: "visible" }}
 				removeClippedSubviews={false}
 			>
-				<View style={styles.slideItem}>
+				<View style={[styles.slideItem, {}]}>
 					<ImageBackground
 						source={require("../../Images/MAIN01_bg1.png")}
 						resizeMode="contain"
@@ -56,9 +61,21 @@ export default ({ navigation }) => {
 							style={styles.contentsBtn}
 						>
 							<Image
-								style={{ height: "100%" }}
+								style={{
+									height: "100%",
+									position: "absolute",
+									//   left: 0,
+									//   top: 0,
+								}}
 								source={require("../../Images/MAIN01_btn1.png")}
+								resizeMode="contain"
 							/>
+							<Image
+								style={{ height: 18 }}
+								source={require("../../Images/MAIN01_card.png")}
+							/>
+							<Text>x 1</Text>
+							<Text>PLAY</Text>
 						</Pressable>
 						<Pressable style={styles.contentsText}>
 							<Text>취향 검사 하러가기</Text>
@@ -100,18 +117,26 @@ const styles = StyleSheet.create({
 	// #F6EF50
 	body: {
 		flex: 1,
-		alignItems: "flex-start",
+		// alignItems: 'flex-start',
+		alignItems: "center",
 		justifyContent: "center",
 	},
+	wrapper: {
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+		// marginTop: '20%',
+		// height: '90%',
+		// flexGrow: 0.1,
+	},
 	slideItem: {
-		width: "95%",
+		width: "98%",
 		// height: '80%',
-		marginTop: "12%",
 		flex: 1,
 		justifyContent: "center",
 		alignItems: "center",
 		alignItems: "center",
-		marginLeft: "5%",
+		marginTop: "20%",
 	},
 	contentsArea: {
 		width: "98%",
@@ -122,17 +147,20 @@ const styles = StyleSheet.create({
 		// justifyContent: 'center',
 		shadowColor: "#000",
 		shadowOpacity: 0.2,
-		shadowRadius: 5,
+		shadowRadius: 3,
 		shadowOffset: {
-			height: 0,
+			height: 2,
 			width: 0,
 		},
 		elevation: 3,
-		overflow: "hidden",
+		// overflow: 'hidden',
 	},
 	contentsBtn: {
-		height: "25%",
+		width: 125,
+		height: 120,
 		top: "45%",
+		alignItems: "center",
+		justifyContent: "center",
 	},
 	contentsText: {
 		top: "55%",
