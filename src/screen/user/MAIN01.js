@@ -16,25 +16,71 @@ import { AnimatedBackgroundColorView } from "react-native-animated-background-co
 
 export default ({ navigation }) => {
 	const winWidth = Dimensions.get("window").width;
-	const width = winWidth * 0.85;
 
+	const colorListMain = ["#007A31", "#F59300"];
+	const colorListSub = ["#0FC558", "#F6D629"];
+	// 백그라운드 색상 리스트
 	const bgColorList = ["rgba(228, 244, 217, 1)", "#FBF7A7"];
+	// 현재 스와이프 인덱스
 	const [swipeIndex, setSwipeIndex] = useState(0);
-
-	useEffect(() => {
-		console.log(bgColorList[swipeIndex]);
-	}, [swipeIndex]);
+	// 카드 PLAY 버튼
+	const cardBtn = (index) => {
+		// 사용가능한 카드가 없는 경우
+		// 사용가능한 무료 카드가 있는 경우
+		return (
+			<Pressable
+				onPress={() => {
+					alert((index == 0 ? '뭐하나' : '뭐먹나') + " PLAY");
+				}}
+				style={styles.cardBtn}
+				>
+				<Image
+					style={{
+						height: "100%",
+						position: "absolute",
+					}}
+					source={index == 0 ? require("../../Images/MAIN01_btn1.png") : require("../../Images/MAIN01_btn2.png")}
+					resizeMode="contain"
+				/>
+				<View style={styles.flexCenter}>
+					<View style={styles.cardCntArea}>
+						<Image
+							style={{ height: 18 }}
+							source={require("../../Images/MAIN01_card.png")}
+						/>
+						<Text style={styles.cardBtnText}>x 1</Text>
+					</View>
+					{/* <Text style={styles.cardBtnText}>오늘의 무료</Text> */}
+					<Text style={styles.cardPlayText}>PLAY</Text>
+				</View>
+			</Pressable>
+		)
+	}
+	// 카드 aside 영역
+	const cardAside = (index) => {
+		// 검사 이력이 있는 경우 닉네임 표시
+		// 검사 이력이 없는 경우 검사 하기 버튼
+		return(
+			<Pressable style={styles.cardAsideArea}>
+				{/* <Text style={styles.cardAsideText}>취향 검사 하러가기</Text> */}
+				<Text style={styles.cardAsideText}>
+					<Text style={[styles.cardAsideTextTitle, {color: colorListMain[index]}]}>달달러버 </Text>
+					<Text>OH_123456</Text>
+				</Text>
+			</Pressable>
+		)
+	}
 
 	return (
 		<AnimatedBackgroundColorView
 			color={bgColorList[swipeIndex]}
 			//   initialColor={swipeIndex == 0 ? bgColorList[1] : bgColorList[0]}
 			initialColor={"rgba(228, 244, 217, 1)"}
-			duration={1000}
+			duration={800}
 			style={styles.body}
 		>
 			<Swiper
-				style={[styles.wrapper]}
+				style={styles.wrapper}
 				showsButtons={false}
 				loop={false}
 				index={0}
@@ -42,72 +88,44 @@ export default ({ navigation }) => {
 					setSwipeIndex(index);
 				}}
 				showsPagination={false}
-				width={width}
-				// overflow={'visible'}
+				width={winWidth * 0.85}
 				loadMinimal={true}
 				scrollViewStyle={{ overflow: "visible" }}
 				removeClippedSubviews={false}
 			>
-				<View style={[styles.slideItem, {}]}>
+				<View style={styles.slideItem}>
 					<ImageBackground
 						source={require("../../Images/MAIN01_bg1.png")}
 						resizeMode="contain"
-						style={styles.contentsArea}
+						style={styles.cardArea}
 					>
-						<Pressable
-							onPress={() => {
-								alert("PLAY");
-							}}
-							style={styles.contentsBtn}
-						>
-							<Image
-								style={{
-									height: "100%",
-									position: "absolute",
-									//   left: 0,
-									//   top: 0,
-								}}
-								source={require("../../Images/MAIN01_btn1.png")}
-								resizeMode="contain"
-							/>
-							<Image
-								style={{ height: 18 }}
-								source={require("../../Images/MAIN01_card.png")}
-							/>
-							<Text>x 1</Text>
-							<Text>PLAY</Text>
-						</Pressable>
-						<Pressable style={styles.contentsText}>
-							<Text>취향 검사 하러가기</Text>
-						</Pressable>
+						{cardBtn(0)}
+						{cardAside(0)}
 					</ImageBackground>
 				</View>
 				<View style={styles.slideItem}>
 					<ImageBackground
 						source={require("../../Images/MAIN01_bg2.png")}
 						resizeMode="contain"
-						style={styles.contentsArea}
+						style={styles.cardArea}
 					>
-						<Pressable
-							onPress={() => {
-								alert("PLAY");
-							}}
-							style={styles.contentsBtn}
-						>
-							<Image
-								style={{ height: "100%" }}
-								source={require("../../Images/MAIN01_btn2.png")}
-							/>
-						</Pressable>
-						<Pressable style={styles.contentsText}>
-							<Text>달달러버 OH_123456</Text>
-						</Pressable>
+						{cardBtn(1)}
+						{cardAside(1)}
 					</ImageBackground>
 				</View>
 			</Swiper>
-			<Pressable style={styles.cardCntArea}>
-				<Text>보유 횟수</Text>
-			</Pressable>
+			<View style={styles.cntArea}>
+				<Pressable 
+					onPress={() => {alert('카드 충전')}}
+					style={styles.cntBtnArea}>
+					<View style={[styles.cntBtnTextArea, {backgroundColor: colorListSub[swipeIndex]}]}>
+						<Text style={styles.cntBtnText}>999+</Text>
+					</View>
+					<Image 
+						style={styles.cntBtnImg}
+						source={swipeIndex == 0 ? require("../../Images/MAIN01_card1.png") : require("../../Images/MAIN01_card2.png")}/>
+				</Pressable>
+			</View>
 		</AnimatedBackgroundColorView>
 	);
 };
@@ -115,36 +133,34 @@ export default ({ navigation }) => {
 const styles = StyleSheet.create({
 	// #CAE8B2
 	// #F6EF50
+	flexCenter: {
+		alignItems: 'center',
+		justifyContent: 'center'
+	},
 	body: {
 		flex: 1,
-		// alignItems: 'flex-start',
 		alignItems: "center",
 		justifyContent: "center",
 	},
 	wrapper: {
+		width: '200%',
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "center",
-		// marginTop: '20%',
-		// height: '90%',
-		// flexGrow: 0.1,
 	},
 	slideItem: {
 		width: "98%",
-		// height: '80%',
 		flex: 1,
+		alignItems: "center",
 		justifyContent: "center",
-		alignItems: "center",
-		alignItems: "center",
-		marginTop: "20%",
+		marginTop: "15%",
 	},
-	contentsArea: {
+	cardArea: {
 		width: "98%",
 		height: "98%",
 		backgroundColor: "#fff",
 		borderRadius: 10,
 		alignItems: "center",
-		// justifyContent: 'center',
 		shadowColor: "#000",
 		shadowOpacity: 0.2,
 		shadowRadius: 3,
@@ -153,22 +169,72 @@ const styles = StyleSheet.create({
 			width: 0,
 		},
 		elevation: 3,
-		// overflow: 'hidden',
 	},
-	contentsBtn: {
+	cardBtn: {
 		width: 125,
 		height: 120,
 		top: "45%",
 		alignItems: "center",
 		justifyContent: "center",
 	},
-	contentsText: {
+	cardCntArea: {
+		flexDirection: 'row',
+		// alignItems: 'center'
+	},
+	cardBtnText: {
+		color: '#F1F528',
+		marginLeft: 5,
+		fontFamily: 'UhBeecharming',
+		fontSize: 12,
+	},
+	cardPlayText: {
+		color: '#FFF',
+		fontFamily: 'UhBeecharming',
+		fontSize: 18
+	},
+	cardAsideArea: {
 		top: "55%",
 	},
-	cardCntArea: {
-		width: "100%",
-		height: "8%",
-		justifyContent: "center",
-		alignItems: "center",
+	cardAsideText: {
+		fontFamily: 'UhBeecharming',
 	},
+	cardAsideTextTitle: {
+		fontWeight: 'bold'
+	},
+	cntArea: {
+		width: "100%",
+		height: "10%",
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	cntBtnArea: {
+		width: 68,
+		height: 30,
+		flexDirection: 'row',
+		alignItems: "flex-end",
+		position: 'relative',
+	},
+	cntBtnImg: {
+		width: 21,
+		height: 27,
+		position: 'absolute',
+		top: 0,
+		left: 4,
+	},
+	cntBtnTextArea: {
+		width: '100%',
+		height: 20,
+		borderTopLeftRadius: 5,
+		borderBottomLeftRadius: 5,
+		borderTopRightRadius: 10,
+		borderBottomRightRadius: 10,
+		alignItems: "flex-end",
+		justifyContent: "center",
+	},
+	cntBtnText: {
+		width: 45,
+		fontFamily: 'UhBeecharmingBold',
+		textAlign: 'center',
+		fontSize: 11,
+	}
 });
