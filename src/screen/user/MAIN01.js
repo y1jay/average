@@ -13,6 +13,7 @@ import {
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Swiper from "react-native-swiper";
 import { AnimatedBackgroundColorView } from "react-native-animated-background-color-view";
+import { UserGetter } from "../../User/UserInfo";
 
 export default ({ navigation }) => {
 	const winWidth = Dimensions.get("window").width;
@@ -26,8 +27,12 @@ export default ({ navigation }) => {
 	// 현재 스와이프 인덱스
 	const [swipeIndex, setSwipeIndex] = useState(0);
 	// 결과 정보
-	const result = {name: '메롱'}
-
+	const doResult = {name: '할거', heart: 0}
+	const eatResult = {name: '먹을거', heart: 1}
+	// 현재 카드 상태 (카드인덱스, 상태)
+	const [doCardState, setDoCardState] = useState(0)
+	const [eatCardState, setEatCardState] = useState(0)
+	
 	// 카드 PLAY 버튼
 	const cardBtn = (index) => {
 		// 사용가능한 카드가 없는 경우
@@ -35,7 +40,8 @@ export default ({ navigation }) => {
 		return (
 			<Pressable
 				onPress={() => {
-					alert((index == 0 ? '뭐하나' : '뭐먹나') + " PLAY");
+					// 카드를 Play 상태로 변경
+					index == 0 ? setDoCardState(1) : setEatCardState(1)
 				}}
 				style={styles.cardBtn}
 				>
@@ -75,6 +81,95 @@ export default ({ navigation }) => {
 			</Pressable>
 		)
 	}
+	// 카드 
+	const cardArea = (index, state) => {
+		// heart
+		const heartImg = () => {
+			const thisHeart = index == 0 ? doResult.heart : eatResult.heart
+			return (
+				thisHeart == 0 ? require("../../Images/heart_gray.png")
+				: require("../../Images/heart_yellow.png")
+			)
+		}
+		// CARD1 : Basic
+		if( state == 0) {
+			return (
+			<ImageBackground
+				source={index == 0 ? require("../../Images/MAIN01_bg1.png") : require("../../Images/MAIN01_bg2.png")}
+				resizeMode="contain"
+				style={styles.cardArea}
+			>
+				{cardBtn(index)}
+				{cardAside(index)}
+			</ImageBackground>
+			)
+		}
+		// CARD2 : Play
+		if(state == 1) {
+			return (
+			<ImageBackground
+			source={index == 0 ? require("../../Images/MAIN01_bg1_1.png") : require("../../Images/MAIN01_bg2_1.png")}
+				resizeMode="contain"
+				style={styles.cardArea}
+			>
+				<Text style={[styles.cardAsideText, {fontSize: 20}]}>핸드폰을</Text>
+				<Text style={[styles.cardAsideText, {fontSize: 20}]}>흔들어 주세요</Text>
+			</ImageBackground>
+			)
+		}
+		// CARD3 : Result
+		if(state == 2) {
+			return (
+			<View style={[styles.cardArea, styles.cardResultArea ]}>
+				<Pressable
+					onPress={() => {alert(index +'좋아')}}
+					style={styles.cardResultHeart}>
+					<Image
+						style={{width: 20, height: 17}}
+						source={heartImg()}
+						resizeMode={'contain'}
+					/>
+				</Pressable>
+				<View style={{alignItems: 'center'}}>
+					<Text style={[styles.cardAsideText, {fontSize: 20}]}>오늘은</Text>
+					<Text style={[styles.cardAsideText, {fontSize: 50}]}>{index == 0 ? doResult.name : eatResult.name}</Text>
+				</View>
+				<View style={styles.cardResultAgainBtn}>
+					<Text style={[
+						styles.cardAsideText, 
+						styles.cardResultAgainBtnText
+						]}>
+						한번 더!
+					</Text>
+					{cardBtn(index)}
+					<Image
+						style={styles.cardResultAgainBtnImg}
+						source={require("../../Images/btn_aside_arrow.png")}
+					/>
+				</View>
+				<Pressable 
+					onPress={() => {alert('검색창 연결')}}
+					style={styles.cardResultBtn}>
+					<Text style={styles.cardResultBtnText}>내 주변 {index == 0 ? doResult.name : eatResult.name} 할 곳 찾기</Text>
+					<View style={styles.cardResultBtnArrow}></View>
+				</Pressable>
+			</View>
+			)
+		}
+	}
+	// test 일정시간 후 result
+	useEffect(() => {
+		if(doCardState == 1) {
+			setTimeout(() => {
+				setDoCardState(2)
+			}, 1000);
+		}
+		if(eatCardState == 1 == 1) {
+			setTimeout(() => {
+				setEatCardState(2)
+			}, 1000);
+		}
+	}, [doCardState, eatCardState])
 
 	return (
 		<AnimatedBackgroundColorView
@@ -91,6 +186,9 @@ export default ({ navigation }) => {
 				index={0}
 				onIndexChanged={(index) => {
 					setSwipeIndex(index);
+					// Play 상태에서 Result로 진행되지 않고 swipe한 경우 Basic 상태로 되돌리기
+					(index == 0 && eatCardState == 1) && setEatCardState(0);
+					(index == 1 && doCardState == 1) && setDoCardState(0);
 				}}
 				showsPagination={false}
 				width={winWidth * 0.85}
@@ -98,44 +196,22 @@ export default ({ navigation }) => {
 				scrollViewStyle={{ overflow: "visible" }}
 				removeClippedSubviews={false}
 			>
+				{/* 뭐하나 */}
 				<View style={styles.slideItem}>
-					{/* CARD1 : Basic */}
-					{/* <ImageBackground
-						source={require("../../Images/MAIN01_bg1.png")}
-						resizeMode="contain"
-						style={styles.cardArea}
-					>
-						{cardBtn(0)}
-						{cardAside(0)}
-					</ImageBackground> */}
-					{/* CARD2 : Play */}
-					{/* <ImageBackground
-						source={require("../../Images/MAIN01_bg1_1.png")}
-						resizeMode="contain"
-						style={styles.cardArea}
-					>
-						<Text style={[styles.cardAsideText, {fontSize: 20}]}>핸드폰을</Text>
-						<Text style={[styles.cardAsideText, {fontSize: 20}]}>흔들어 주세요</Text>
-					</ImageBackground> */}
-					{/* CARD3 : Result */}
-					<View style={styles.cardArea}>
-						<Text style={[styles.cardAsideText, {fontSize: 20}]}>오늘은</Text>
-						<Text style={[styles.cardAsideText, {fontSize: 50}]}>{result.name}</Text>
-						<Text style={[styles.cardAsideText, {fontSize: 20}]}>또 뭐 넣지..</Text>
-						<Pressable style={[styles.cardResultBtn, {backgroundColor: colorListMain[0]}]}>
-							<Text style={styles.cardResultBtnText}>내 주변 {result.name} 할 곳 찾기</Text>
-						</Pressable>
-					</View>
+					{cardArea(0, doCardState)}
 				</View>
+				{/* 뭐먹나 */}
 				<View style={styles.slideItem}>
-					<ImageBackground
+					{/* <ImageBackground
 						source={require("../../Images/MAIN01_bg2.png")}
 						resizeMode="contain"
 						style={styles.cardArea}
 					>
 						{cardBtn(1)}
 						{cardAside(1)}
-					</ImageBackground>
+					</ImageBackground> */}
+					
+					{cardArea(1, eatCardState)}
 				</View>
 			</Swiper>
 			<View style={styles.cntArea}>
@@ -171,7 +247,6 @@ const styles = StyleSheet.create({
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "center",
-		borderWidth:1
 	},
 	slideItem: {
 		width: "98%",
@@ -187,7 +262,7 @@ const styles = StyleSheet.create({
 		borderRadius: 10,
 		alignItems: "center",
 		justifyContent: "center",
-		shadowColor: "#000",
+		shadowColor: "#212121",
 		shadowOpacity: 0.2,
 		shadowRadius: 3,
 		shadowOffset: {
@@ -229,16 +304,59 @@ const styles = StyleSheet.create({
 	cardAsideTextTitle: {
 		fontWeight: 'bold'
 	},
+	cardResultArea: {
+		justifyContent: 'space-between', 
+		paddingTop: '10%', 
+		paddingBottom: '10%'
+	},
+	cardResultHeart: {
+		width: '20%', 
+		height: '8%', 
+		alignItems: 'center', 
+		justifyContent: 'center', 
+		marginBottom: '10%'
+	},
+	cardResultAgainBtn: {
+		justifyContent: 'flex-end', 
+		paddingBottom: '5%', 
+		marginTop: '10%'
+	},
+	cardResultAgainBtnText: {
+		fontSize: 16, 
+		color: '#BDBDBD', 
+		position: 'absolute', 
+		top: '0%', 
+		transform: [{rotate: '-30deg'}]
+	},
+	cardResultAgainBtnImg: {
+		position:'absolute', 
+		right: -50, 
+		top: '10%'
+	},
 	cardResultBtn: {
-		width: '80%',
-		height: 50,
-		borderRadius: 25,
+		height: 40,
 		alignItems: "center",
 		justifyContent: "center",
+		borderBottomWidth: 2,
+		borderColor: '#BDBDBD',
+		padding: 10,
+		paddingRight: 20,
+		paddingBottom: 0,
+		top: 0
+	},
+	cardResultBtnArrow: {
+		width: 10,
+		height: 10,
+		position: 'absolute',
+		right: 2,
+		bottom: -5,
+		borderRightWidth: 2,
+		borderColor: '#BDBDBD',
+		transform: [{rotate: '-45deg'}]
 	},
 	cardResultBtnText: {
-		color: '#FFF',
-		fontSize: 16
+		color: '#757575',
+		fontSize: 12
 	},
 	cntArea: {
 		width: "100%",
