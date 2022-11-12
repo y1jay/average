@@ -72,29 +72,27 @@ export default ({ navigation }) => {
 			});
 	};
 	const logIn = async (token, uid, type) => {
-		// console.log(uid, "uid", type, "type");
 		await axios
 			.get(`${config.apiUrl}/user/member/userLogIn`, {
 				params: { uid: uid, join_type: type },
 			})
 			.then(async (res) => {
 				// console.log(res.data.DATA.paid_count, "로그인 성공");
-				const asnycUser = await AsyncStorage.getItem("userInfo");
-				const userInfo = JSON.parse(asnycUser);
-				if (userInfo.token != token) {
+				let user = await UserGetter();
+				if (user.token != token) {
 					tokenSetting = await axios.post(
 						`${config.apiUrl}/user/member/userTokenSetting`,
 						{
 							uid: uid,
 							join_type: type,
 							token: token,
-							member_idx: userInfo.member_idx,
+							member_idx: res.data.DATA.member_idx,
 						}
 					);
 				}
 				if (res.data.CODE == 20) {
 					const userInfo = res.data.DATA;
-					console.log(userInfo, "uuu");
+					// console.log(userInfo, "uuu");
 					let user = await UserSetter(userInfo, token);
 					console.log(user);
 					if (

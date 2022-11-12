@@ -7,6 +7,7 @@ export const UserSetter = async (userInfo, token) => {
 	await AsyncStorage.setItem("user_jt", userInfo.join_type);
 	await AsyncStorage.setItem("user_mi", JSON.stringify(userInfo.member_idx));
 	await AsyncStorage.setItem("user_sc", userInfo.state_code);
+	await AsyncStorage.setItem("user_nick", userInfo.nick);
 	await AsyncStorage.setItem("user_tk", token);
 	if (userInfo == null) {
 		result = 10;
@@ -27,6 +28,7 @@ export const UserGetter = async () => {
 	let member_idx = await AsyncStorage.getItem("user_mi");
 	let state_code = await AsyncStorage.getItem("user_sc");
 	let token = await AsyncStorage.getItem("user_tk");
+	let nick = await AsyncStorage.getItem("user_nick");
 	data = {
 		free_count: free_count,
 		paid_count: paid_count,
@@ -34,6 +36,7 @@ export const UserGetter = async () => {
 		member_idx: member_idx,
 		state_code: state_code,
 		token: token,
+		nick: nick,
 	};
 	return data;
 };
