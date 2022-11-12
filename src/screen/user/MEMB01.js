@@ -18,6 +18,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import config from "../../Libs/Config";
+import { UserGetter, UserSetter, UserRemover } from "../../User/UserInfo";
 import InstagramLogin from "react-native-instagram-login";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -71,13 +72,13 @@ export default ({ navigation }) => {
 			});
 	};
 	const logIn = async (token, uid, type) => {
-		console.log(uid, "uid", type, "type");
+		// console.log(uid, "uid", type, "type");
 		await axios
 			.get(`${config.apiUrl}/user/member/userLogIn`, {
 				params: { uid: uid, join_type: type },
 			})
 			.then(async (res) => {
-				console.log(res.data.DATA.paid_count, "로그인 성공");
+				// console.log(res.data.DATA.paid_count, "로그인 성공");
 				const asnycUser = await AsyncStorage.getItem("userInfo");
 				const userInfo = JSON.parse(asnycUser);
 				if (userInfo.token != token) {
@@ -93,21 +94,16 @@ export default ({ navigation }) => {
 				}
 				if (res.data.CODE == 20) {
 					const userInfo = res.data.DATA;
-					await AsyncStorage.setItem(
-						"userInfo",
-						`{"free_count":"${userInfo.free_count}"
-						,"paid_count":"${userInfo.paid_count}"
-						,"join_type":"${userInfo.join_type}"
-						,"member_idx":"${userInfo.member_idx}"
-						,"state_code":"${userInfo.state_code}"
-						,"token":"${token}"}`
-					);
+					console.log(userInfo, "uuu");
+					let user = await UserSetter(userInfo, token);
+					console.log(user);
 					if (
 						tokenSetting.data.CODE == 10 ||
-						tokenSetting.data.CODE == 0
+						tokenSetting.data.CODE == 0 ||
+						user == 10
 					) {
-						// ERROR ERROR ERROR 후처리 요망 (알러트창)
-						await AsyncStorage.removeItem("userInfo");
+						// ERROR ERROR ERROR 후처리 요망
+						await UserRemover();
 					} else {
 						await navigation.navigate("MAIN01", {
 							screen: "MAIN01",
@@ -195,8 +191,8 @@ export default ({ navigation }) => {
 					</Text>
 				</Pressable>
 				<Pressable
-					onPress={() => {
-						getPP();
+					onPress={async () => {
+						console.log(await UserGetter());
 					}}
 					style={[
 						commonStyles.loginSnsBtn,
