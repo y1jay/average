@@ -16,13 +16,18 @@ import { AnimatedBackgroundColorView } from "react-native-animated-background-co
 
 export default ({ navigation }) => {
 	const winWidth = Dimensions.get("window").width;
+	const winHeight = Dimensions.get("window").height;
 
+	// 공통 컬러코드
 	const colorListMain = ["#007A31", "#F59300"];
 	const colorListSub = ["#0FC558", "#F6D629"];
 	// 백그라운드 색상 리스트
 	const bgColorList = ["rgba(228, 244, 217, 1)", "#FBF7A7"];
 	// 현재 스와이프 인덱스
 	const [swipeIndex, setSwipeIndex] = useState(0);
+	// 결과 정보
+	const result = {name: '메롱'}
+
 	// 카드 PLAY 버튼
 	const cardBtn = (index) => {
 		// 사용가능한 카드가 없는 경우
@@ -94,14 +99,33 @@ export default ({ navigation }) => {
 				removeClippedSubviews={false}
 			>
 				<View style={styles.slideItem}>
-					<ImageBackground
+					{/* CARD1 : Basic */}
+					{/* <ImageBackground
 						source={require("../../Images/MAIN01_bg1.png")}
 						resizeMode="contain"
 						style={styles.cardArea}
 					>
 						{cardBtn(0)}
 						{cardAside(0)}
-					</ImageBackground>
+					</ImageBackground> */}
+					{/* CARD2 : Play */}
+					{/* <ImageBackground
+						source={require("../../Images/MAIN01_bg1_1.png")}
+						resizeMode="contain"
+						style={styles.cardArea}
+					>
+						<Text style={[styles.cardAsideText, {fontSize: 20}]}>핸드폰을</Text>
+						<Text style={[styles.cardAsideText, {fontSize: 20}]}>흔들어 주세요</Text>
+					</ImageBackground> */}
+					{/* CARD3 : Result */}
+					<View style={styles.cardArea}>
+						<Text style={[styles.cardAsideText, {fontSize: 20}]}>오늘은</Text>
+						<Text style={[styles.cardAsideText, {fontSize: 50}]}>{result.name}</Text>
+						<Text style={[styles.cardAsideText, {fontSize: 20}]}>또 뭐 넣지..</Text>
+						<Pressable style={[styles.cardResultBtn, {backgroundColor: colorListMain[0]}]}>
+							<Text style={styles.cardResultBtnText}>내 주변 {result.name} 할 곳 찾기</Text>
+						</Pressable>
+					</View>
 				</View>
 				<View style={styles.slideItem}>
 					<ImageBackground
@@ -147,6 +171,7 @@ const styles = StyleSheet.create({
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "center",
+		borderWidth:1
 	},
 	slideItem: {
 		width: "98%",
@@ -161,6 +186,7 @@ const styles = StyleSheet.create({
 		backgroundColor: "#fff",
 		borderRadius: 10,
 		alignItems: "center",
+		justifyContent: "center",
 		shadowColor: "#000",
 		shadowOpacity: 0.2,
 		shadowRadius: 3,
@@ -173,7 +199,7 @@ const styles = StyleSheet.create({
 	cardBtn: {
 		width: 125,
 		height: 120,
-		top: "45%",
+		top: "10%",
 		alignItems: "center",
 		justifyContent: "center",
 	},
@@ -193,13 +219,26 @@ const styles = StyleSheet.create({
 		fontSize: 18
 	},
 	cardAsideArea: {
-		top: "55%",
+		top: "20%",
 	},
 	cardAsideText: {
 		fontFamily: 'UhBeecharming',
+		color: '#757575',
+		fontSize: 14
 	},
 	cardAsideTextTitle: {
 		fontWeight: 'bold'
+	},
+	cardResultBtn: {
+		width: '80%',
+		height: 50,
+		borderRadius: 25,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	cardResultBtnText: {
+		color: '#FFF',
+		fontSize: 16
 	},
 	cntArea: {
 		width: "100%",
