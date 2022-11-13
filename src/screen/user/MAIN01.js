@@ -14,11 +14,12 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Swiper from "react-native-swiper";
 import { AnimatedBackgroundColorView } from "react-native-animated-background-color-view";
 import { UserGetter } from "../../User/UserInfo";
+import commonStyles from "../../Components/Style";
 
 export default ({ navigation }) => {
 	// 유저 정보
 	const userInfo = useRef({
-		"member_idx": "", 
+		"member_idx": "-", 
 		"nick": "", 
 		"free_count": "0", 
 		"paid_count": "0", 
@@ -27,15 +28,15 @@ export default ({ navigation }) => {
 		"token": ""
 	})
 	// 로그인 여부 확인
-	const [isLogin, setIsLogin] = useState(false)
+	const [isLogin, setIsLogin] = useState()
 	useEffect(() => {
 		const Load = async () => {
 			userInfo.current = await UserGetter()
-			setIsLogin(userInfo.current.member_idx !== "")
-			console.log('setInfo')
+			setIsLogin(userInfo.current.member_idx !== "");
+			console.log(userInfo.current.nick)
 		}
 		Load();
-	}, [userInfo])
+	}, [userInfo.current])
 
 	const winWidth = Dimensions.get("window").width;
 	const winHeight = Dimensions.get("window").height;
@@ -197,7 +198,6 @@ export default ({ navigation }) => {
 	return (
 		<AnimatedBackgroundColorView
 			color={bgColorList[swipeIndex]}
-			//   initialColor={swipeIndex == 0 ? bgColorList[1] : bgColorList[0]}
 			initialColor={"rgba(228, 244, 217, 1)"}
 			duration={800}
 			style={styles.body}

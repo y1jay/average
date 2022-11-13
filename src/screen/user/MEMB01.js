@@ -33,6 +33,30 @@ import commonStyles from "../../Components/Style";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
 export default ({ navigation }) => {
+	// 유저 정보
+	const userInfo = useRef({
+		"member_idx": "-", 
+		"nick": "", 
+		"free_count": "0", 
+		"paid_count": "0", 
+		"state_code": "", 
+		"join_type": "", 
+		"token": ""
+	})
+	// 로그인 여부 확인
+	const [isLogin, setIsLogin] = useState()
+	useEffect(() => {
+		const Load = async () => {
+			userInfo.current = await UserGetter()
+			setIsLogin(userInfo.current.member_idx !== "");
+			console.log(userInfo.current.nick)
+		}
+		Load();
+	}, [userInfo.current])
+	
+	// 공통 컬러코드
+	const colorListMain = ["#F1F528", "#116C89"];
+
 	const signInWithKakao = async () => {
 		const token = await login();
 		// setResult(JSON.stringify(token));
@@ -131,8 +155,11 @@ export default ({ navigation }) => {
 
 		setResult(message);
 	};
-	return (
-		<View style={commonStyles.body}>
+
+	// 로그인 페이지
+	const Login = () => {
+		return (
+			<View style={commonStyles.body}>
 			<View style={commonStyles.loginTopArea}>
 				<Image
 					style={commonStyles.loginTopLogo}
@@ -246,5 +273,138 @@ export default ({ navigation }) => {
 				onLoginFailure={(data) => console.log(data, "로그인 실패 처리")}
 			/>
 		</View>
+		)
+	}
+	
+	// 내 정보 페이지
+	const Mypage = () => {
+		return (
+			<View style={commonStyles.body}>
+				<View style={styles.myInfoArea}>
+					<View style={styles.myInfoMoreArea}>
+						<Pressable style={styles.myInfoMoreBtn}>
+							<Image source={require('../../Images/notice_white.png')}/>
+						</Pressable>
+						<Pressable style={styles.myInfoMoreBtn}>
+							<Image source={require('../../Images/setting_white.png')}/>
+						</Pressable>
+					</View>
+					<ImageBackground 
+						source={require('../../Images/profile.png')}
+						style={styles.myInfoImg}
+						resizeMode="cover">
+					</ImageBackground>
+					<Text style={styles.myInfoNick}>
+						<Text style={[styles.myInfoTitle, {color: colorListMain[0]}]}>달달러버 </Text>
+						<Text>{userInfo.current.nick}</Text>
+					</Text>
+					<View style={{flexDirection: 'row'}}>
+						<Text style={styles.myInfoCardCnt}>남은카드 <Text style={{fontWeight: 'bold'}}>{userInfo.current.paid_count}</Text></Text>
+						<Text style={styles.myInfoGoTest}>유형검사 하러가기 {">"}</Text>
+					</View>
+					<View style={styles.myInfoCntArea}>
+						<View style={styles.myInfoCntItem}>
+							<View style={styles.myInfoCntItemTitleArea}>
+								<Text style={styles.myInfoCntItemTitle}>좋아</Text>
+								<Image source={require('../../Images/heart_white.png')}/>
+							</View>
+							<Text style={styles.myInfoCntItemText}>00</Text>
+						</View>
+						<View style={styles.myInfoCntItem}>
+							<View style={styles.myInfoCntItemTitleArea}>
+								<Text style={styles.myInfoCntItemTitle}>채택</Text>
+								<Image source={require('../../Images/good_white.png')}/>
+							</View>
+							<Text style={styles.myInfoCntItemText}>00</Text>
+						</View>
+						<View style={styles.myInfoCntItem}>
+							<View style={styles.myInfoCntItemTitleArea}>
+								<Text style={styles.myInfoCntItemTitle}>칭호</Text>
+								<Image source={require('../../Images/heart_white.png')}/>
+							</View>
+							<Text style={styles.myInfoCntItemText}>00</Text>
+						</View>
+					</View>
+				</View>
+				<View style={styles.myListArea}><Text>이력</Text></View>
+			</View>
+		)
+	}
+	return (
+		isLogin ? Mypage() : Login()
 	);
 };
+
+const styles = StyleSheet.create({
+	myInfoArea : {
+		height: '40%',
+		backgroundColor: '#18A8C8',
+		padding: '3%',
+		paddingTop: '10%',
+		justifyContent: 'space-between'
+	},
+	myListArea: {
+		height: '60%',
+		padding: '3%',
+	},
+	myInfoMoreArea: {
+		flexDirection: 'row',
+		justifyContent: 'flex-end',
+		position: 'absolute',
+		top: '10%',
+		right: '3%',
+	},
+	myInfoMoreBtn: {
+		padding: 8,
+	},
+	myInfoImg: {
+		width: 60,
+		height: 60,
+		borderRadius: 28,
+		backgroundColor: '#FFF',
+		overflow: 'hidden'
+	},
+	myInfoNick: {
+		color: '#FFF',
+		fontSize: 18,
+		fontWeight: 'bold',
+	},
+	myInfoCardCnt: {
+		color: '#FFF',
+		fontSize: 11,
+		flexGrow: 1
+	},
+	myInfoGoTest: {
+		color: '#FFF',
+		fontSize: 11,
+		textAlign: 'right'
+	},
+	myInfoCntArea: {
+		backgroundColor: 'rgba(255,255,255,0.2)',
+		borderRadius: 10,
+		flexDirection: 'row',
+		alignItems:'center',
+		justifyContent: 'center',
+		paddingTop: '3%',
+		paddingBottom: '3%'
+	},
+	myInfoCntItem: {
+		flexGrow: 1,
+		alignItems:'center',
+		justifyContent: 'center'
+	},
+	myInfoCntItemTitleArea: {
+		flexDirection: 'row',
+		alignItems: 'center'
+	},
+	myInfoCntItemTitle: {
+		color: '#fff',
+		fontSize: 12,
+		marginRight: 5,
+	},
+	myInfoCntItemText: {
+		color: '#fff',
+		fontSize: 18,
+		marginTop: 3,
+	}
+})
