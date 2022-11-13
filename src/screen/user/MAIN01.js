@@ -16,6 +16,27 @@ import { AnimatedBackgroundColorView } from "react-native-animated-background-co
 import { UserGetter } from "../../User/UserInfo";
 
 export default ({ navigation }) => {
+	// 유저 정보
+	const userInfo = useRef({
+		"member_idx": "", 
+		"nick": "", 
+		"free_count": "0", 
+		"paid_count": "0", 
+		"state_code": "", 
+		"join_type": "", 
+		"token": ""
+	})
+	// 로그인 여부 확인
+	const [isLogin, setIsLogin] = useState(false)
+	useEffect(() => {
+		const Load = async () => {
+			userInfo.current = await UserGetter()
+			setIsLogin(userInfo.current.member_idx !== "")
+			console.log('setInfo')
+		}
+		Load();
+	}, [userInfo])
+
 	const winWidth = Dimensions.get("window").width;
 	const winHeight = Dimensions.get("window").height;
 
@@ -40,8 +61,10 @@ export default ({ navigation }) => {
 		return (
 			<Pressable
 				onPress={() => {
+					isLogin ?
 					// 카드를 Play 상태로 변경
 					index == 0 ? setDoCardState(1) : setEatCardState(1)
+					: navigation.navigate("MEMB01", {screen: "MEMB01",});
 				}}
 				style={styles.cardBtn}
 				>
@@ -76,7 +99,7 @@ export default ({ navigation }) => {
 				{/* <Text style={styles.cardAsideText}>취향 검사 하러가기</Text> */}
 				<Text style={styles.cardAsideText}>
 					<Text style={[styles.cardAsideTextTitle, {color: colorListMain[index]}]}>달달러버 </Text>
-					<Text>OH_123456</Text>
+					<Text>{userInfo.current.nick}</Text>
 				</Text>
 			</Pressable>
 		)
@@ -216,10 +239,13 @@ export default ({ navigation }) => {
 			</Swiper>
 			<View style={styles.cntArea}>
 				<Pressable 
-					onPress={() => {alert('카드 충전')}}
+					onPress={() => {
+						isLogin ?
+						alert('카드 충전')
+						: navigation.navigate("MEMB01", {screen: "MEMB01",});}}
 					style={styles.cntBtnArea}>
 					<View style={[styles.cntBtnTextArea, {backgroundColor: colorListSub[swipeIndex]}]}>
-						<Text style={styles.cntBtnText}>999+</Text>
+						<Text style={styles.cntBtnText}>{userInfo.current.paid_count}</Text>
 					</View>
 					<Image 
 						style={styles.cntBtnImg}
