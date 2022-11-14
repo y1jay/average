@@ -12,31 +12,29 @@ import {
 
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Swiper from "react-native-swiper";
+import { useIsFocused } from '@react-navigation/native';
+import RNShake from 'react-native-shake';
 import { AnimatedBackgroundColorView } from "react-native-animated-background-color-view";
 import { UserGetter } from "../../User/UserInfo";
 import commonStyles from "../../Components/Style";
 
 export default ({ navigation }) => {
+	const isFocused = useIsFocused();
 	// 유저 정보
-	const userInfo = useRef({
-		"member_idx": "-", 
-		"nick": "", 
-		"free_count": "0", 
-		"paid_count": "0", 
-		"state_code": "", 
-		"join_type": "", 
-		"token": ""
-	})
+	const userInfo = useRef({})
 	// 로그인 여부 확인
 	const [isLogin, setIsLogin] = useState()
 	useEffect(() => {
 		const Load = async () => {
 			userInfo.current = await UserGetter()
-			setIsLogin(userInfo.current.member_idx !== "");
-			console.log(userInfo.current.nick)
+			setIsLogin(
+				userInfo.current.member_idx !== "" 
+				&& userInfo.current.member_idx !== null
+				&& userInfo.current.member_idx !== undefined);
+			console.log("MAIN")
 		}
 		Load();
-	}, [userInfo.current])
+	}, [userInfo.current, isFocused ])
 
 	const winWidth = Dimensions.get("window").width;
 	const winHeight = Dimensions.get("window").height;
@@ -97,11 +95,12 @@ export default ({ navigation }) => {
 		// 검사 이력이 없는 경우 검사 하기 버튼
 		return(
 			<Pressable style={styles.cardAsideArea}>
-				{/* <Text style={styles.cardAsideText}>취향 검사 하러가기</Text> */}
-				<Text style={styles.cardAsideText}>
+				{!isLogin && <Text style={styles.cardAsideText}>로그인을 해 주세요</Text>}
+				{/* {isLogin && <Text style={styles.cardAsideText}>취향 검사 하러가기</Text>} */}
+				{isLogin && <Text style={styles.cardAsideText}>
 					<Text style={[styles.cardAsideTextTitle, {color: colorListMain[index]}]}>달달러버 </Text>
 					<Text>{userInfo.current.nick}</Text>
-				</Text>
+				</Text>}
 			</Pressable>
 		)
 	}
@@ -194,6 +193,16 @@ export default ({ navigation }) => {
 			}, 1000);
 		}
 	}, [doCardState, eatCardState])
+	// useEffect(() => {
+	// 	const subscription = RNShake.addListener(() => {
+		//   alert('핸드폰이 흔들릴때 이게 동작을 할까?')
+	// 	})
+	
+	// 	return () => {
+	// 	  // Your code here...
+	// 	  subscription.remove()
+	// 	}
+	//   }, [])
 
 	return (
 		<AnimatedBackgroundColorView
@@ -245,7 +254,7 @@ export default ({ navigation }) => {
 						: navigation.navigate("MEMB01", {screen: "MEMB01",});}}
 					style={styles.cntBtnArea}>
 					<View style={[styles.cntBtnTextArea, {backgroundColor: colorListSub[swipeIndex]}]}>
-						<Text style={styles.cntBtnText}>{userInfo.current.paid_count}</Text>
+						<Text style={styles.cntBtnText}>{isLogin ? userInfo.current.paid_count : '0'}</Text>
 					</View>
 					<Image 
 						style={styles.cntBtnImg}
@@ -416,7 +425,7 @@ const styles = StyleSheet.create({
 	},
 	cntBtnText: {
 		width: 45,
-		fontFamily: 'UhBeecharmingBold',
+		fontFamily: 'UhBeecharming',
 		textAlign: 'center',
 		fontSize: 11,
 	}

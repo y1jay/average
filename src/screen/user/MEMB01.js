@@ -16,6 +16,7 @@ import {
 	Platform,
 	ActivityIndicator,
 } from "react-native";
+import { useIsFocused } from '@react-navigation/native';
 import axios from "axios";
 import config from "../../Libs/Config";
 import { UserGetter, UserSetter, UserRemover } from "../../User/UserInfo";
@@ -33,26 +34,22 @@ import commonStyles from "../../Components/Style";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
 export default ({ navigation }) => {
+	const isFocused = useIsFocused();
 	// 유저 정보
-	const userInfo = useRef({
-		"member_idx": "-", 
-		"nick": "", 
-		"free_count": "0", 
-		"paid_count": "0", 
-		"state_code": "", 
-		"join_type": "", 
-		"token": ""
-	})
+	const userInfo = useRef({})
 	// 로그인 여부 확인
-	const [isLogin, setIsLogin] = useState()
+	const [isLogin, setIsLogin] = useState();
 	useEffect(() => {
 		const Load = async () => {
 			userInfo.current = await UserGetter()
-			setIsLogin(userInfo.current.member_idx !== "");
-			console.log(userInfo.current.nick)
+			setIsLogin(
+				userInfo.current.member_idx !== "" 
+				&& userInfo.current.member_idx !== null
+				&& userInfo.current.member_idx !== undefined);
+			console.log("MEMB")
 		}
 		Load();
-	}, [userInfo.current])
+	}, [userInfo.current, isFocused])
 	
 	// 공통 컬러코드
 	const colorListMain = ["#F1F528", "#116C89"];
@@ -115,9 +112,8 @@ export default ({ navigation }) => {
 					);
 				}
 				if (res.data.CODE == 20) {
-					const userInfo = res.data.DATA;
-					// console.log(userInfo, "uuu");
-					let user = await UserSetter(userInfo, token);
+					const resUserInfo = res.data.DATA;
+					let user = await UserSetter(resUserInfo, token);
 					console.log(user);
 					if (
 						tokenSetting.data.CODE == 10 ||
@@ -126,11 +122,15 @@ export default ({ navigation }) => {
 					) {
 						// ERROR ERROR ERROR 후처리 요망
 						await UserRemover();
-					} else {
-						await navigation.navigate("MAIN01", {
-							screen: "MAIN01",
-						});
-					}
+						return;
+					} 
+						// await navigation.navigate("MEMB01", {
+						// 	screen: "MEMB01",
+						// });
+						userInfo.current = {}
+						userInfo.current = await UserGetter()
+						setIsLogin(true)
+					
 				}
 			})
 			.catch((e) => {
@@ -171,7 +171,7 @@ export default ({ navigation }) => {
 			<View style={commonStyles.loginSnsArea}>
 				<Pressable
 					onPress={() => {
-						instagramLogin.show();
+						InstagramLogin.show();
 					}}
 					style={commonStyles.loginSnsBtn}
 				>
@@ -285,7 +285,12 @@ export default ({ navigation }) => {
 						<Pressable style={styles.myInfoMoreBtn}>
 							<Image source={require('../../Images/notice_white.png')}/>
 						</Pressable>
-						<Pressable style={styles.myInfoMoreBtn}>
+						<Pressable 
+							onPress={async () => {
+								await UserRemover(); 
+								userInfo.current = {};
+								setIsLogin(false)}}
+							style={styles.myInfoMoreBtn}>
 							<Image source={require('../../Images/setting_white.png')}/>
 						</Pressable>
 					</View>
@@ -296,10 +301,10 @@ export default ({ navigation }) => {
 					</ImageBackground>
 					<Text style={styles.myInfoNick}>
 						<Text style={[styles.myInfoTitle, {color: colorListMain[0]}]}>달달러버 </Text>
-						<Text>{userInfo.current.nick}</Text>
+						<Text>{isLogin && userInfo.current.nick}</Text>
 					</Text>
 					<View style={{flexDirection: 'row'}}>
-						<Text style={styles.myInfoCardCnt}>남은카드 <Text style={{fontWeight: 'bold'}}>{userInfo.current.paid_count}</Text></Text>
+						<Text style={styles.myInfoCardCnt}>남은카드 <Text style={{fontWeight: 'bold'}}>{isLogin && userInfo.current.paid_count}</Text></Text>
 						<Text style={styles.myInfoGoTest}>유형검사 하러가기 {">"}</Text>
 					</View>
 					<View style={styles.myInfoCntArea}>
@@ -331,7 +336,8 @@ export default ({ navigation }) => {
 		)
 	}
 	return (
-		isLogin ? Mypage() : Login()
+		// isLogin ? Mypage() : Login()
+		(isLogin == undefined || isLogin)  ? Mypage() : Login()
 	);
 };
 
