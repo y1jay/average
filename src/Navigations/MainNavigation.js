@@ -48,7 +48,10 @@ export default () => {
 		<BottomTab.Navigator 
 		initialRouteName="MAIN01"
 		screenOptions={{
-			"tabBarShowLabel": false, headerShown: false}}>
+			tabBarShowLabel: false, 
+			headerShown: false,
+			tabBarHideOnKeyboard: true
+			}}>
 				{/* 인트로/스플래시 화면 */}
 			<BottomTab.Screen
 					name="LOAD01"
