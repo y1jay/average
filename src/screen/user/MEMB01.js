@@ -30,6 +30,7 @@ import {
 	loginWithKakaoAccount,
 } from "@react-native-seoul/kakao-login";
 // 공통 컴포넌트 선언
+import Setting from "../../Components/Setting";
 import commonStyles from "../../Components/Style";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
@@ -50,6 +51,9 @@ export default ({ navigation }) => {
 		}
 		Load();
 	}, [userInfo.current, isFocused])
+
+	// 설정모달
+	const [modalVisibleSetting, setModalVisibleSetting] = useState(true)
 	
 	// 공통 컬러코드
 	const colorListMain = ["#F1F528", "#116C89"];
@@ -287,25 +291,27 @@ export default ({ navigation }) => {
 						</Pressable>
 						<Pressable 
 							onPress={async () => {
-								await UserRemover(); 
-								userInfo.current = {};
-								setIsLogin(false)}}
+								setModalVisibleSetting(true)}}
 							style={styles.myInfoMoreBtn}>
 							<Image source={require('../../Images/setting_white.png')}/>
 						</Pressable>
 					</View>
-					<ImageBackground 
-						source={require('../../Images/profile.png')}
-						style={styles.myInfoImg}
-						resizeMode="cover">
-					</ImageBackground>
-					<Text style={styles.myInfoNick}>
-						<Text style={[styles.myInfoTitle, {color: colorListMain[0]}]}>달달러버 </Text>
-						<Text>{isLogin && userInfo.current.nick}</Text>
-					</Text>
 					<View style={{flexDirection: 'row'}}>
-						<Text style={styles.myInfoCardCnt}>남은카드 <Text style={{fontWeight: 'bold'}}>{isLogin && userInfo.current.paid_count}</Text></Text>
-						<Text style={styles.myInfoGoTest}>유형검사 하러가기 {">"}</Text>
+						<ImageBackground 
+							source={require('../../Images/profile.png')}
+							style={styles.myInfoImg}
+							resizeMode="cover">
+						</ImageBackground>
+						<View style={{flexGrow: 1, marginLeft: 15, justifyContent: 'flex-end'}}>
+							<Text style={styles.myInfoNick}>
+								<Text style={[styles.myInfoTitle, {color: colorListMain[0]}]}>달달러버 </Text>
+								<Text>{isLogin && userInfo.current.nick}</Text>
+							</Text>
+							<View style={{flexDirection: 'row'}}>
+								<Text style={styles.myInfoCardCnt}>남은카드 <Text style={{fontWeight: 'bold'}}>{isLogin && userInfo.current.paid_count}</Text></Text>
+								<Text style={styles.myInfoGoTest}>유형검사 하러가기 {">"}</Text>
+							</View>
+						</View>
 					</View>
 					<View style={styles.myInfoCntArea}>
 						<View style={styles.myInfoCntItem}>
@@ -332,6 +338,9 @@ export default ({ navigation }) => {
 					</View>
 				</View>
 				<View style={styles.myListArea}><Text>이력</Text></View>
+				<Setting
+					modalVisibleSetting={modalVisibleSetting}
+					setModalVisibleSetting={setModalVisibleSetting}/>
 			</View>
 		)
 	}
@@ -346,8 +355,9 @@ const styles = StyleSheet.create({
 		height: '40%',
 		backgroundColor: '#18A8C8',
 		padding: '3%',
-		paddingTop: '10%',
-		justifyContent: 'space-between'
+		paddingTop: '10%', // 상태바 영역으로 대치
+		justifyContent: 'space-between',
+		position: 'relative'
 	},
 	myListArea: {
 		height: '60%',
@@ -356,17 +366,14 @@ const styles = StyleSheet.create({
 	myInfoMoreArea: {
 		flexDirection: 'row',
 		justifyContent: 'flex-end',
-		position: 'absolute',
-		top: '10%',
-		right: '3%',
 	},
 	myInfoMoreBtn: {
 		padding: 8,
 	},
 	myInfoImg: {
-		width: 60,
-		height: 60,
-		borderRadius: 28,
+		width: 70,
+		height: 70,
+		borderRadius: 33,
 		backgroundColor: '#FFF',
 		overflow: 'hidden'
 	},
@@ -374,6 +381,7 @@ const styles = StyleSheet.create({
 		color: '#FFF',
 		fontSize: 18,
 		fontWeight: 'bold',
+		marginBottom: 5
 	},
 	myInfoCardCnt: {
 		color: '#FFF',
