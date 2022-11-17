@@ -15,6 +15,7 @@ import {
     Modal,
 } from "react-native";
 
+import { UserGetter, UserSetter, UserRemover } from "../User/UserInfo";
 import commonStyles from './Style';
 
 export default ({navigation, modalVisibleSetting, setModalVisibleSetting}) => {
@@ -33,7 +34,7 @@ export default ({navigation, modalVisibleSetting, setModalVisibleSetting}) => {
                 <Text style={styles.settingTitle}>계정</Text>
                 <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>칭호 관리</Text></Pressable>
                 <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>닉네임 변경</Text></Pressable>
-                <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>로그아웃</Text></Pressable>
+                <Pressable style={styles.settingItemArea} onPress={async () => {await UserRemover(); setModalVisibleSetting(false)}}><Text style={styles.settingItemText}>로그아웃</Text></Pressable>
 
                 <Text style={styles.settingTitle}>고객지원</Text>
                 <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>공지사항</Text></Pressable>
