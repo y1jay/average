@@ -18,6 +18,7 @@ import commonStyles from "./src/Components/Style";
 import Login from "./src/screen/user/MEMB01";
 import NavigationContainer from "./src/Navigations/NavigationContainer";
 import MainNavigation from "./src/Navigations/MainNavigation";
+import { getStatusBarHeight } from 'react-native-status-bar-height';
 
 // 안드로이드 시스템 바 제거
 import SystemNavigationBar from "react-native-system-navigation-bar";
@@ -31,6 +32,7 @@ const App = ({ navigation }) => {
 	const StatusBarStyle =
 		Platform.OS === "ios" ? "dark-content" : "light-content";
 	// const StatusBarColor = Platform.OS === 'ios' ? 'transparent' : 'transparent';
+	const statusBarHeight = getStatusBarHeight(true);
 
 	//  ios 키보드 영역
 	const [keyboardHeight, setKeyboardHeight] = useState(0);
@@ -44,6 +46,7 @@ const App = ({ navigation }) => {
 		setIsShow(false);
 	}
 	useEffect(() => {
+		StatusBar.setHidden(true);
 		// foregroundListener();
 
 		// checkforUpdates()
@@ -67,6 +70,7 @@ const App = ({ navigation }) => {
 		<Fragment>
 			{/* <UserContextProvider> */}
 			<SafeAreaView style={[{ flex: 1 }]}>
+				<View style={{height: statusBarHeight, backgroundColor: 'red'}}></View>
 				<StatusBar
 					barStyle={StatusBarStyle}
 					backgroundColor={"transparent"}
