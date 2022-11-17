@@ -23,6 +23,8 @@ import com.reactnativepagerview.PagerViewPackage;
 import com.th3rdwave.safeareacontext.SafeAreaContextPackage;
 // react-native-screens
 import com.swmansion.rnscreens.RNScreensPackage;
+// react-native-shake
+import com.clipsub.RNShake.RNShakeEventPackage;
 // react-native-system-navigation-bar
 import com.reactnativesystemnavigationbar.SystemNavigationBarPackage;
 // react-native-video
@@ -80,6 +82,7 @@ public class PackageList {
       new PagerViewPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
+      new RNShakeEventPackage(),
       new SystemNavigationBarPackage(),
       new ReactVideoPackage(),
       new RNCWebViewPackage()

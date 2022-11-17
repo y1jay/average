@@ -30,6 +30,7 @@ import {
 	loginWithKakaoAccount,
 } from "@react-native-seoul/kakao-login";
 // 공통 컴포넌트 선언
+import MyNavigation from "../../Navigations/MyNavigation";
 import Setting from "../../Components/Setting";
 import commonStyles from "../../Components/Style";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
@@ -53,7 +54,7 @@ export default ({ navigation }) => {
 	}, [userInfo.current, isFocused])
 
 	// 설정모달
-	const [modalVisibleSetting, setModalVisibleSetting] = useState(true)
+	const [modalVisibleSetting, setModalVisibleSetting] = useState(false)
 	
 	// 공통 컬러코드
 	const colorListMain = ["#F1F528", "#116C89"];
@@ -337,14 +338,16 @@ export default ({ navigation }) => {
 						</View>
 					</View>
 				</View>
-				<View style={styles.myListArea}><Text>이력</Text></View>
+				<View style={styles.myListArea}>
+					<MyNavigation/>
+				</View>
 				<Setting
 					modalVisibleSetting={modalVisibleSetting}
 					setModalVisibleSetting={setModalVisibleSetting}/>
 			</View>
 		)
 	}
-	return (
+	return ( 
 		// isLogin ? Mypage() : Login()
 		(isLogin == undefined || isLogin)  ? Mypage() : Login()
 	);

@@ -14,6 +14,7 @@ MERGED from [:react-native-gesture-handler] C:\Users\ejddm\Documents\average\nod
 MERGED from [:react-native-pager-view] C:\Users\ejddm\Documents\average\node_modules\react-native-pager-view\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-safe-area-context] C:\Users\ejddm\Documents\average\node_modules\react-native-safe-area-context\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-screens] C:\Users\ejddm\Documents\average\node_modules\react-native-screens\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
+MERGED from [:react-native-shake] C:\Users\ejddm\Documents\average\node_modules\react-native-shake\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-7:12
 MERGED from [:react-native-system-navigation-bar] C:\Users\ejddm\Documents\average\node_modules\react-native-system-navigation-bar\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-video] C:\Users\ejddm\Documents\average\node_modules\react-native-video\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-9:12
 MERGED from [:react-native-webview] C:\Users\ejddm\Documents\average\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:2:1-21:12
@@ -241,6 +242,8 @@ MERGED from [:react-native-safe-area-context] C:\Users\ejddm\Documents\average\n
 MERGED from [:react-native-safe-area-context] C:\Users\ejddm\Documents\average\node_modules\react-native-safe-area-context\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-screens] C:\Users\ejddm\Documents\average\node_modules\react-native-screens\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-screens] C:\Users\ejddm\Documents\average\node_modules\react-native-screens\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
+MERGED from [:react-native-shake] C:\Users\ejddm\Documents\average\node_modules\react-native-shake\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
+MERGED from [:react-native-shake] C:\Users\ejddm\Documents\average\node_modules\react-native-shake\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-44
 MERGED from [:react-native-system-navigation-bar] C:\Users\ejddm\Documents\average\node_modules\react-native-system-navigation-bar\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-system-navigation-bar] C:\Users\ejddm\Documents\average\node_modules\react-native-system-navigation-bar\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
 MERGED from [:react-native-video] C:\Users\ejddm\Documents\average\node_modules\react-native-video\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:5:5-7:41
