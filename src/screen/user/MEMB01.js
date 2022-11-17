@@ -41,6 +41,8 @@ export default ({ navigation }) => {
 	const userInfo = useRef({})
 	// 로그인 여부 확인
 	const [isLogin, setIsLogin] = useState();
+	// 설정모달
+	const [modalVisibleSetting, setModalVisibleSetting] = useState(false)
 	useEffect(() => {
 		const Load = async () => {
 			userInfo.current = await UserGetter()
@@ -51,10 +53,8 @@ export default ({ navigation }) => {
 			console.log("MEMB")
 		}
 		Load();
-	}, [userInfo.current, isFocused])
+	}, [userInfo.current, isFocused, modalVisibleSetting])
 
-	// 설정모달
-	const [modalVisibleSetting, setModalVisibleSetting] = useState(false)
 	
 	// 공통 컬러코드
 	const colorListMain = ["#F1F528", "#116C89"];
@@ -176,7 +176,7 @@ export default ({ navigation }) => {
 			<View style={commonStyles.loginSnsArea}>
 				<Pressable
 					onPress={() => {
-						InstagramLogin.show();
+						instagramLogin.show();
 					}}
 					style={commonStyles.loginSnsBtn}
 				>
