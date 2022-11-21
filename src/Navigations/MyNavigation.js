@@ -44,10 +44,13 @@ export default () => {
 	return (
 		<Tab.Navigator
 		screenOptions={{
+			tabBarIndicatorStyle: {backgroundColor: '#116C89', height: 3,},
 			tabBarInactiveTintColor: '#212121',
 			tabBarActiveTintColor: '#116C89',
-			tabBarLabelStyle: { fontSize: 12,},
-			tabBarStyle: { backgroundColor: 'transparent', shadowOpacity: 0},
+			tabBarLabelStyle: { fontSize: 12, fontWeight: 'bold',},
+			tabBarStyle: { backgroundColor: 'transparent', shadowOpacity: 0, marginLeft: '3%', marginRight: '3%',},
+			tabBarItemStyle: { borderBottomWidth: 1, borderColor: '#BDBDBD'},
+
 		  }}>
 		  <Tab.Screen name="카드" component={Card} />
 		  <Tab.Screen name="제안" component={Card} />

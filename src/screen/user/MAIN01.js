@@ -15,7 +15,7 @@ import Swiper from "react-native-swiper";
 import { useIsFocused } from '@react-navigation/native';
 import RNShake from 'react-native-shake';
 import { AnimatedBackgroundColorView } from "react-native-animated-background-color-view";
-import { UserGetter } from "../../User/UserInfo";
+import { UserGetter, UserRemover } from "../../User/UserInfo";
 import commonStyles from "../../Components/Style";
 
 export default ({ navigation }) => {

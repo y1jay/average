@@ -364,7 +364,6 @@ const styles = StyleSheet.create({
 	},
 	myListArea: {
 		height: '60%',
-		padding: '3%',
 	},
 	myInfoMoreArea: {
 		flexDirection: 'row',
