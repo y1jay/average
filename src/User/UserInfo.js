@@ -2,13 +2,40 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const UserSetter = async (userInfo, token) => {
 	let result;
-	await AsyncStorage.setItem("user_fc", JSON.stringify(userInfo.free_count));
-	await AsyncStorage.setItem("user_pc", JSON.stringify(userInfo.paid_count));
-	await AsyncStorage.setItem("user_jt", userInfo.join_type);
-	await AsyncStorage.setItem("user_mi", JSON.stringify(userInfo.member_idx));
-	await AsyncStorage.setItem("user_sc", userInfo.state_code);
-	await AsyncStorage.setItem("user_nick", userInfo.nick);
-	await AsyncStorage.setItem("user_tk", token);
+	if (userInfo.free_count != undefined && userInfo.free_count != null) {
+		await AsyncStorage.setItem(
+			"user_fc",
+			JSON.stringify(userInfo.free_count)
+		);
+	}
+	if (userInfo.paid_count != undefined && userInfo.paid_count != null) {
+		await AsyncStorage.setItem(
+			"user_pc",
+			JSON.stringify(userInfo.paid_count)
+		);
+	}
+	if (userInfo.join_type != undefined && userInfo.join_type != null) {
+		await AsyncStorage.setItem("user_jt", userInfo.join_type);
+	}
+	if (userInfo.member_idx != undefined && userInfo.member_idx != null) {
+		await AsyncStorage.setItem(
+			"user_mi",
+			JSON.stringify(userInfo.member_idx)
+		);
+	}
+	if (userInfo.state_code != undefined && userInfo.state_code != null) {
+		await AsyncStorage.setItem("user_sc", userInfo.state_code);
+	}
+	if (userInfo.nick != undefined && userInfo.nick != null) {
+		await AsyncStorage.setItem("user_nick", userInfo.nick);
+	}
+	if (token != undefined && token) {
+		await AsyncStorage.setItem("user_tk", token);
+	}
+	if (userInfo.crown != undefined && userInfo.crown != null) {
+		await AsyncStorage.setItem("crown", JSON.stringify(userInfo.crown));
+	}
+
 	if (userInfo == null) {
 		result = 10;
 	} else if (token == null) {
@@ -29,6 +56,7 @@ export const UserGetter = async () => {
 	let state_code = await AsyncStorage.getItem("user_sc");
 	let token = await AsyncStorage.getItem("user_tk");
 	let nick = await AsyncStorage.getItem("user_nick");
+	let crown = await AsyncStorage.getItem("crown");
 	data = {
 		free_count: free_count,
 		paid_count: paid_count,
@@ -37,6 +65,7 @@ export const UserGetter = async () => {
 		state_code: state_code,
 		token: token,
 		nick: nick,
+		crown: crown,
 	};
 	return data;
 };
