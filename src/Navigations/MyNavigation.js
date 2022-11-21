@@ -21,28 +21,49 @@ import {
 } from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
+import axios from "axios";
+import config from "../Libs/Config";
 import commonStyles from '../Components/Style';
 
 
 const Tab = createMaterialTopTabNavigator();
-const config = {
-	animation: 'timing',
-	config: {
-		stiffness: 1000,
-		damping: 500,
-		mass: 3,
-		overshootClamping: true,
-		restDisplacementThreshold: 0.01,
-		restSpeedThreshold: 0.01,
-	},
-};
+
 export default () => {
+	const [cardHistoryData, setCardHistoryData] = useState({})
+
+	useEffect(() => {
+		getCardHistory()
+	}, [])
+
+	const getCardHistory = async () => {
+		await axios
+			.get(`${config.apiUrl}/user/member/userCardResult`, {
+				params: { member_idx: 1 },
+			})
+			.then(async (res) => {
+				console.log(res.data)
+				setCardHistoryData(res.data)
+			})
+			.catch((e) => {
+				console.log(e, "e2");
+			});
+	};
+	const cardHistoryRenderItem = ({item}) => (
+		<Text>{item.result}</Text>
+	)
 
 	const Card = () => {
-			return <Text>Search</Text>;
+			return (
+				<FlatList
+				data={cardHistoryData}
+				renderItem={cardHistoryRenderItem}
+				keyExtractor={item => item.what_history_idx}
+				/>
+			);
 	}
 	return (
 		<Tab.Navigator
+		
 		screenOptions={{
 			tabBarIndicatorStyle: {backgroundColor: '#116C89', height: 3,},
 			tabBarInactiveTintColor: '#212121',
