@@ -10,6 +10,8 @@ import {
 	Pressable,
 } from "react-native";
 
+import axios from "axios";
+import config from "../../Libs/Config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Swiper from "react-native-swiper";
 import { useIsFocused } from '@react-navigation/native';
@@ -47,8 +49,8 @@ export default ({ navigation }) => {
 	// 현재 스와이프 인덱스
 	const [swipeIndex, setSwipeIndex] = useState(0);
 	// 결과 정보
-	const doResult = {name: '할거', heart: 0}
-	const eatResult = {name: '먹을거', heart: 1}
+	const [doResult, setDoResult] = useState({})
+	const [eatResult, setEatResult] = useState({})
 	// 현재 카드 상태 (카드인덱스, 상태)
 	const [doCardState, setDoCardState] = useState(0)
 	const [eatCardState, setEatCardState] = useState(0)
@@ -62,7 +64,8 @@ export default ({ navigation }) => {
 				onPress={() => {
 					isLogin ?
 					// 카드를 Play 상태로 변경
-					index == 0 ? setDoCardState(1) : setEatCardState(1)
+					// index == 0 ? setDoCardState(1) : setEatCardState(1)
+					playCard(index)
 					: navigation.navigate("MEMB01", {screen: "MEMB01",});
 				}}
 				style={styles.cardBtn}
@@ -106,11 +109,11 @@ export default ({ navigation }) => {
 	}
 	// 카드 
 	const cardArea = (index, state) => {
+		const type = index == 0 ? doResult : eatResult
 		// heart
 		const heartImg = () => {
-			const thisHeart = index == 0 ? doResult.heart : eatResult.heart
 			return (
-				thisHeart == 0 ? require("../../Images/heart_gray.png")
+				type.favorite == 0 ? require("../../Images/heart_gray.png")
 				: require("../../Images/heart_yellow.png")
 			)
 		}
@@ -155,7 +158,7 @@ export default ({ navigation }) => {
 				</Pressable>
 				<View style={{alignItems: 'center'}}>
 					<Text style={[styles.cardAsideText, {fontSize: 20}]}>오늘은</Text>
-					<Text style={[styles.cardAsideText, {fontSize: 50}]}>{index == 0 ? doResult.name : eatResult.name}</Text>
+					<Text style={[styles.cardAsideText, {fontSize: 50}]}>{type.result}</Text>
 				</View>
 				<View style={styles.cardResultAgainBtn}>
 					<Text style={[
@@ -173,7 +176,7 @@ export default ({ navigation }) => {
 				<Pressable 
 					onPress={() => {alert('검색창 연결')}}
 					style={styles.cardResultBtn}>
-					<Text style={styles.cardResultBtnText}>내 주변 {index == 0 ? doResult.name : eatResult.name} 할 곳 찾기</Text>
+					<Text style={styles.cardResultBtnText}>내 주변 {type.result} {index == 0 ? '할 곳' : '맛집'} 찾기</Text>
 					<View style={styles.cardResultBtnArrow}></View>
 				</Pressable>
 			</View>
@@ -203,6 +206,31 @@ export default ({ navigation }) => {
 	// 	  subscription.remove()
 	// 	}
 	//   }, [])
+
+	
+	const playCard = async (type) => {
+		const url = type == 0 ? '/user/what/whatAction' : '/user/what/whatEat'
+		await axios
+			.get(`${config.apiUrl}${url}`, {
+				params: { 
+					taste: 1, 
+					member_idx: userInfo.current.member_idx, 
+					use_count: 1 
+				},
+			})
+			.then(async (res) => {
+				type == 0 ? setDoCardState(1) : setEatCardState(1)
+				// 성공 doResult
+				type == 0 ? setDoResult(res.data.DATA) : setEatResult(res.data.DATA)
+				// console.log(type)
+				// console.log(url)
+				// console.log(userInfo.current.member_idx)
+				console.log(res.data)
+			})
+			.catch((e) => {
+				console.log(e, "e2");
+			});
+	};
 
 	return (
 		<AnimatedBackgroundColorView

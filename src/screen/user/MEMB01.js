@@ -303,7 +303,7 @@ export default ({ navigation }) => {
 							style={styles.myInfoImg}
 							resizeMode="cover">
 						</ImageBackground>
-						<View style={{flexGrow: 1, marginLeft: 15, justifyContent: 'flex-end'}}>
+						<View style={{flexGrow: 1, marginLeft: 15, justifyContent: 'flex-end', flexShrink: 1}}>
 							<Text style={styles.myInfoNick}>
 								<Text style={[styles.myInfoTitle, {color: colorListMain[0]}]}>달달러버 </Text>
 								<Text>{isLogin && userInfo.current.nick}</Text>
@@ -383,7 +383,7 @@ const styles = StyleSheet.create({
 		color: '#FFF',
 		fontSize: 18,
 		fontWeight: 'bold',
-		marginBottom: 5
+		marginBottom: 5,
 	},
 	myInfoCardCnt: {
 		color: '#FFF',
