@@ -49,16 +49,30 @@ export default () => {
 			});
 	};
 	const cardHistoryRenderItem = ({item}) => (
-		<Text>{item.result}</Text>
+		<View style={{width: '30%', height: 150, backgroundColor: '#fff', marginBottom: 15, borderRadius: 10}}>
+			<Text>{item.result}</Text>
+		</View>
+		
 	)
 
 	const Card = () => {
 			return (
+			<View style={{paddingLeft: '3%', paddingRight: '3%'}}>
 				<FlatList
 				data={cardHistoryData}
 				renderItem={cardHistoryRenderItem}
 				keyExtractor={item => item.what_history_idx}
+				numColumns={3}
+				columnWrapperStyle={{justifyContent: 'space-between'}}
+				ListHeaderComponent={<View style={{height: 15}}></View>}
+				ListEmptyComponent={<Text>아모것도업서</Text>}
 				/>
+				<View style={{width: '106%', height: 15, position: 'absolute', top: 0, left: 0,}}>
+					<Image 
+					style={{width: '100%', height: '100%',}} 
+					source={require('../Images/list_shadow.png')}/>
+				</View>
+			</View>
 			);
 	}
 	return (
