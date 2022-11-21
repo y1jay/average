@@ -14,30 +14,46 @@ import axios from "axios";
 import config from "../../Libs/Config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Swiper from "react-native-swiper";
-import { useIsFocused } from '@react-navigation/native';
-import RNShake from 'react-native-shake';
+import { useIsFocused } from "@react-navigation/native";
+import RNShake from "react-native-shake";
 import { AnimatedBackgroundColorView } from "react-native-animated-background-color-view";
-import { UserGetter, UserRemover } from "../../User/UserInfo";
+import { UserGetter, UserSetter } from "../../User/UserInfo";
 import commonStyles from "../../Components/Style";
 
 export default ({ navigation }) => {
 	const isFocused = useIsFocused();
 	// 유저 정보
-	const userInfo = useRef({})
+	const userInfo = useRef({});
 	// 로그인 여부 확인
-	const [isLogin, setIsLogin] = useState()
+	const [isLogin, setIsLogin] = useState();
 	useEffect(() => {
 		const Load = async () => {
-			userInfo.current = await UserGetter()
+			userInfo.current = await UserGetter();
 			setIsLogin(
-				userInfo.current.member_idx !== "" 
-				&& userInfo.current.member_idx !== null
-				&& userInfo.current.member_idx !== undefined);
-			console.log("MAIN")
-		}
+				userInfo.current.member_idx !== "" &&
+					userInfo.current.member_idx !== null &&
+					userInfo.current.member_idx !== undefined
+			);
+			console.log("MAIN");
+		};
 		Load();
-	}, [userInfo.current, isFocused ])
+	}, [userInfo.current, isFocused]);
 
+	const memberInfo = async () => {
+		await axios
+			.get(`${config.apiUrl}/user/member/userInfoSelect`, {
+				params: {
+					member_idx: userInfo.current.member_idx,
+				},
+			})
+			.then(async (res) => {
+				console.log(res.data);
+				await UserSetter(res.data, null);
+			})
+			.catch((e) => {
+				console.log(e, "e2");
+			});
+	};
 	const winWidth = Dimensions.get("window").width;
 	const winHeight = Dimensions.get("window").height;
 
@@ -49,12 +65,12 @@ export default ({ navigation }) => {
 	// 현재 스와이프 인덱스
 	const [swipeIndex, setSwipeIndex] = useState(0);
 	// 결과 정보
-	const [doResult, setDoResult] = useState({})
-	const [eatResult, setEatResult] = useState({})
+	const [doResult, setDoResult] = useState({});
+	const [eatResult, setEatResult] = useState({});
 	// 현재 카드 상태 (카드인덱스, 상태)
-	const [doCardState, setDoCardState] = useState(0)
-	const [eatCardState, setEatCardState] = useState(0)
-	
+	const [doCardState, setDoCardState] = useState(0);
+	const [eatCardState, setEatCardState] = useState(0);
+
 	// 카드 PLAY 버튼
 	const cardBtn = (index) => {
 		// 사용가능한 카드가 없는 경우
@@ -62,20 +78,24 @@ export default ({ navigation }) => {
 		return (
 			<Pressable
 				onPress={() => {
-					isLogin ?
-					// 카드를 Play 상태로 변경
-					// index == 0 ? setDoCardState(1) : setEatCardState(1)
-					playCard(index)
-					: navigation.navigate("MEMB01", {screen: "MEMB01",});
+					isLogin
+						? // 카드를 Play 상태로 변경
+						  // index == 0 ? setDoCardState(1) : setEatCardState(1)
+						  playCard(index)
+						: navigation.navigate("MEMB01", { screen: "MEMB01" });
 				}}
 				style={styles.cardBtn}
-				>
+			>
 				<Image
 					style={{
 						height: "100%",
 						position: "absolute",
 					}}
-					source={index == 0 ? require("../../Images/MAIN01_btn1.png") : require("../../Images/MAIN01_btn2.png")}
+					source={
+						index == 0
+							? require("../../Images/MAIN01_btn1.png")
+							: require("../../Images/MAIN01_btn2.png")
+					}
 					resizeMode="contain"
 				/>
 				<View style={styles.flexCenter}>
@@ -90,142 +110,182 @@ export default ({ navigation }) => {
 					<Text style={styles.cardPlayText}>PLAY</Text>
 				</View>
 			</Pressable>
-		)
-	}
+		);
+	};
 	// 카드 aside 영역
 	const cardAside = (index) => {
 		// 검사 이력이 있는 경우 닉네임 표시
 		// 검사 이력이 없는 경우 검사 하기 버튼
-		return(
+		return (
 			<Pressable style={styles.cardAsideArea}>
-				{!isLogin && <Text style={styles.cardAsideText}>로그인을 해 주세요</Text>}
+				{!isLogin && (
+					<Text style={styles.cardAsideText}>로그인을 해 주세요</Text>
+				)}
 				{/* {isLogin && <Text style={styles.cardAsideText}>취향 검사 하러가기</Text>} */}
-				{isLogin && <Text style={styles.cardAsideText}>
-					<Text style={[styles.cardAsideTextTitle, {color: colorListMain[index]}]}>달달러버 </Text>
-					<Text>{userInfo.current.nick}</Text>
-				</Text>}
+				{isLogin && (
+					<Text style={styles.cardAsideText}>
+						<Text
+							style={[
+								styles.cardAsideTextTitle,
+								{ color: colorListMain[index] },
+							]}
+						>
+							{userInfo.current.crown}
+						</Text>
+						<Text>{userInfo.current.nick}</Text>
+					</Text>
+				)}
 			</Pressable>
-		)
-	}
-	// 카드 
+		);
+	};
+	// 카드
 	const cardArea = (index, state) => {
-		const type = index == 0 ? doResult : eatResult
+		const type = index == 0 ? doResult : eatResult;
 		// heart
 		const heartImg = () => {
-			return (
-				type.favorite == 0 ? require("../../Images/heart_gray.png")
-				: require("../../Images/heart_yellow.png")
-			)
-		}
+			return type.favorite == 0
+				? require("../../Images/heart_gray.png")
+				: require("../../Images/heart_yellow.png");
+		};
 		// CARD1 : Basic
-		if( state == 0) {
+		if (state == 0) {
 			return (
-			<ImageBackground
-				source={index == 0 ? require("../../Images/MAIN01_bg1.png") : require("../../Images/MAIN01_bg2.png")}
-				resizeMode="contain"
-				style={styles.cardArea}
-			>
-				{cardBtn(index)}
-				{cardAside(index)}
-			</ImageBackground>
-			)
+				<ImageBackground
+					source={
+						index == 0
+							? require("../../Images/MAIN01_bg1.png")
+							: require("../../Images/MAIN01_bg2.png")
+					}
+					resizeMode="contain"
+					style={styles.cardArea}
+				>
+					{cardBtn(index)}
+					{cardAside(index)}
+				</ImageBackground>
+			);
 		}
 		// CARD2 : Play
-		if(state == 1) {
+		if (state == 1) {
 			return (
-			<ImageBackground
-			source={index == 0 ? require("../../Images/MAIN01_bg1_1.png") : require("../../Images/MAIN01_bg2_1.png")}
-				resizeMode="contain"
-				style={styles.cardArea}
-			>
-				<Text style={[styles.cardAsideText, {fontSize: 20}]}>핸드폰을</Text>
-				<Text style={[styles.cardAsideText, {fontSize: 20}]}>흔들어 주세요</Text>
-			</ImageBackground>
-			)
+				<ImageBackground
+					source={
+						index == 0
+							? require("../../Images/MAIN01_bg1_1.png")
+							: require("../../Images/MAIN01_bg2_1.png")
+					}
+					resizeMode="contain"
+					style={styles.cardArea}
+				>
+					<Text style={[styles.cardAsideText, { fontSize: 20 }]}>
+						핸드폰을
+					</Text>
+					<Text style={[styles.cardAsideText, { fontSize: 20 }]}>
+						흔들어 주세요
+					</Text>
+				</ImageBackground>
+			);
 		}
 		// CARD3 : Result
-		if(state == 2) {
+		if (state == 2) {
 			return (
-			<View style={[styles.cardArea, styles.cardResultArea ]}>
-				<Pressable
-					onPress={() => {alert(index +'좋아')}}
-					style={styles.cardResultHeart}>
-					<Image
-						style={{width: 20, height: 17}}
-						source={heartImg()}
-						resizeMode={'contain'}
-					/>
-				</Pressable>
-				<View style={{alignItems: 'center'}}>
-					<Text style={[styles.cardAsideText, {fontSize: 20}]}>오늘은</Text>
-					<Text style={[styles.cardAsideText, {fontSize: 50}]}>{type.result}</Text>
+				<View style={[styles.cardArea, styles.cardResultArea]}>
+					<Pressable
+						onPress={() => {
+							alert(index + "좋아");
+						}}
+						style={styles.cardResultHeart}
+					>
+						<Image
+							style={{ width: 20, height: 17 }}
+							source={heartImg()}
+							resizeMode={"contain"}
+						/>
+					</Pressable>
+					<View style={{ alignItems: "center" }}>
+						<Text style={[styles.cardAsideText, { fontSize: 20 }]}>
+							오늘은
+						</Text>
+						<Text style={[styles.cardAsideText, { fontSize: 50 }]}>
+							{type.result}
+						</Text>
+					</View>
+					<View style={styles.cardResultAgainBtn}>
+						<Text
+							style={[
+								styles.cardAsideText,
+								styles.cardResultAgainBtnText,
+							]}
+						>
+							한번 더!
+						</Text>
+						{cardBtn(index)}
+						<Image
+							style={styles.cardResultAgainBtnImg}
+							source={require("../../Images/btn_aside_arrow.png")}
+						/>
+					</View>
+					<Pressable
+						onPress={() => {
+							alert("검색창 연결");
+						}}
+						style={styles.cardResultBtn}
+					>
+						<Text style={styles.cardResultBtnText}>
+							내 주변 {type.result}{" "}
+							{index == 0 ? "할 곳" : "맛집"} 찾기
+						</Text>
+						<View style={styles.cardResultBtnArrow}></View>
+					</Pressable>
 				</View>
-				<View style={styles.cardResultAgainBtn}>
-					<Text style={[
-						styles.cardAsideText, 
-						styles.cardResultAgainBtnText
-						]}>
-						한번 더!
-					</Text>
-					{cardBtn(index)}
-					<Image
-						style={styles.cardResultAgainBtnImg}
-						source={require("../../Images/btn_aside_arrow.png")}
-					/>
-				</View>
-				<Pressable 
-					onPress={() => {alert('검색창 연결')}}
-					style={styles.cardResultBtn}>
-					<Text style={styles.cardResultBtnText}>내 주변 {type.result} {index == 0 ? '할 곳' : '맛집'} 찾기</Text>
-					<View style={styles.cardResultBtnArrow}></View>
-				</Pressable>
-			</View>
-			)
+			);
 		}
-	}
+	};
 	// test 일정시간 후 result
 	useEffect(() => {
-		if(doCardState == 1) {
+		if (doCardState == 1) {
 			setTimeout(() => {
-				setDoCardState(2)
+				setDoCardState(2);
 			}, 1000);
 		}
-		if(eatCardState == 1 == 1) {
+		if ((eatCardState == 1) == 1) {
 			setTimeout(() => {
-				setEatCardState(2)
+				setEatCardState(2);
 			}, 1000);
 		}
-	}, [doCardState, eatCardState])
+	}, [doCardState, eatCardState]);
 	// useEffect(() => {
 	// 	const subscription = RNShake.addListener(() => {
-		//   alert('핸드폰이 흔들릴때 이게 동작을 할까?')
+	//   alert('핸드폰이 흔들릴때 이게 동작을 할까?')
 	// 	})
-	
+
 	// 	return () => {
 	// 	  // Your code here...
 	// 	  subscription.remove()
 	// 	}
 	//   }, [])
 
-	
 	const playCard = async (type) => {
-		const url = type == 0 ? '/user/what/whatAction' : '/user/what/whatEat'
+		const url = type == 0 ? "/user/what/whatAction" : "/user/what/whatEat";
 		await axios
 			.get(`${config.apiUrl}${url}`, {
-				params: { 
-					taste: 1, 
-					member_idx: userInfo.current.member_idx, 
-					use_count: 1 
+				params: {
+					taste: 1,
+					member_idx: userInfo.current.member_idx,
+					use_count: 1,
 				},
 			})
 			.then(async (res) => {
-				type == 0 ? setDoCardState(1) : setEatCardState(1)
+				type == 0 ? setDoCardState(1) : setEatCardState(1);
 				// 성공 doResult
-				type == 0 ? setDoResult(res.data.DATA) : setEatResult(res.data.DATA)
+				type == 0
+					? setDoResult(res.data.DATA)
+					: setEatResult(res.data.DATA);
+				memberInfo();
+
 				// console.log(type)
 				// console.log(url)
 				// console.log(userInfo.current.member_idx)
-				console.log(res.data)
+				console.log(res.data);
 			})
 			.catch((e) => {
 				console.log(e, "e2");
@@ -247,8 +307,8 @@ export default ({ navigation }) => {
 				onIndexChanged={(index) => {
 					setSwipeIndex(index);
 					// Play 상태에서 Result로 진행되지 않고 swipe한 경우 Basic 상태로 되돌리기
-					(index == 0 && eatCardState == 1) && setEatCardState(0);
-					(index == 1 && doCardState == 1) && setDoCardState(0);
+					index == 0 && eatCardState == 1 && setEatCardState(0);
+					index == 1 && doCardState == 1 && setDoCardState(0);
 				}}
 				showsPagination={false}
 				width={winWidth * 0.85}
@@ -257,9 +317,7 @@ export default ({ navigation }) => {
 				removeClippedSubviews={false}
 			>
 				{/* 뭐하나 */}
-				<View style={styles.slideItem}>
-					{cardArea(0, doCardState)}
-				</View>
+				<View style={styles.slideItem}>{cardArea(0, doCardState)}</View>
 				{/* 뭐먹나 */}
 				<View style={styles.slideItem}>
 					{/* <ImageBackground
@@ -270,23 +328,39 @@ export default ({ navigation }) => {
 						{cardBtn(1)}
 						{cardAside(1)}
 					</ImageBackground> */}
-					
+
 					{cardArea(1, eatCardState)}
 				</View>
 			</Swiper>
 			<View style={styles.cntArea}>
-				<Pressable 
+				<Pressable
 					onPress={() => {
-						isLogin ?
-						alert('카드 충전')
-						: navigation.navigate("MEMB01", {screen: "MEMB01",});}}
-					style={styles.cntBtnArea}>
-					<View style={[styles.cntBtnTextArea, {backgroundColor: colorListSub[swipeIndex]}]}>
-						<Text style={styles.cntBtnText}>{isLogin ? userInfo.current.paid_count : '0'}</Text>
+						isLogin
+							? alert("카드 충전")
+							: navigation.navigate("MEMB01", {
+									screen: "MEMB01",
+							  });
+					}}
+					style={styles.cntBtnArea}
+				>
+					<View
+						style={[
+							styles.cntBtnTextArea,
+							{ backgroundColor: colorListSub[swipeIndex] },
+						]}
+					>
+						<Text style={styles.cntBtnText}>
+							{isLogin ? userInfo.current.paid_count : "0"}
+						</Text>
 					</View>
-					<Image 
+					<Image
 						style={styles.cntBtnImg}
-						source={swipeIndex == 0 ? require("../../Images/MAIN01_card1.png") : require("../../Images/MAIN01_card2.png")}/>
+						source={
+							swipeIndex == 0
+								? require("../../Images/MAIN01_card1.png")
+								: require("../../Images/MAIN01_card2.png")
+						}
+					/>
 				</Pressable>
 			</View>
 		</AnimatedBackgroundColorView>
@@ -297,8 +371,8 @@ const styles = StyleSheet.create({
 	// #CAE8B2
 	// #F6EF50
 	flexCenter: {
-		alignItems: 'center',
-		justifyContent: 'center'
+		alignItems: "center",
+		justifyContent: "center",
 	},
 	body: {
 		flex: 1,
@@ -306,7 +380,7 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	wrapper: {
-		width: '200%',
+		width: "200%",
 		display: "flex",
 		alignItems: "center",
 		justifyContent: "center",
@@ -342,84 +416,84 @@ const styles = StyleSheet.create({
 		justifyContent: "center",
 	},
 	cardCntArea: {
-		flexDirection: 'row',
+		flexDirection: "row",
 		// alignItems: 'center'
 	},
 	cardBtnText: {
-		color: '#F1F528',
+		color: "#F1F528",
 		marginLeft: 5,
-		fontFamily: 'UhBeecharming',
+		fontFamily: "UhBeecharming",
 		fontSize: 12,
 	},
 	cardPlayText: {
-		color: '#FFF',
-		fontFamily: 'UhBeecharming',
-		fontSize: 18
+		color: "#FFF",
+		fontFamily: "UhBeecharming",
+		fontSize: 18,
 	},
 	cardAsideArea: {
 		top: "20%",
 	},
 	cardAsideText: {
-		fontFamily: 'UhBeecharming',
-		color: '#757575',
-		fontSize: 14
+		fontFamily: "UhBeecharming",
+		color: "#757575",
+		fontSize: 14,
 	},
 	cardAsideTextTitle: {
-		fontWeight: 'bold'
+		fontWeight: "bold",
 	},
 	cardResultArea: {
-		justifyContent: 'space-between', 
-		paddingTop: '10%', 
-		paddingBottom: '10%'
+		justifyContent: "space-between",
+		paddingTop: "10%",
+		paddingBottom: "10%",
 	},
 	cardResultHeart: {
-		width: '20%', 
-		height: '8%', 
-		alignItems: 'center', 
-		justifyContent: 'center', 
-		marginBottom: '10%'
+		width: "20%",
+		height: "8%",
+		alignItems: "center",
+		justifyContent: "center",
+		marginBottom: "10%",
 	},
 	cardResultAgainBtn: {
-		justifyContent: 'flex-end', 
-		paddingBottom: '5%', 
-		marginTop: '10%'
+		justifyContent: "flex-end",
+		paddingBottom: "5%",
+		marginTop: "10%",
 	},
 	cardResultAgainBtnText: {
-		fontSize: 16, 
-		color: '#BDBDBD', 
-		position: 'absolute', 
-		top: '0%', 
-		transform: [{rotate: '-30deg'}]
+		fontSize: 16,
+		color: "#BDBDBD",
+		position: "absolute",
+		top: "0%",
+		transform: [{ rotate: "-30deg" }],
 	},
 	cardResultAgainBtnImg: {
-		position:'absolute', 
-		right: -50, 
-		top: '10%'
+		position: "absolute",
+		right: -50,
+		top: "10%",
 	},
 	cardResultBtn: {
 		height: 40,
 		alignItems: "center",
 		justifyContent: "center",
 		borderBottomWidth: 2,
-		borderColor: '#BDBDBD',
+		borderColor: "#BDBDBD",
 		padding: 10,
 		paddingRight: 20,
 		paddingBottom: 0,
-		top: 0
+		top: 0,
 	},
 	cardResultBtnArrow: {
 		width: 10,
 		height: 10,
-		position: 'absolute',
+		position: "absolute",
 		right: 2,
 		bottom: -5,
 		borderRightWidth: 2,
-		borderColor: '#BDBDBD',
-		transform: [{rotate: '-45deg'}]
+		borderColor: "#BDBDBD",
+		transform: [{ rotate: "-45deg" }],
 	},
 	cardResultBtnText: {
-		color: '#757575',
-		fontSize: 12
+		color: "#757575",
+		fontSize: 12,
 	},
 	cntArea: {
 		width: "100%",
@@ -430,19 +504,19 @@ const styles = StyleSheet.create({
 	cntBtnArea: {
 		width: 68,
 		height: 30,
-		flexDirection: 'row',
+		flexDirection: "row",
 		alignItems: "flex-end",
-		position: 'relative',
+		position: "relative",
 	},
 	cntBtnImg: {
 		width: 21,
 		height: 27,
-		position: 'absolute',
+		position: "absolute",
 		top: 0,
 		left: 4,
 	},
 	cntBtnTextArea: {
-		width: '100%',
+		width: "100%",
 		height: 20,
 		borderTopLeftRadius: 5,
 		borderBottomLeftRadius: 5,
@@ -453,8 +527,8 @@ const styles = StyleSheet.create({
 	},
 	cntBtnText: {
 		width: 45,
-		fontFamily: 'UhBeecharming',
-		textAlign: 'center',
+		fontFamily: "UhBeecharming",
+		textAlign: "center",
 		fontSize: 11,
-	}
+	},
 });

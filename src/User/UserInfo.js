@@ -65,7 +65,7 @@ export const UserGetter = async () => {
 		state_code: state_code,
 		token: token,
 		nick: nick,
-		crown: crown,
+		crown: JSON.parse(crown),
 	};
 	return data;
 };
