@@ -13,12 +13,12 @@ import {
 	Pressable,
 	Platform,
 } from "react-native";
-
+import { BannerAd, BannerAdSize, TestIds } from "@react-native-admob/admob";
 import commonStyles from "./src/Components/Style";
 import Login from "./src/screen/user/MEMB01";
 import NavigationContainer from "./src/Navigations/NavigationContainer";
 import MainNavigation from "./src/Navigations/MainNavigation";
-import { getStatusBarHeight } from 'react-native-status-bar-height';
+import { getStatusBarHeight } from "react-native-status-bar-height";
 
 // 안드로이드 시스템 바 제거
 import SystemNavigationBar from "react-native-system-navigation-bar";
@@ -70,16 +70,19 @@ const App = ({ navigation }) => {
 		<Fragment>
 			{/* <UserContextProvider> */}
 			<SafeAreaView style={[{ flex: 1 }]}>
-				<View style={{height: statusBarHeight, backgroundColor: 'red'}}></View>
+				<View
+					style={{ height: statusBarHeight, backgroundColor: "red" }}
+				></View>
 				<StatusBar
 					barStyle={StatusBarStyle}
 					backgroundColor={"transparent"}
 				/>
 
 				<NavigationContainer />
-				<View style={commonStyles.bannerArea}>
-					<Text style={commonStyles.textWhite}>배너 광고</Text>
-				</View>
+				<BannerAd
+					size={BannerAdSize.FULL_BANNER}
+					unitId={TestIds.BANNER}
+				/>
 			</SafeAreaView>
 			{/* ios 키보드 영역 */}
 			{/* </UserContextProvider> */}
