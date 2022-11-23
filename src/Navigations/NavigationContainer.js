@@ -51,6 +51,7 @@ export default () => {
 	const navigationRef = useNavigationContainerRef();
 	const [confirmText, setConfirmText] = useState("");
 	const [codePushUpdate, setCodePushUpdate] = useState(false);
+
 	const memberInfo = async () => {
 		userInfo.current = await UserGetter();
 		console.log(userInfo.current.member_idx);
@@ -76,8 +77,10 @@ export default () => {
 			onReady={() => {}}
 			onStateChange={() => {
 				setIsLoading(true);
-				memberInfo();
-				console.log("AAAAAAAA");
+				if (userInfo.current.member_idx != null) {
+					memberInfo();
+				}
+				console.log(userInfo, "1212");
 			}}
 		>
 			<MainNavigation />

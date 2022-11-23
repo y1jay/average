@@ -77,6 +77,7 @@ export const UserRemover = async () => {
 	await AsyncStorage.removeItem("user_sc");
 	await AsyncStorage.removeItem("user_tk");
 	await AsyncStorage.removeItem("user_nick");
+	await AsyncStorage.removeItem("crown");
 };
 
 module.exports = {
