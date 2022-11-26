@@ -13,7 +13,7 @@ import {
 	Pressable,
 	Platform,
 } from "react-native";
-import { BannerAd, BannerAdSize, TestIds } from "@react-native-admob/admob";
+// import { BannerAd, BannerAdSize, TestIds } from "@react-native-admob/admob";
 import commonStyles from "./src/Components/Style";
 import Login from "./src/screen/user/MEMB01";
 import NavigationContainer from "./src/Navigations/NavigationContainer";
@@ -79,10 +79,10 @@ const App = ({ navigation }) => {
 				/>
 
 				<NavigationContainer />
-				<BannerAd
+				{/* <BannerAd
 					size={BannerAdSize.FULL_BANNER}
 					unitId={TestIds.BANNER}
-				/>
+				/> */}
 			</SafeAreaView>
 			{/* ios 키보드 영역 */}
 			{/* </UserContextProvider> */}

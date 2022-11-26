@@ -226,7 +226,8 @@ export default ({ navigation }) => {
 					</View>
 					<Pressable
 						onPress={() => {
-							alert("검색창 연결");
+							// alert("검색창 연결");
+							getAds();
 						}}
 						style={styles.cardResultBtn}
 					>
