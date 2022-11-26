@@ -1,10 +1,10 @@
 {
     "logs": [
         {
-            "outputFile": "/Users/yijun/average/android/app/build/intermediates/incremental/mergeDebugResources/merged.dir/values-large-v4/values-large-v4.xml",
+            "outputFile": "C:\\Users\\ejddm\\Documents\\average\\android\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-large-v4\\values-large-v4.xml",
             "map": [
                 {
-                    "source": "/Users/yijun/.gradle/caches/transforms-3/b53af3e2d023c02b9ae966b8e28a0489/transformed/material-1.1.0/res/values-large-v4/values-large-v4.xml",
+                    "source": "C:\\Users\\ejddm\\.gradle\\caches\\transforms-3\\2cfe6d277fc50c447fc3ab2170b14a8c\\transformed\\material-1.1.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3",
                         "startColumns": "4,4",
@@ -21,7 +21,7 @@
                     }
                 },
                 {
-                    "source": "/Users/yijun/.gradle/caches/transforms-3/a79359b3d9ccbd2d5c99827267eea6ce/transformed/appcompat-1.3.0/res/values-large-v4/values-large-v4.xml",
+                    "source": "C:\\Users\\ejddm\\.gradle\\caches\\transforms-3\\12c3b3d24923cf55540d50e624551d87\\transformed\\appcompat-1.3.0\\res\\values-large-v4\\values-large-v4.xml",
                     "from": {
                         "startLines": "2,3,4,5,6,7,8,9,10",
                         "startColumns": "4,4,4,4,4,4,4,4,4",
