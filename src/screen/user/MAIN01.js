@@ -34,7 +34,6 @@ export default ({ navigation }) => {
 					userInfo.current.member_idx !== null &&
 					userInfo.current.member_idx !== undefined
 			);
-			console.log("MAIN");
 		};
 		Load();
 	}, [userInfo.current, isFocused]);
@@ -49,6 +48,7 @@ export default ({ navigation }) => {
 			.then(async (res) => {
 				console.log(res.data);
 				await UserSetter(res.data, null);
+				userInfo.current = await UserGetter();
 			})
 			.catch((e) => {
 				console.log(e, "e2");
@@ -123,17 +123,14 @@ export default ({ navigation }) => {
 				)}
 				{/* {isLogin && <Text style={styles.cardAsideText}>취향 검사 하러가기</Text>} */}
 				{isLogin && (
-					<Text style={styles.cardAsideText}>
+					<View style={{flexDirection: 'row'}}>
 						<Text
-							style={[
-								styles.cardAsideTextTitle,
-								{ color: colorListMain[index] },
-							]}
+							style={[styles.cardAsideText, { color: colorListMain[index], marginRight: 5}]}
 						>
 							{userInfo.current.crown}
 						</Text>
-						<Text>{userInfo.current.nick}</Text>
-					</Text>
+						<Text style={styles.cardAsideText}>{userInfo.current.nick}</Text>
+					</View>
 				)}
 			</Pressable>
 		);
@@ -282,11 +279,6 @@ export default ({ navigation }) => {
 					? setDoResult(res.data.DATA)
 					: setEatResult(res.data.DATA);
 				memberInfo();
-
-				// console.log(type)
-				// console.log(url)
-				// console.log(userInfo.current.member_idx)
-				console.log(res.data);
 			})
 			.catch((e) => {
 				console.log(e, "e2");
@@ -440,7 +432,7 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 	},
 	cardAsideTextTitle: {
-		fontWeight: "bold",
+		marginRight: 10
 	},
 	cardResultArea: {
 		justifyContent: "space-between",

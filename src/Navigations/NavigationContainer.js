@@ -52,9 +52,17 @@ export default () => {
 	const [confirmText, setConfirmText] = useState("");
 	const [codePushUpdate, setCodePushUpdate] = useState(false);
 
+	useEffect(() => {
+		const Load = async () => {
+			userInfo.current = await UserGetter();
+			console.log(userInfo.current)
+		};
+		Load();
+	}, [userInfo.current]);
+
 	const memberInfo = async () => {
 		userInfo.current = await UserGetter();
-		console.log(userInfo.current.member_idx);
+		console.log(userInfo.current);
 		console.log(config.apiUrl);
 		await axios
 			.get(`${config.apiUrl}/user/member/userInfoSelect`, {
@@ -63,8 +71,8 @@ export default () => {
 				},
 			})
 			.then(async (res) => {
-				console.log(res.data);
 				UserSetter(res.data, null);
+				userInfo.current = await UserGetter();
 			})
 			.catch((e) => {
 				console.log(e, "e2");
@@ -80,7 +88,6 @@ export default () => {
 				if (userInfo.current.member_idx != null) {
 					memberInfo();
 				}
-				console.log(userInfo, "1212");
 			}}
 		>
 			<MainNavigation />

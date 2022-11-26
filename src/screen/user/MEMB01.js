@@ -50,12 +50,24 @@ export default ({ navigation }) => {
 				userInfo.current.member_idx !== "" 
 				&& userInfo.current.member_idx !== null
 				&& userInfo.current.member_idx !== undefined);
-			console.log("MEMB")
 		}
 		Load();
 	}, [userInfo.current, isFocused, modalVisibleSetting])
 
-	
+	const memberInfo = async () => {
+		await axios
+			.get(`${config.apiUrl}/user/member/userInfoSelect`, {
+				params: {
+					member_idx: userInfo.current.member_idx,
+				},
+			})
+			.then(async (res) => {
+				await UserSetter(res.data, null);
+			})
+			.catch((e) => {
+				console.log(e, "e2");
+			});
+	};
 	// 공통 컬러코드
 	const colorListMain = ["#F1F528", "#116C89"];
 
@@ -70,7 +82,6 @@ export default ({ navigation }) => {
 		}
 	};
 	const signInWithInstagram = async (data) => {
-		console.log(data.user_id, "!@!@");
 		if (data.access_token) {
 			if (data.user_id) {
 				signIn("instagram", data.access_token, data.user_id);
@@ -103,7 +114,6 @@ export default ({ navigation }) => {
 				params: { uid: uid, join_type: type },
 			})
 			.then(async (res) => {
-				// console.log(res.data.DATA.paid_count, "로그인 성공");
 				let user = await UserGetter();
 				if (user.token != token) {
 					tokenSetting = await axios.post(
@@ -119,7 +129,6 @@ export default ({ navigation }) => {
 				if (res.data.CODE == 20) {
 					const resUserInfo = res.data.DATA;
 					let user = await UserSetter(resUserInfo, token);
-					console.log(user);
 					if (
 						tokenSetting.data.CODE == 10 ||
 						tokenSetting.data.CODE == 0 ||
@@ -305,11 +314,11 @@ export default ({ navigation }) => {
 						</ImageBackground>
 						<View style={{flexGrow: 1, marginLeft: 15, justifyContent: 'flex-end', flexShrink: 1}}>
 							<Text style={styles.myInfoNick}>
-								<Text style={[styles.myInfoTitle, {color: colorListMain[0]}]}>달달러버 </Text>
+								<Text style={[styles.myInfoTitle, {color: colorListMain[0]}]}>{userInfo.current.crown} </Text>
 								<Text>{isLogin && userInfo.current.nick}</Text>
 							</Text>
 							<View style={{flexDirection: 'row'}}>
-								<Text style={styles.myInfoCardCnt}>남은카드 <Text style={{fontWeight: 'bold'}}>{isLogin && userInfo.current.paid_count}</Text></Text>
+								<Text style={styles.myInfoCardCnt}>남은카드 <Text style={{fontWeight: 'bold'}}>{isLogin ? userInfo.current.paid_count : "0"}</Text></Text>
 								<Text style={styles.myInfoGoTest}>유형검사 하러가기 {">"}</Text>
 							</View>
 						</View>
