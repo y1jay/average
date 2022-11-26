@@ -1,6 +1,8 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const UserSetter = async (userInfo, token) => {
+	console.log('Setter : ', userInfo)
+	if (userInfo == null) {return;}
 	let result;
 	if (userInfo.free_count != undefined && userInfo.free_count != null) {
 		await AsyncStorage.setItem(

@@ -1,7 +1,7 @@
 /**
  * 메인 네비게이션
  */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
 	SafeAreaView,
 	ScrollView,
@@ -44,59 +44,75 @@ const config = {
 	},
 };
 export default () => {
+	const screen = useRef()
 	return (
 		<BottomTab.Navigator 
 		initialRouteName="MAIN01"
 		screenOptions={{
 			tabBarShowLabel: false, 
 			headerShown: false,
-			tabBarHideOnKeyboard: true
+			tabBarHideOnKeyboard: true,
 			}}>
 				{/* 인트로/스플래시 화면 */}
 			<BottomTab.Screen
-					name="LOAD01"
-					component={LOAD01}
-					options={{
-						transitionSpec: {
-							open: config,
-							close: config,
-						},
-						tabBarIcon: ({focused}) => (
-							(<Image style={!focused && {opacity: 0.3}} source={require('../Images/Chat_icon.png')}/>)
-							
-						),
-					  }}
-				/>
-				{/* 메인 */}
+				// listeners={{
+				// 	tabPress: e => {
+				// 		console.log(e.target)
+				// 		screen.current = 'LOAD01'
+				// 	}}}
+				name="LOAD01"
+				component={LOAD01}
+				options={{
+					transitionSpec: {
+						open: config,
+						close: config,
+					},
+					tabBarIcon: ({focused}) => (
+						(<Image style={!focused && {opacity: 0.3}} source={require('../Images/Chat_icon.png')}/>)
+						
+					),
+					}}
+			/>
+			{/* 메인 */}
 			<BottomTab.Screen
-					name="MAIN01"
-					component={MAIN01}
-					options={{
-						transitionSpec: {
-							open: config,
-							close: config,
-						},
-						tabBarIcon: ({focused}) => (
-							(<Image style={!focused && {opacity: 0.3}} source={require('../Images/Home_icon.png')}/>)
-							
-						),
-					  }}
-				/>
-				{/* 내정보 */}
+				// listeners={{
+				// 	tabPress: e => {
+				// 		console.log(e.target)
+				// 		screen.current = 'MAIN01'
+				// 	}}}
+				name="MAIN01"
+				component={MAIN01}
+				options={{
+					transitionSpec: {
+						open: config,
+						close: config,
+					},
+					tabBarIcon: ({focused}) => (
+						(<Image style={!focused && {opacity: 0.3}} source={require('../Images/Home_icon.png')}/>)
+						
+					),
+					}}
+			/>
+			{/* 내정보 */}
 			<BottomTab.Screen
-					name="MEMB01"
-					component={MEMB01}
-					options={{
-						transitionSpec: {
-							open: config,
-							close: config,
-						},
-						tabBarIcon: ({focused}) => (
-							(<Image style={!focused && {opacity: 0.3}} source={require('../Images/My_icon.png')}/>)
-							
-						),
-					  }}
-				/>
+				// listeners={{
+				// 	tabPress: e => {
+				// 		console.log(e.target)
+				// 		screen.current = 'MEMB01'
+				// 	}}}
+				name="MEMB01"
+				component={MEMB01}
+				options={{
+					transitionSpec: {
+						open: config,
+						close: config,
+					},
+					tabBarIcon: ({focused}) => (
+						(<Image style={!focused && {opacity: 0.3}} source={require('../Images/My_icon.png')}/>)
+						
+					),
+					}}
+			/>
 		</BottomTab.Navigator>
 	);
 };

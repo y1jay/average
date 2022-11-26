@@ -41,18 +41,21 @@ export default ({ navigation }) => {
 	const userInfo = useRef({})
 	// 로그인 여부 확인
 	const [isLogin, setIsLogin] = useState();
+	const [change, setChange] = useState(true);
 	// 설정모달
 	const [modalVisibleSetting, setModalVisibleSetting] = useState(false)
 	useEffect(() => {
 		const Load = async () => {
+			userInfo.current = ''
 			userInfo.current = await UserGetter()
 			setIsLogin(
 				userInfo.current.member_idx !== "" 
 				&& userInfo.current.member_idx !== null
 				&& userInfo.current.member_idx !== undefined);
+			setChange(!change)
 		}
 		Load();
-	}, [userInfo.current, isFocused, modalVisibleSetting])
+	}, [isFocused, modalVisibleSetting])
 
 	const memberInfo = async () => {
 		await axios
@@ -63,11 +66,14 @@ export default ({ navigation }) => {
 			})
 			.then(async (res) => {
 				await UserSetter(res.data, null);
+				userInfo.current = await UserGetter();
+				console.log('memberInfo!!!!!!!!!!!!!!!!', userInfo.current.paid_count)
 			})
 			.catch((e) => {
 				console.log(e, "e2");
 			});
 	};
+
 	// 공통 컬러코드
 	const colorListMain = ["#F1F528", "#116C89"];
 
@@ -141,7 +147,7 @@ export default ({ navigation }) => {
 						// await navigation.navigate("MEMB01", {
 						// 	screen: "MEMB01",
 						// });
-						userInfo.current = {}
+						userInfo.current = ''
 						userInfo.current = await UserGetter()
 						setIsLogin(true)
 					
@@ -301,7 +307,9 @@ export default ({ navigation }) => {
 						</Pressable>
 						<Pressable 
 							onPress={async () => {
-								setModalVisibleSetting(true)}}
+								setModalVisibleSetting(true)
+							}
+							}
 							style={styles.myInfoMoreBtn}>
 							<Image source={require('../../Images/setting_white.png')}/>
 						</Pressable>
@@ -318,7 +326,11 @@ export default ({ navigation }) => {
 								<Text>{isLogin && userInfo.current.nick}</Text>
 							</Text>
 							<View style={{flexDirection: 'row'}}>
-								<Text style={styles.myInfoCardCnt}>남은카드 <Text style={{fontWeight: 'bold'}}>{isLogin ? userInfo.current.paid_count : "0"}</Text></Text>
+								<Text style={styles.myInfoCardCnt}>남은카드 
+									<Text style={{fontWeight: 'bold'}}>
+										{(isLogin && (change || !change)) ? userInfo.current.paid_count : "0"}
+									</Text>
+								</Text>
 								<Text style={styles.myInfoGoTest}>유형검사 하러가기 {">"}</Text>
 							</View>
 						</View>
@@ -357,8 +369,11 @@ export default ({ navigation }) => {
 		)
 	}
 	return ( 
-		// isLogin ? Mypage() : Login()
-		(isLogin == undefined || isLogin)  ? Mypage() : Login()
+		<View style={commonStyles.body}>
+			{isLogin && Mypage()}
+			{!isLogin && Login()}
+		</View>
+		
 	);
 };
 

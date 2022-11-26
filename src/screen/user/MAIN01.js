@@ -26,17 +26,19 @@ export default ({ navigation }) => {
 	const userInfo = useRef({});
 	// 로그인 여부 확인
 	const [isLogin, setIsLogin] = useState();
+	const [change, setChange] = useState(true);
 	useEffect(() => {
 		const Load = async () => {
+			userInfo.current = ''
 			userInfo.current = await UserGetter();
 			setIsLogin(
 				userInfo.current.member_idx !== "" &&
-					userInfo.current.member_idx !== null &&
-					userInfo.current.member_idx !== undefined
-			);
+				userInfo.current.member_idx !== null &&
+				userInfo.current.member_idx !== undefined);
+			setChange(!change)
 		};
 		Load();
-	}, [userInfo.current, isFocused]);
+	}, [isFocused]);
 
 	const memberInfo = async () => {
 		await axios
@@ -46,7 +48,6 @@ export default ({ navigation }) => {
 				},
 			})
 			.then(async (res) => {
-				console.log(res.data);
 				await UserSetter(res.data, null);
 				userInfo.current = await UserGetter();
 			})
@@ -145,7 +146,7 @@ export default ({ navigation }) => {
 				: require("../../Images/heart_yellow.png");
 		};
 		// CARD1 : Basic
-		if (state == 0) {
+		if (state == 0 || !isLogin) {
 			return (
 				<ImageBackground
 					source={
