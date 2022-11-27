@@ -18,6 +18,7 @@ import {
 	FlatList,
 	Platform,
 	ActivityIndicator,
+	Dimensions,
 } from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
@@ -29,6 +30,9 @@ import commonStyles from '../Components/Style';
 const Tab = createMaterialTopTabNavigator();
 
 export default () => {
+	const winWidth = Dimensions.get("window").width;
+	const winHeight = Dimensions.get("window").height;
+	// 카드 이력
 	const [cardHistoryData, setCardHistoryData] = useState('')
 
 	useEffect(() => {
@@ -42,6 +46,7 @@ export default () => {
 			})
 			.then(async (res) => {
 				setCardHistoryData(res.data)
+				console.log(res.data[0])
 			})
 			.catch((e) => {
 				console.log(e, "e2");
@@ -49,8 +54,17 @@ export default () => {
 	};
 	const cardHistoryRenderItem = ({item}) => (
 		<View 
-		style={{width: '30%', height: 150, backgroundColor: '#fff', marginBottom: 15, borderRadius: 10}}>
-			<Text>{item.result}</Text>
+		style={[styles.historyCard, {width: winWidth*0.3, height: winWidth*0.36, marginBottom: winWidth*0.02, padding: winWidth*0.02}]}>
+			<Pressable style={{height: winWidth*0.05, padding: winWidth*0.01}} onPress={() => {}}>
+				<Image style={{height: '100%'}} resizeMode={'contain'} source={item.favorite == 0
+				? require("../Images/heart_gray.png")
+				: require("../Images/heart_yellow.png")}/>
+			</Pressable>
+			<View style={commonStyles.flexCenter}>
+				<Text style={{ fontFamily: "UhBeecharming", fontSize: 12 }}>{item.type == 1 ? '뭐하나' : '뭐먹나'}</Text>
+				<Text style={{ fontFamily: "UhBeecharming", fontSize: 20 }}>{item.result}</Text>
+			</View>
+			<Text style={{color: '#BDBDBD', fontSize: 10}}>{item.reg_date.toString().replace(/^(\d{4})(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)$/, '$1.$2.$3 $4:$5:$6').slice(0,10)}</Text>
 		</View>
 		
 	)
@@ -67,6 +81,8 @@ export default () => {
 					columnWrapperStyle={{justifyContent: 'space-between'}}
 					ListHeaderComponent={<View style={{height: 15}}></View>}
 					ListEmptyComponent={<Text>아모것도업서</Text>}
+					showsVerticalScrollIndicator ={false}
+					showsHorizontalScrollIndicator={false}
 				/>}
 				<View style={{width: '106%', height: 15, position: 'absolute', top: 0, left: 0, opacity: 0.6}}>
 					<Image 
@@ -94,3 +110,12 @@ export default () => {
 		</Tab.Navigator>
 	);
 };
+
+const styles = StyleSheet.create({
+	historyCard: {
+		backgroundColor: '#fff', 
+		borderRadius: 10,
+		alignItems: 'center',
+		justifyContent: 'space-between',
+	}
+})

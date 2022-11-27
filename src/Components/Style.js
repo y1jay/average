@@ -10,6 +10,10 @@ export default StyleSheet.create({
         width: '100%',
         height: '100%'
     },
+    flexCenter: {
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
     // 공통 텍스트
     textWhite: {
         color: '#FFF'

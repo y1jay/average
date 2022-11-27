@@ -22,6 +22,8 @@ import commonStyles from "../../Components/Style";
 
 export default ({ navigation }) => {
 	const isFocused = useIsFocused();
+	const winWidth = Dimensions.get("window").width;
+	const winHeight = Dimensions.get("window").height;
 	// 유저 정보
 	const userInfo = useRef({});
 	// 로그인 여부 확인
@@ -55,8 +57,6 @@ export default ({ navigation }) => {
 				console.log(e, "e2");
 			});
 	};
-	const winWidth = Dimensions.get("window").width;
-	const winHeight = Dimensions.get("window").height;
 
 	// 공통 컬러코드
 	const colorListMain = ["#007A31", "#F59300"];
@@ -100,6 +100,8 @@ export default ({ navigation }) => {
 					resizeMode="contain"
 				/>
 				<View style={styles.flexCenter}>
+					{userInfo.current.free_count > 0 ? 
+					<Text style={styles.cardBtnText}>오늘의 무료</Text> :
 					<View style={styles.cardCntArea}>
 						<Image
 							style={{ height: 18 }}
@@ -107,7 +109,7 @@ export default ({ navigation }) => {
 						/>
 						<Text style={styles.cardBtnText}>x 1</Text>
 					</View>
-					{/* <Text style={styles.cardBtnText}>오늘의 무료</Text> */}
+					}
 					<Text style={styles.cardPlayText}>PLAY</Text>
 				</View>
 			</Pressable>

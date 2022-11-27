@@ -32,6 +32,7 @@ import {
 // 공통 컴포넌트 선언
 import MyNavigation from "../../Navigations/MyNavigation";
 import Setting from "../../Components/Setting";
+import Loading from "../../Components/Loading";
 import commonStyles from "../../Components/Style";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
 
@@ -370,8 +371,9 @@ export default ({ navigation }) => {
 	}
 	return ( 
 		<View style={commonStyles.body}>
+			{isLogin == undefined && <Loading/>}
 			{isLogin && Mypage()}
-			{!isLogin && Login()}
+			{isLogin == false && Login()}
 		</View>
 		
 	);
