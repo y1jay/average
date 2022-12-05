@@ -13,6 +13,10 @@ import java.util.ArrayList;
 
 // @react-native-async-storage/async-storage
 import com.reactnativecommunity.asyncstorage.AsyncStoragePackage;
+// @react-native-firebase/admob
+import io.invertase.firebase.admob.ReactNativeFirebaseAdmobPackage;
+// @react-native-firebase/app
+import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 // @react-native-seoul/kakao-login
 import com.dooboolab.kakaologins.RNKakaoLoginsPackage;
 // react-native-gesture-handler
@@ -77,6 +81,8 @@ public class PackageList {
     return new ArrayList<>(Arrays.<ReactPackage>asList(
       new MainReactPackage(mConfig),
       new AsyncStoragePackage(),
+      new ReactNativeFirebaseAdmobPackage(),
+      new ReactNativeFirebaseAppPackage(),
       new RNKakaoLoginsPackage(),
       new RNGestureHandlerPackage(),
       new PagerViewPackage(),

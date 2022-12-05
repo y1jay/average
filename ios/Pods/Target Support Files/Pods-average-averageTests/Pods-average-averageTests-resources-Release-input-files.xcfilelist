@@ -1,2 +1,3 @@
 ${PODS_ROOT}/Target Support Files/Pods-average-averageTests/Pods-average-averageTests-resources.sh
+${PODS_CONFIGURATION_BUILD_DIR}/PersonalizedAdConsent/PersonalizedAdConsent.bundle
 ${PODS_CONFIGURATION_BUILD_DIR}/React-Core/AccessibilityResources.bundle
