@@ -1,7 +1,7 @@
 /**
  * 메인 네비게이션
  */
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
 	SafeAreaView,
 	ScrollView,
@@ -26,6 +26,7 @@ import axios from "axios";
 import config from "../Libs/Config";
 import commonStyles from '../Components/Style';
 import { useIsFocused } from "@react-navigation/native";
+import { UserGetter, UserSetter } from "../User/UserInfo";
 
 
 const Tab = createMaterialTopTabNavigator();
@@ -37,14 +38,29 @@ export default () => {
 	// 카드 이력
 	const [cardHistoryData, setCardHistoryData] = useState('')
 
+	// 유저 정보
+	const userInfo = useRef({});
+	// 로그인 여부 확인
+	const [isLogin, setIsLogin] = useState();
+	const [change, setChange] = useState(true);
 	useEffect(() => {
-		getCardHistory()
-	}, [isFocused])
+		const Load = async () => {
+			userInfo.current = ''
+			userInfo.current = await UserGetter();
+			setIsLogin(
+				userInfo.current.member_idx !== "" &&
+				userInfo.current.member_idx !== null &&
+				userInfo.current.member_idx !== undefined);
+			setChange(!change)
+			getCardHistory()
+		};
+		Load();
+	}, [isFocused]);
 
 	const getCardHistory = async () => {
 		await axios
 			.get(`${config.apiUrl}/user/member/userCardResult`, {
-				params: { member_idx: 1 },
+				params: { member_idx: userInfo.current.member_idx },
 			})
 			.then(async (res) => {
 				setCardHistoryData(res.data)
@@ -54,9 +70,10 @@ export default () => {
 				console.log(e, "e2");
 			});
 	};
-	const cardHistoryRenderItem = ({item}) => (
+	const cardHistoryRenderItem = ({item, index}) => (
 		<View 
-		style={[styles.historyCard, {width: winWidth*0.3, height: winWidth*0.36, marginBottom: winWidth*0.02, padding: winWidth*0.02}]}>
+			key={index}
+			style={[styles.historyCard, {width: winWidth*0.3, height: winWidth*0.36, marginBottom: winWidth*0.02, padding: winWidth*0.02}]}>
 			<Pressable style={{height: winWidth*0.05, padding: winWidth*0.01}} onPress={() => {}}>
 				<Image style={{height: '100%'}} resizeMode={'contain'} source={item.favorite == 0
 				? require("../Images/heart_gray.png")
@@ -78,7 +95,7 @@ export default () => {
 				<FlatList
 					data={cardHistoryData}
 					renderItem={cardHistoryRenderItem}
-					keyExtractor={item => item.what_history_idx}
+					// keyExtractor={item => item.what_history_idx}
 					numColumns={3}
 					columnWrapperStyle={{justifyContent: 'space-between'}}
 					ListHeaderComponent={<View style={{height: 15}}></View>}
