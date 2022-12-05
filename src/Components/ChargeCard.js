@@ -25,6 +25,7 @@ import commonStyles from "./Style";
 
 export default ({ navigation, modalVisible, setModalVisible }) => {
 	const getAds = () => {
+		setModalVisible(false);
 		try {
 			const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
 				requestNonPersonalizedAdsOnly: true,
