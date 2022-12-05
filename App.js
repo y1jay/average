@@ -70,9 +70,6 @@ const App = ({ navigation }) => {
 		<Fragment>
 			{/* <UserContextProvider> */}
 			<SafeAreaView style={[{ flex: 1 }]}>
-				<View
-					style={{ height: statusBarHeight, backgroundColor: "red" }}
-				></View>
 				<StatusBar
 					barStyle={StatusBarStyle}
 					backgroundColor={"transparent"}

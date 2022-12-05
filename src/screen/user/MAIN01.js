@@ -283,26 +283,30 @@ export default ({ navigation }) => {
 	//   }, [])
 
 	const playCard = async (type) => {
-		const url = type == 0 ? "/user/what/whatAction" : "/user/what/whatEat";
-		await axios
-			.get(`${config.apiUrl}${url}`, {
-				params: {
-					taste: 1,
-					member_idx: userInfo.current.member_idx,
-					use_count: 1,
-				},
-			})
-			.then(async (res) => {
-				type == 0 ? setDoCardState(1) : setEatCardState(1);
-				// 성공 doResult
-				type == 0
-					? setDoResult(res.data.DATA)
-					: setEatResult(res.data.DATA);
-				memberInfo();
-			})
-			.catch((e) => {
-				console.log(e, "e2");
-			});
+		if(userInfo.current.free_count == 0 && userInfo.current.paid_count == 0) {
+			setVisibleChargeCard(true)
+		} else {
+			const url = type == 0 ? "/user/what/whatAction" : "/user/what/whatEat";
+			await axios
+				.get(`${config.apiUrl}${url}`, {
+					params: {
+						taste: 1,
+						member_idx: userInfo.current.member_idx,
+						use_count: 1,
+					},
+				})
+				.then(async (res) => {
+					type == 0 ? setDoCardState(1) : setEatCardState(1);
+					// 성공 doResult
+					type == 0
+						? setDoResult(res.data.DATA)
+						: setEatResult(res.data.DATA);
+					memberInfo();
+				})
+				.catch((e) => {
+					console.log(e, "e2");
+				});
+		}
 	};
 
 	return (
