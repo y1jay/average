@@ -363,9 +363,10 @@ export default ({ navigation }) => {
 				<View style={styles.myListArea}>
 					<MyNavigation/>
 				</View>
+				{/* 모달 */}
 				<Setting
-					modalVisibleSetting={modalVisibleSetting}
-					setModalVisibleSetting={setModalVisibleSetting}/>
+					modalVisible={modalVisibleSetting}
+					setModalVisible={setModalVisibleSetting}/>
 			</View>
 		)
 	}

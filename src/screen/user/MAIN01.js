@@ -20,10 +20,15 @@ import { AnimatedBackgroundColorView } from "react-native-animated-background-co
 import { UserGetter, UserSetter } from "../../User/UserInfo";
 import commonStyles from "../../Components/Style";
 
+// 모달
+import ChargeCard from "../../Components/ChargeCard"
+
 export default ({ navigation }) => {
 	const isFocused = useIsFocused();
 	const winWidth = Dimensions.get("window").width;
 	const winHeight = Dimensions.get("window").height;
+	// 카드 충전 모달 
+	const [visibleChargeCard, setVisibleChargeCard] = useState(false)
 	// 유저 정보
 	const userInfo = useRef({});
 	// 로그인 여부 확인
@@ -332,7 +337,7 @@ export default ({ navigation }) => {
 				<Pressable
 					onPress={() => {
 						isLogin
-							? alert("카드 충전")
+							? setVisibleChargeCard(true)
 							: navigation.navigate("MEMB01", {
 									screen: "MEMB01",
 							  });
@@ -359,6 +364,9 @@ export default ({ navigation }) => {
 					/>
 				</Pressable>
 			</View>
+			<ChargeCard
+				modalVisible={visibleChargeCard}
+				setModalVisible={setVisibleChargeCard}/>
 		</AnimatedBackgroundColorView>
 	);
 };

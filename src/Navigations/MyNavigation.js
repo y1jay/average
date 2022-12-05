@@ -25,11 +25,13 @@ import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs
 import axios from "axios";
 import config from "../Libs/Config";
 import commonStyles from '../Components/Style';
+import { useIsFocused } from "@react-navigation/native";
 
 
 const Tab = createMaterialTopTabNavigator();
 
 export default () => {
+	const isFocused = useIsFocused();
 	const winWidth = Dimensions.get("window").width;
 	const winHeight = Dimensions.get("window").height;
 	// 카드 이력
@@ -37,7 +39,7 @@ export default () => {
 
 	useEffect(() => {
 		getCardHistory()
-	}, [])
+	}, [isFocused])
 
 	const getCardHistory = async () => {
 		await axios

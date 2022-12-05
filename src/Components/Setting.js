@@ -18,23 +18,23 @@ import {
 import { UserGetter, UserSetter, UserRemover } from "../User/UserInfo";
 import commonStyles from './Style';
 
-export default ({navigation, modalVisibleSetting, setModalVisibleSetting}) => {
+export default ({navigation, modalVisible, setModalVisible}) => {
 	return (
         <Modal
             animationType="slide"
             transparent={true}
-            visible={modalVisibleSetting}
-            setVisible={setModalVisibleSetting}
+            visible={modalVisible}
+            setVisible={setModalVisible}
             >
             <View
                 style={styles.modalBody}>
-                <Pressable style={styles.settingItemArea} onPress={() => {setModalVisibleSetting(false)}}>
+                <Pressable style={styles.settingItemArea} onPress={() => {setModalVisible(false)}}>
                     <Image style={{width: 20, height: 20}} source={require('../Images/back_arrow.png')} resizeMode={'contain'}/>
                 </Pressable>
                 <Text style={styles.settingTitle}>계정</Text>
                 <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>칭호 관리</Text></Pressable>
                 <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>닉네임 변경</Text></Pressable>
-                <Pressable style={styles.settingItemArea} onPress={async () => {await UserRemover(); setModalVisibleSetting(false)}}><Text style={styles.settingItemText}>로그아웃</Text></Pressable>
+                <Pressable style={styles.settingItemArea} onPress={async () => {await UserRemover(); setModalVisible(false)}}><Text style={styles.settingItemText}>로그아웃</Text></Pressable>
 
                 <Text style={styles.settingTitle}>고객지원</Text>
                 <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>공지사항</Text></Pressable>
