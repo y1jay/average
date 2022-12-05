@@ -77,6 +77,7 @@ const styles = StyleSheet.create({
         paddingLeft: 20,
         paddingRight: 20,
         fontWeight: 'bold',
+        marginTop: 20
     },
     settingItemArea: {
         padding: 20,
@@ -103,7 +104,7 @@ const styles = StyleSheet.create({
 	},
     settingInputArea: {
         paddingLeft: 20,
-        paddingRight: 20
+        paddingRight: 20,
     },
     settingInput: {
         backgroundColor: '#f8f8f8',
