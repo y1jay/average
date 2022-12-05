@@ -32,6 +32,7 @@ import {
 // 공통 컴포넌트 선언
 import MyNavigation from "../../Navigations/MyNavigation";
 import Setting from "../../Components/Setting";
+import ProfileSetting from "../../Components/ProfileSetting";
 import Loading from "../../Components/Loading";
 import commonStyles from "../../Components/Style";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
@@ -45,6 +46,7 @@ export default ({ navigation }) => {
 	const [change, setChange] = useState(true);
 	// 설정모달
 	const [modalVisibleSetting, setModalVisibleSetting] = useState(false)
+	const [modalVisibleProfileSetting, setModalVisibleProfileSetting] = useState(false)
 	useEffect(() => {
 		const Load = async () => {
 			userInfo.current = ''
@@ -316,11 +318,13 @@ export default ({ navigation }) => {
 						</Pressable>
 					</View>
 					<View style={{flexDirection: 'row'}}>
-						<ImageBackground 
-							source={require('../../Images/profile.png')}
-							style={styles.myInfoImg}
-							resizeMode="cover">
-						</ImageBackground>
+						<Pressable onPress={() => {setModalVisibleProfileSetting(true)}}>
+							<ImageBackground 
+								source={require('../../Images/profile.png')}
+								style={styles.myInfoImg}
+								resizeMode="cover">
+							</ImageBackground>
+						</Pressable>
 						<View style={{flexGrow: 1, marginLeft: 15, justifyContent: 'flex-end', flexShrink: 1}}>
 							<Text style={styles.myInfoNick}>
 								<Text style={[styles.myInfoTitle, {color: colorListMain[0]}]}>{userInfo.current.crown} </Text>
@@ -367,6 +371,9 @@ export default ({ navigation }) => {
 				<Setting
 					modalVisible={modalVisibleSetting}
 					setModalVisible={setModalVisibleSetting}/>
+				<ProfileSetting
+					modalVisible={modalVisibleProfileSetting}
+					setModalVisible={setModalVisibleProfileSetting}/>
 			</View>
 		)
 	}
