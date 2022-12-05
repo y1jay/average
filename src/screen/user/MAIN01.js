@@ -13,6 +13,11 @@ import {
 import axios from "axios";
 import config from "../../Libs/Config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+	RewardedAd,
+	RewardedAdEventType,
+	TestIds,
+} from "@react-native-firebase/admob";
 import Swiper from "react-native-swiper";
 import { useIsFocused } from "@react-navigation/native";
 import RNShake from "react-native-shake";
@@ -21,14 +26,14 @@ import { UserGetter, UserSetter } from "../../User/UserInfo";
 import commonStyles from "../../Components/Style";
 
 // 모달
-import ChargeCard from "../../Components/ChargeCard"
+import ChargeCard from "../../Components/ChargeCard";
 
 export default ({ navigation }) => {
 	const isFocused = useIsFocused();
 	const winWidth = Dimensions.get("window").width;
 	const winHeight = Dimensions.get("window").height;
-	// 카드 충전 모달 
-	const [visibleChargeCard, setVisibleChargeCard] = useState(false)
+	// 카드 충전 모달
+	const [visibleChargeCard, setVisibleChargeCard] = useState(false);
 	// 유저 정보
 	const userInfo = useRef({});
 	// 로그인 여부 확인
@@ -36,13 +41,14 @@ export default ({ navigation }) => {
 	const [change, setChange] = useState(true);
 	useEffect(() => {
 		const Load = async () => {
-			userInfo.current = ''
+			userInfo.current = "";
 			userInfo.current = await UserGetter();
 			setIsLogin(
 				userInfo.current.member_idx !== "" &&
-				userInfo.current.member_idx !== null &&
-				userInfo.current.member_idx !== undefined);
-			setChange(!change)
+					userInfo.current.member_idx !== null &&
+					userInfo.current.member_idx !== undefined
+			);
+			setChange(!change);
 		};
 		Load();
 	}, [isFocused]);
@@ -105,16 +111,17 @@ export default ({ navigation }) => {
 					resizeMode="contain"
 				/>
 				<View style={styles.flexCenter}>
-					{userInfo.current.free_count > 0 ? 
-					<Text style={styles.cardBtnText}>오늘의 무료</Text> :
-					<View style={styles.cardCntArea}>
-						<Image
-							style={{ height: 18 }}
-							source={require("../../Images/MAIN01_card.png")}
-						/>
-						<Text style={styles.cardBtnText}>x 1</Text>
-					</View>
-					}
+					{userInfo.current.free_count > 0 ? (
+						<Text style={styles.cardBtnText}>오늘의 무료</Text>
+					) : (
+						<View style={styles.cardCntArea}>
+							<Image
+								style={{ height: 18 }}
+								source={require("../../Images/MAIN01_card.png")}
+							/>
+							<Text style={styles.cardBtnText}>x 1</Text>
+						</View>
+					)}
 					<Text style={styles.cardPlayText}>PLAY</Text>
 				</View>
 			</Pressable>
@@ -131,13 +138,18 @@ export default ({ navigation }) => {
 				)}
 				{/* {isLogin && <Text style={styles.cardAsideText}>취향 검사 하러가기</Text>} */}
 				{isLogin && (
-					<View style={{flexDirection: 'row'}}>
+					<View style={{ flexDirection: "row" }}>
 						<Text
-							style={[styles.cardAsideText, { color: colorListMain[index], marginRight: 5}]}
+							style={[
+								styles.cardAsideText,
+								{ color: colorListMain[index], marginRight: 5 },
+							]}
 						>
 							{userInfo.current.crown}
 						</Text>
-						<Text style={styles.cardAsideText}>{userInfo.current.nick}</Text>
+						<Text style={styles.cardAsideText}>
+							{userInfo.current.nick}
+						</Text>
 					</View>
 				)}
 			</Pressable>
@@ -232,7 +244,7 @@ export default ({ navigation }) => {
 					<Pressable
 						onPress={() => {
 							// alert("검색창 연결");
-							getAds();
+							// getAds();
 						}}
 						style={styles.cardResultBtn}
 					>
@@ -366,7 +378,8 @@ export default ({ navigation }) => {
 			</View>
 			<ChargeCard
 				modalVisible={visibleChargeCard}
-				setModalVisible={setVisibleChargeCard}/>
+				setModalVisible={setVisibleChargeCard}
+			/>
 		</AnimatedBackgroundColorView>
 	);
 };
@@ -443,7 +456,7 @@ const styles = StyleSheet.create({
 		fontSize: 14,
 	},
 	cardAsideTextTitle: {
-		marginRight: 10
+		marginRight: 10,
 	},
 	cardResultArea: {
 		justifyContent: "space-between",
