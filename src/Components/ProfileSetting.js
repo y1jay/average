@@ -14,6 +14,7 @@ import {
 	Pressable,
     Modal,
     ImageBackground,
+    ScrollView
 } from "react-native";
 
 import { UserGetter, UserSetter, UserRemover } from "../User/UserInfo";
@@ -29,7 +30,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
             setVisible={setModalVisible}
             >
             <View
-                style={styles.modalBody}>
+                style={styles.modalBody}> 
                 <Pressable style={styles.settingItemArea} onPress={() => {setModalVisible(false)}}>
                     <Image style={{width: 20, height: 20}} source={require('../Images/back_arrow.png')} resizeMode={'contain'}/>
                     <Text style={styles.profileSettingTitle}>프로필 설정</Text>
@@ -41,6 +42,10 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                             style={styles.myInfoImg}
                             resizeMode="cover">
                         </ImageBackground>
+                        <View 
+                            style={styles.myInfoCamera}>
+                            <Image source={require('../Images/pencil.png')}/>
+                        </View>
                     </Pressable>
                 </View>
                 <Text style={styles.settingTitle}>닉네임</Text>
@@ -48,10 +53,11 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                     <TextInput  style={styles.settingInput}/>
                 </View>
                 <Text style={styles.settingTitle}>칭호</Text>
-                <View style={styles.settingInputArea}>
+                <ScrollView style={styles.settingCrownListArea}>
                     <Text>칭호1</Text>
                     <Text>칭호2</Text>
-                </View>
+                </ScrollView>
+                <View style={styles.absoluteBtnBlank}></View>
                 <View style={styles.absoluteBtnArea}>
                     <Pressable style={styles.absoluteBtn}>
                         <Text style={styles.absoluteBtnText}>저장하기</Text>
@@ -63,9 +69,10 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 }
 const styles = StyleSheet.create({
     modalBody: {
+        height: '100%',
         backgroundColor: '#FFF',
         flexGrow: 1,
-
+        flexShrink: 0
     },
     profileSettingTitle: {
         fontWeight: 'bold',
@@ -102,6 +109,25 @@ const styles = StyleSheet.create({
 		},
 		elevation: 3,
 	},
+	myInfoCamera: {
+		width: 26, 
+		height: 26, 
+		backgroundColor: 'rgba(255,255,255,0.8)', 
+		borderRadius: 13,
+		alignItems: 'center',
+		justifyContent:'center',
+		position: 'absolute',
+		right: 0,
+		bottom: 0,
+		shadowColor: "#212121",
+		shadowOpacity: 0.2,
+		shadowRadius: 3,
+		shadowOffset: {
+			height: 2,
+			width: 0,
+		},
+		elevation: 3,
+	},
     settingInputArea: {
         paddingLeft: 20,
         paddingRight: 20,
@@ -110,6 +136,15 @@ const styles = StyleSheet.create({
         backgroundColor: '#f8f8f8',
         padding: 10,
         borderRadius: 10
+    },
+    settingCrownListArea: {
+        paddingLeft: 20,
+        paddingRight: 20,
+        flexGrow: 1,
+        flexShrink: 1
+    },
+    absoluteBtnBlank: {
+        height: 70
     },
     absoluteBtnArea: {
         width: '100%',
@@ -120,10 +155,11 @@ const styles = StyleSheet.create({
         bottom: 0,
     },
     absoluteBtn: {
+        height: 50,
         backgroundColor: '#18A8C8',
         borderRadius: 10,
-        padding: 15,
-        alignItems: 'center'
+        alignItems: 'center',
+        justifyContent: 'center'
     },
     absoluteBtnText: {
         color: '#FFF',

@@ -324,6 +324,10 @@ export default ({ navigation }) => {
 								style={styles.myInfoImg}
 								resizeMode="cover">
 							</ImageBackground>
+							<View 
+								style={styles.myInfoPencil}>
+								<Image source={require('../../Images/pencil.png')}/>
+							</View>
 						</Pressable>
 						<View style={{flexGrow: 1, marginLeft: 15, justifyContent: 'flex-end', flexShrink: 1}}>
 							<Text style={styles.myInfoNick}>
@@ -413,6 +417,25 @@ const styles = StyleSheet.create({
 		borderRadius: 33,
 		backgroundColor: '#FFF',
 		overflow: 'hidden'
+	},
+	myInfoPencil: {
+		width: 22, 
+		height: 22, 
+		backgroundColor: 'rgba(255,255,255,0.8)', 
+		borderRadius: 11,
+		alignItems: 'center',
+		justifyContent:'center',
+		position: 'absolute',
+		right: 0,
+		bottom: 0,
+		shadowColor: "#212121",
+		shadowOpacity: 0.2,
+		shadowRadius: 3,
+		shadowOffset: {
+			height: 2,
+			width: 0,
+		},
+		elevation: 3,
 	},
 	myInfoNick: {
 		color: '#FFF',
