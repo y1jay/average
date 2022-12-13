@@ -58,7 +58,7 @@ export default ({ navigation }) => {
 			setChange(!change)
 		}
 		Load();
-	}, [isFocused, modalVisibleSetting])
+	}, [isFocused, modalVisibleSetting, modalVisibleProfileSetting])
 
 	const memberInfo = async () => {
 		await axios

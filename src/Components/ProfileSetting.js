@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { Fragment, useEffect, useState, useCallback } from "react";
+import React, { Fragment, useEffect, useState, useCallback, useRef } from "react";
 import {
 	SafeAreaView,
 	StatusBar,
@@ -17,11 +17,84 @@ import {
     ScrollView
 } from "react-native";
 
+import axios from "axios";
+import config from "../Libs/Config";
 import { UserGetter, UserSetter, UserRemover } from "../User/UserInfo";
+import { useIsFocused } from "@react-navigation/native";
 import commonStyles from './Style';
 import { TextInput } from "react-native-gesture-handler";
 
 export default ({navigation, modalVisible, setModalVisible}) => {
+	const isFocused = useIsFocused();
+    const [inputNick, setInputNick] = useState('')
+
+	// 유저 정보
+	const userInfo = useRef({});
+	// 로그인 여부 확인
+	const [isLogin, setIsLogin] = useState();
+	const [change, setChange] = useState(true);
+	useEffect(() => {
+		const Load = async () => {
+			userInfo.current = "";
+			userInfo.current = await UserGetter();
+            setInputNick(userInfo.current.nick)
+			setIsLogin(
+				userInfo.current.member_idx !== "" &&
+					userInfo.current.member_idx !== null &&
+					userInfo.current.member_idx !== undefined
+			);
+			setChange(!change);
+		};
+		Load();
+	}, [modalVisible]);
+
+	const memberInfo = async () => {
+		await axios
+			.get(`${config.apiUrl}/user/member/userInfoSelect`, {
+				params: {
+					member_idx: userInfo.current.member_idx,
+				},
+			})
+			.then(async (res) => {
+				await UserSetter(res.data, null);
+				userInfo.current = await UserGetter();
+			})
+			.catch((e) => {
+				console.log(e, "e2");
+			});
+	};
+    // 저장하기 버튼 클릭
+    const memberInfoUpdate = async () => {
+		await axios
+			.post(`${config.apiUrl}/user/member/userNickUpdate`, {
+				member_idx: userInfo.current.member_idx,
+                before_nick: userInfo.current.nick,
+                after_nick: inputNick,
+			})
+			.then(async (res) => {
+                console.log(userInfo.current.member_idx)
+                console.log(userInfo.current.nick)
+                console.log(inputNick)
+                console.log(res.data)
+				if (res.data.CODE == 20) {
+                    alert(res.data.MSG)
+                    memberInfo()
+					// 10 : 사용 불가 닉네임
+                    // 11 : 닉네임 변경 횟수 초과
+                    // 12 : 중복 닉네임
+                    // 13: 닉네임 변경 실패
+                    // 14: 변경 히스토리 오류
+                    // 20 : after_nick (으)로 변경이 완료되었습니다
+				} else {
+                    alert(res.data.MSG)
+                    memberInfo()
+				}
+			})
+			.catch((e) => {
+				console.log(e, "e");
+			});
+    }
+
 	return (
         <Modal
             animationType="slide"
@@ -50,8 +123,16 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                 </View>
                 <Text style={styles.settingTitle}>닉네임</Text>
                 <View style={styles.settingInputArea}>
-                    <TextInput  style={styles.settingInput}/>
+                    <TextInput 
+                        value={inputNick} 
+                        onChangeText={setInputNick}
+                        placeholder="2글자 이상 입력해 주세요"
+                        style={styles.settingInput}
+                        maxLength={9}
+                        />
                 </View>
+                <Text>월 1회 변경 가능합니다.</Text>
+                <Text>횟수 없을 시 인풋창 비활성화, 클릭 시 변경불가 안내 모달</Text>
                 <Text style={styles.settingTitle}>칭호</Text>
                 <ScrollView style={styles.settingCrownListArea}>
                     <Text>칭호1</Text>
@@ -59,7 +140,9 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                 </ScrollView>
                 <View style={styles.absoluteBtnBlank}></View>
                 <View style={styles.absoluteBtnArea}>
-                    <Pressable style={styles.absoluteBtn}>
+                    <Pressable 
+                        onPress={() => {memberInfoUpdate()}}
+                        style={styles.absoluteBtn}>
                         <Text style={styles.absoluteBtnText}>저장하기</Text>
                     </Pressable>
                 </View>
@@ -135,7 +218,8 @@ const styles = StyleSheet.create({
     settingInput: {
         backgroundColor: '#f8f8f8',
         padding: 10,
-        borderRadius: 10
+        borderRadius: 10,
+        fontSize: 16,
     },
     settingCrownListArea: {
         paddingLeft: 20,
