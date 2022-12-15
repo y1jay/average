@@ -19,7 +19,8 @@ import {
 	RewardedAdEventType,
 	TestIds,
 } from "@react-native-firebase/admob";
-
+import config from "../Libs/Config";
+import axios from "axios";
 import { UserGetter, UserSetter, UserRemover } from "../User/UserInfo";
 import commonStyles from "./Style";
 
@@ -37,21 +38,52 @@ export default ({
 				requestNonPersonalizedAdsOnly: true,
 			});
 
-			rewarded.onAdEvent((type, error, reward) => {
+			rewarded.onAdEvent(async (type, error, reward) => {
 				if (error) {
 					console.log(error, reward);
 				}
 				if (type === RewardedAdEventType.LOADED) {
 					// 동영상 로드 완료
-					setLoadingVisible(false);
 					rewarded.show(); // 동영상 광고 띄우기
 				}
 				if (type === RewardedAdEventType.EARNED_REWARD) {
 					console.log("User earned reward of ", reward);
+					if (reward) {
+						//
+						console.log("AAAAAA");
+						let user = await UserGetter();
+						await axios
+							.post(`${config.apiUrl}/user/member/userReward`, {
+								member_idx: user.member_idx,
+								paid_count: user.paid_count,
+								reward_count: 1,
+								type: 0,
+							})
+							.then(async (res) => {
+								console.log(res.data, "로그인 성공");
+								if (res.data.CODE == 10) {
+									// ERROR ERROR ERROR ERROR ERROR
+									// 리워드 지급 오류
+								} else {
+									let userInfo = {
+										paid_count:
+											parseInt(user.paid_count) + 1,
+									};
+									await UserSetter(userInfo);
+									// logIn(token, uid, type);
+									setLoadingVisible(false);
+								}
+							})
+							.catch((e) => {
+								console.log(e, "e");
+							});
+					}
 				}
 			});
 			rewarded.load();
 		} catch (error) {
+			// 광고 로드 오류 (광고 없을때도 나옴)
+			setLoadingVisible(false);
 			console.log("catch error", error);
 		}
 	};

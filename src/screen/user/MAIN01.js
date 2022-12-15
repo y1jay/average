@@ -53,7 +53,7 @@ export default ({ navigation }) => {
 			setChange(!change);
 		};
 		Load();
-	}, [isFocused]);
+	}, [isFocused, loadingVisible]);
 
 	const memberInfo = async () => {
 		await axios
