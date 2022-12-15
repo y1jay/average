@@ -25,6 +25,7 @@ import { AnimatedBackgroundColorView } from "react-native-animated-background-co
 import { UserGetter, UserSetter } from "../../User/UserInfo";
 import commonStyles from "../../Components/Style";
 
+import Loading from "../../Components/Loading";
 // 모달
 import ChargeCard from "../../Components/ChargeCard";
 
@@ -39,6 +40,7 @@ export default ({ navigation }) => {
 	// 로그인 여부 확인
 	const [isLogin, setIsLogin] = useState();
 	const [change, setChange] = useState(true);
+	const [loadingVisible, setLoadingVisible] = useState(false);
 	useEffect(() => {
 		const Load = async () => {
 			userInfo.current = "";
@@ -283,10 +285,14 @@ export default ({ navigation }) => {
 	//   }, [])
 
 	const playCard = async (type) => {
-		if(userInfo.current.free_count == 0 && userInfo.current.paid_count == 0) {
-			setVisibleChargeCard(true)
+		if (
+			userInfo.current.free_count == 0 &&
+			userInfo.current.paid_count == 0
+		) {
+			setVisibleChargeCard(true);
 		} else {
-			const url = type == 0 ? "/user/what/whatAction" : "/user/what/whatEat";
+			const url =
+				type == 0 ? "/user/what/whatAction" : "/user/what/whatEat";
 			await axios
 				.get(`${config.apiUrl}${url}`, {
 					params: {
@@ -310,34 +316,42 @@ export default ({ navigation }) => {
 	};
 
 	return (
-		<AnimatedBackgroundColorView
-			color={bgColorList[swipeIndex]}
-			initialColor={"rgba(228, 244, 217, 1)"}
-			duration={800}
-			style={styles.body}
-		>
-			<Swiper
-				style={styles.wrapper}
-				showsButtons={false}
-				loop={false}
-				index={0}
-				onIndexChanged={(index) => {
-					setSwipeIndex(index);
-					// Play 상태에서 Result로 진행되지 않고 swipe한 경우 Basic 상태로 되돌리기
-					index == 0 && eatCardState == 1 && setEatCardState(0);
-					index == 1 && doCardState == 1 && setDoCardState(0);
-				}}
-				showsPagination={false}
-				width={winWidth * 0.85}
-				loadMinimal={true}
-				scrollViewStyle={{ overflow: "visible" }}
-				removeClippedSubviews={false}
-			>
-				{/* 뭐하나 */}
-				<View style={styles.slideItem}>{cardArea(0, doCardState)}</View>
-				{/* 뭐먹나 */}
-				<View style={styles.slideItem}>
-					{/* <ImageBackground
+		<View style={{ flexGrow: 1 }}>
+			{loadingVisible == true ? (
+				<Loading loadingVisible={loadingVisible} />
+			) : (
+				<AnimatedBackgroundColorView
+					color={bgColorList[swipeIndex]}
+					initialColor={"rgba(228, 244, 217, 1)"}
+					duration={800}
+					style={styles.body}
+				>
+					<Swiper
+						style={styles.wrapper}
+						showsButtons={false}
+						loop={false}
+						index={0}
+						onIndexChanged={(index) => {
+							setSwipeIndex(index);
+							// Play 상태에서 Result로 진행되지 않고 swipe한 경우 Basic 상태로 되돌리기
+							index == 0 &&
+								eatCardState == 1 &&
+								setEatCardState(0);
+							index == 1 && doCardState == 1 && setDoCardState(0);
+						}}
+						showsPagination={false}
+						width={winWidth * 0.85}
+						loadMinimal={true}
+						scrollViewStyle={{ overflow: "visible" }}
+						removeClippedSubviews={false}
+					>
+						{/* 뭐하나 */}
+						<View style={styles.slideItem}>
+							{cardArea(0, doCardState)}
+						</View>
+						{/* 뭐먹나 */}
+						<View style={styles.slideItem}>
+							{/* <ImageBackground
 						source={require("../../Images/MAIN01_bg2.png")}
 						resizeMode="contain"
 						style={styles.cardArea}
@@ -346,45 +360,54 @@ export default ({ navigation }) => {
 						{cardAside(1)}
 					</ImageBackground> */}
 
-					{cardArea(1, eatCardState)}
-				</View>
-			</Swiper>
-			<View style={styles.cntArea}>
-				<Pressable
-					onPress={() => {
-						isLogin
-							? setVisibleChargeCard(true)
-							: navigation.navigate("MEMB01", {
-									screen: "MEMB01",
-							  });
-					}}
-					style={styles.cntBtnArea}
-				>
-					<View
-						style={[
-							styles.cntBtnTextArea,
-							{ backgroundColor: colorListSub[swipeIndex] },
-						]}
-					>
-						<Text style={styles.cntBtnText}>
-							{isLogin ? userInfo.current.paid_count : "0"}
-						</Text>
+							{cardArea(1, eatCardState)}
+						</View>
+					</Swiper>
+					<View style={styles.cntArea}>
+						<Pressable
+							onPress={() => {
+								isLogin
+									? setVisibleChargeCard(true)
+									: navigation.navigate("MEMB01", {
+											screen: "MEMB01",
+									  });
+							}}
+							style={styles.cntBtnArea}
+						>
+							<View
+								style={[
+									styles.cntBtnTextArea,
+									{
+										backgroundColor:
+											colorListSub[swipeIndex],
+									},
+								]}
+							>
+								<Text style={styles.cntBtnText}>
+									{isLogin
+										? userInfo.current.paid_count
+										: "0"}
+								</Text>
+							</View>
+							<Image
+								style={styles.cntBtnImg}
+								source={
+									swipeIndex == 0
+										? require("../../Images/MAIN01_card1.png")
+										: require("../../Images/MAIN01_card2.png")
+								}
+							/>
+						</Pressable>
 					</View>
-					<Image
-						style={styles.cntBtnImg}
-						source={
-							swipeIndex == 0
-								? require("../../Images/MAIN01_card1.png")
-								: require("../../Images/MAIN01_card2.png")
-						}
+
+					<ChargeCard
+						modalVisible={visibleChargeCard}
+						setModalVisible={setVisibleChargeCard}
+						setLoadingVisible={setLoadingVisible}
 					/>
-				</Pressable>
-			</View>
-			<ChargeCard
-				modalVisible={visibleChargeCard}
-				setModalVisible={setVisibleChargeCard}
-			/>
-		</AnimatedBackgroundColorView>
+				</AnimatedBackgroundColorView>
+			)}
+		</View>
 	);
 };
 

@@ -23,9 +23,15 @@ import {
 import { UserGetter, UserSetter, UserRemover } from "../User/UserInfo";
 import commonStyles from "./Style";
 
-export default ({ navigation, modalVisible, setModalVisible }) => {
+export default ({
+	navigation,
+	modalVisible,
+	setModalVisible,
+	setLoadingVisible,
+}) => {
 	const getAds = () => {
 		setModalVisible(false);
+		setLoadingVisible(true);
 		try {
 			const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
 				requestNonPersonalizedAdsOnly: true,
@@ -37,6 +43,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 				}
 				if (type === RewardedAdEventType.LOADED) {
 					// 동영상 로드 완료
+					setLoadingVisible(false);
 					rewarded.show(); // 동영상 광고 띄우기
 				}
 				if (type === RewardedAdEventType.EARNED_REWARD) {
