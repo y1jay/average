@@ -32,6 +32,10 @@ export default ({navigation, modalVisible, setModalVisible}) => {
     const [editable, setEditable] = useState(false)
 	// 칭호 리스트
 	const [crownListData, setCrownListData] = useState('')
+    // 선택된 칭호
+    const [selectedCrown, setSelectedCrown] = useState('')
+    const [selectedCrownIdx, setSelectedCrownIdx] = useState('')
+    const bookMarkCrownIdx = useRef('')
 	// 유저 정보
 	const userInfo = useRef({});
 	// 로그인 여부 확인
@@ -50,6 +54,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 			setChange(!change);
             nickCount()
             crownList()
+            setSelectedCrown(userInfo.current.crown)
 		};
 		Load();
 	}, [modalVisible]);
@@ -98,7 +103,6 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 				},
 			})
 			.then(async (res) => {
-                console.log(res.data.DATA)
                 setCrownListData(res.data.DATA)
 			})
 			.catch((e) => {
@@ -107,27 +111,34 @@ export default ({navigation, modalVisible, setModalVisible}) => {
     }
     // 칭호 리스트 아이템
 	const crownListRenderItem = ({item, index}) => (
-		<View 
+		<Pressable
+            onPress={() => {setSelectedCrown(item.crown); setSelectedCrownIdx(item.crown_idx)}} 
 			key={index}
-			style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1}}>
+			style={[
+                {flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1, marginBottom: 20}, 
+                selectedCrown == item.crown && {borderColor: 'red'},
+                ]}>
                 <Text>{item.crown}</Text>
                 <Pressable
-                    onPress={() => {alert('즐겨찾기')}}>
-                    <Image source={require('../Images/Star_gray.png') }/>
+                    onPress={() => {bookMarkCrownIdx.current = item.crown_idx; crownBookMark(item.bookmark);}}>
+                    <Image source={item.bookmark == 0 ? require('../Images/Star_gray.png') : require('../Images/Star_yellow.png') }/>
                 </Pressable>
-		</View>
+		</Pressable>
 	)
     // 칭호 즐겨찾기
-    const crownBookMark = async () => {
+    const crownBookMark = async (bookmarkYn) => {
+        console.log('0000000000000000000000000', bookMarkCrownIdx.current)
+        console.log('0000000000000000000000000', bookmarkYn == 0 ? 1 : 0)
 		await axios
 			.post(`${config.apiUrl}/user/member/userCrownBookMark`, {
 				member_idx: userInfo.current.member_idx,
-                crown_idx: 0,
+                crown_idx: bookMarkCrownIdx.current,
+                bookmark: bookmarkYn == 0 ? 1 : 0,
 			})
 			.then(async (res) => {
-				if (res.data.CODE == 20) {
-				} else {
-				}
+                console.log(res.data)
+                setCrownListData('')
+                crownList()
 			})
 			.catch((e) => {
 				console.log(e, "e");
@@ -135,50 +146,59 @@ export default ({navigation, modalVisible, setModalVisible}) => {
     }
     // 저장하기 버튼 클릭
     const memberInfoUpdate = async () => {
-        // 변경한 내용이 없는 경우 버튼 비활성화
-        if (inputNick == userInfo.current.nick) {
-            alert('변경된 내용이 없습니다.')
-        } else if(inputNick == '') {
-            // 입력한 닉네임이 공백인 경우 닉네임 변경 없음
+        // 닉네임이 변경된 경우
+        if (inputNick !== userInfo.current.nick) {
+            // 공백이 있는 경우
+            var blank_pattern = /[\s]/g;
+            // 이모지가 있는 경우
+            var emoji_pattern = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g;
+            if( blank_pattern.test(inputNick) == true){
+                alert('공백이 입력되었습니다.');
+            }else if(emoji_pattern.test(inputNick) == true){
+                alert('특수문자가 입력되었습니다.');
+            } else {
+                await axios
+                    .post(`${config.apiUrl}/user/member/userNickUpdate`, {
+                        member_idx: userInfo.current.member_idx,
+                        before_nick: userInfo.current.nick,
+                        after_nick: inputNick,
+                    })
+                    .then(async (res) => {
+                        if (res.data.CODE == 20) {
+                            alert(res.data.MSG)
+                            memberInfo()
+                            // 10 : 사용 불가 닉네임
+                            // 11 : 닉네임 변경 횟수 초과
+                            // 12 : 중복 닉네임
+                            // 13: 닉네임 변경 실패
+                            // 14: 변경 히스토리 오류
+                            // 20 : after_nick (으)로 변경이 완료되었습니다
+                        } else {
+                            alert(res.data.MSG)
+                            memberInfo()
+                        }
+                    })
+                    .catch((e) => {
+                        console.log(e, "e");
+                    });
+            }
+        }
+        // 칭호가 변경된 경우
+        if (selectedCrown !== userInfo.current.crown) {
+            await axios
+                .post(`${config.apiUrl}/user/member/userCrownChange`, {
+                    member_idx: userInfo.current.member_idx,
+                    crown_idx: selectedCrownIdx,
+                })
+                .then(async (res) => {
+                    memberInfo()
+                })
+                .catch((e) => {
+                    console.log(e, "e");
+                });
         }
 
-        // 공백이 있는 경우
-        var blank_pattern = /[\s]/g;
-        // 이모지가 있는 경우
-        var emoji_pattern = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g;
-        if( blank_pattern.test(inputNick) == true){
-            alert('공백이 입력되었습니다.');
-        }else if(emoji_pattern.test(inputNick) == true){
-            alert('특수문자가 입력되었습니다.');
-        }
-		await axios
-			.post(`${config.apiUrl}/user/member/userNickUpdate`, {
-				member_idx: userInfo.current.member_idx,
-                before_nick: userInfo.current.nick,
-                after_nick: inputNick,
-			})
-			.then(async (res) => {
-                console.log(userInfo.current.member_idx)
-                console.log(userInfo.current.nick)
-                console.log(inputNick)
-                console.log(res.data)
-				if (res.data.CODE == 20) {
-                    alert(res.data.MSG)
-                    memberInfo()
-					// 10 : 사용 불가 닉네임
-                    // 11 : 닉네임 변경 횟수 초과
-                    // 12 : 중복 닉네임
-                    // 13: 닉네임 변경 실패
-                    // 14: 변경 히스토리 오류
-                    // 20 : after_nick (으)로 변경이 완료되었습니다
-				} else {
-                    alert(res.data.MSG)
-                    memberInfo()
-				}
-			})
-			.catch((e) => {
-				console.log(e, "e");
-			});
+        
         
     }
 	return (
