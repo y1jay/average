@@ -22,7 +22,7 @@ import config from "../Libs/Config";
 import { UserGetter, UserSetter, UserRemover } from "../User/UserInfo";
 import { useIsFocused } from "@react-navigation/native";
 import commonStyles from './Style';
-import { TextInput } from "react-native-gesture-handler";
+import { FlatList, TextInput } from "react-native-gesture-handler";
 
 export default ({navigation, modalVisible, setModalVisible}) => {
 	const isFocused = useIsFocused();
@@ -30,7 +30,8 @@ export default ({navigation, modalVisible, setModalVisible}) => {
     const [inputNick, setInputNick] = useState('')
     // 닉네임 수정 가능 여부
     const [editable, setEditable] = useState(false)
-
+	// 칭호 리스트
+	const [crownListData, setCrownListData] = useState('')
 	// 유저 정보
 	const userInfo = useRef({});
 	// 로그인 여부 확인
@@ -48,6 +49,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 			);
 			setChange(!change);
             nickCount()
+            crownList()
 		};
 		Load();
 	}, [modalVisible]);
@@ -68,7 +70,6 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 			});
 	};
     // 닉네임 변경 횟수 체크
-    // setEditable(false)
 	const nickCount = async () => {
 		await axios
 			.get(`${config.apiUrl}/user/member/userNickCount`, {
@@ -87,27 +88,69 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 				console.log(e, "e2");
 			});
 	};
-
+    // 칭호 리스트
+    const crownList = async () => {
+		await axios
+			.get(`${config.apiUrl}/user/member/userCrownList`, {
+				params: {
+                    page: 1,
+					member_idx: userInfo.current.member_idx,
+				},
+			})
+			.then(async (res) => {
+                console.log(res.data.DATA)
+                setCrownListData(res.data.DATA)
+			})
+			.catch((e) => {
+				console.log(e, "e2");
+			});
+    }
+    // 칭호 리스트 아이템
+	const crownListRenderItem = ({item, index}) => (
+		<View 
+			key={index}
+			style={{flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', borderWidth: 1}}>
+                <Text>{item.crown}</Text>
+                <Pressable
+                    onPress={() => {alert('즐겨찾기')}}>
+                    <Image source={require('../Images/Star_gray.png') }/>
+                </Pressable>
+		</View>
+	)
+    // 칭호 즐겨찾기
+    const crownBookMark = async () => {
+		await axios
+			.post(`${config.apiUrl}/user/member/userCrownBookMark`, {
+				member_idx: userInfo.current.member_idx,
+                crown_idx: 0,
+			})
+			.then(async (res) => {
+				if (res.data.CODE == 20) {
+				} else {
+				}
+			})
+			.catch((e) => {
+				console.log(e, "e");
+			});
+    }
     // 저장하기 버튼 클릭
     const memberInfoUpdate = async () => {
         // 변경한 내용이 없는 경우 버튼 비활성화
-        if (inputNick == userInfo.current.nick) {return false}
-        if(inputNick == '') {
+        if (inputNick == userInfo.current.nick) {
+            alert('변경된 내용이 없습니다.')
+        } else if(inputNick == '') {
             // 입력한 닉네임이 공백인 경우 닉네임 변경 없음
         }
 
-        //문자열에 공백이 있는 경우
+        // 공백이 있는 경우
         var blank_pattern = /[\s]/g;
-        //특수문자가 있는 경우
+        // 이모지가 있는 경우
         var emoji_pattern = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g;
-
-
         if( blank_pattern.test(inputNick) == true){
             alert('공백이 입력되었습니다.');
         }else if(emoji_pattern.test(inputNick) == true){
             alert('특수문자가 입력되었습니다.');
         }
-
 		await axios
 			.post(`${config.apiUrl}/user/member/userNickUpdate`, {
 				member_idx: userInfo.current.member_idx,
@@ -136,8 +179,8 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 			.catch((e) => {
 				console.log(e, "e");
 			});
+        
     }
-
 	return (
         <Modal
             animationType="slide"
@@ -179,10 +222,17 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                         />
                 </Pressable>
                 <Text style={styles.settingTitle}>칭호</Text>
-                <ScrollView style={styles.settingCrownListArea}>
-                    <Text>칭호1</Text>
-                    <Text>칭호2</Text>
-                </ScrollView>
+				<FlatList
+                    style={{padding: 20, paddingTop: 10, paddingBottom: 10}}
+					data={crownListData}
+					renderItem={crownListRenderItem}
+					// numColumns={3}
+					// columnWrapperStyle={{justifyContent: 'space-between'}}
+					// ListHeaderComponent={<View style={{height: 15}}></View>}
+					ListEmptyComponent={<Text>아모것도업서</Text>}
+					showsVerticalScrollIndicator ={false}
+					showsHorizontalScrollIndicator={false}
+				/>
                 <View style={styles.absoluteBtnBlank}></View>
                 <View style={styles.absoluteBtnArea}>
                     <Pressable 

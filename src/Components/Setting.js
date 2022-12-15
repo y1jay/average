@@ -31,10 +31,9 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                 <Pressable style={styles.settingItemArea} onPress={() => {setModalVisible(false)}}>
                     <Image style={{width: 20, height: 20}} source={require('../Images/back_arrow.png')} resizeMode={'contain'}/>
                 </Pressable>
-                <Text style={styles.settingTitle}>계정</Text>
+                {/* <Text style={styles.settingTitle}>계정</Text>
                 <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>칭호 관리</Text></Pressable>
-                <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>닉네임 변경</Text></Pressable>
-                <Pressable style={styles.settingItemArea} onPress={async () => {await UserRemover(); setModalVisible(false)}}><Text style={styles.settingItemText}>로그아웃</Text></Pressable>
+                <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>닉네임 변경</Text></Pressable> */}
 
                 <Text style={styles.settingTitle}>고객지원</Text>
                 <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>공지사항</Text></Pressable>
@@ -43,6 +42,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                 <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>개인정보 취급방침</Text></Pressable>
                 
                 <Text style={styles.settingTitle}></Text>
+                <Pressable style={styles.settingItemArea} onPress={async () => {await UserRemover(); setModalVisible(false)}}><Text style={styles.settingItemText}>로그아웃</Text></Pressable>
                 <Pressable style={styles.settingItemArea}><Text style={styles.settingItemText}>회원탈퇴</Text></Pressable>
             </View>
         </Modal>
