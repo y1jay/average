@@ -26,7 +26,10 @@ import { TextInput } from "react-native-gesture-handler";
 
 export default ({navigation, modalVisible, setModalVisible}) => {
 	const isFocused = useIsFocused();
+    // 입력된 닉네임
     const [inputNick, setInputNick] = useState('')
+    // 닉네임 수정 가능 여부
+    const [editable, setEditable] = useState(false)
 
 	// 유저 정보
 	const userInfo = useRef({});
@@ -44,6 +47,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 					userInfo.current.member_idx !== undefined
 			);
 			setChange(!change);
+            nickCount()
 		};
 		Load();
 	}, [modalVisible]);
@@ -63,8 +67,47 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 				console.log(e, "e2");
 			});
 	};
+    // 닉네임 변경 횟수 체크
+    // setEditable(false)
+	const nickCount = async () => {
+		await axios
+			.get(`${config.apiUrl}/user/member/userNickCount`, {
+				params: {
+					member_idx: userInfo.current.member_idx,
+				},
+			})
+			.then(async (res) => {
+                if(res.data.cnt == 0) {
+                    setEditable(true)
+                } else {
+                    setEditable(false)
+                }
+			})
+			.catch((e) => {
+				console.log(e, "e2");
+			});
+	};
+
     // 저장하기 버튼 클릭
     const memberInfoUpdate = async () => {
+        // 변경한 내용이 없는 경우 버튼 비활성화
+        if (inputNick == userInfo.current.nick) {return false}
+        if(inputNick == '') {
+            // 입력한 닉네임이 공백인 경우 닉네임 변경 없음
+        }
+
+        //문자열에 공백이 있는 경우
+        var blank_pattern = /[\s]/g;
+        //특수문자가 있는 경우
+        var emoji_pattern = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g;
+
+
+        if( blank_pattern.test(inputNick) == true){
+            alert('공백이 입력되었습니다.');
+        }else if(emoji_pattern.test(inputNick) == true){
+            alert('특수문자가 입력되었습니다.');
+        }
+
 		await axios
 			.post(`${config.apiUrl}/user/member/userNickUpdate`, {
 				member_idx: userInfo.current.member_idx,
@@ -122,17 +165,19 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                     </Pressable>
                 </View>
                 <Text style={styles.settingTitle}>닉네임</Text>
-                <View style={styles.settingInputArea}>
+                <Pressable 
+                    onPress={() => {!editable && alert('닉네임 변경횟수를 초과하셨습니다.')}}
+                    style={styles.settingInputArea}>
                     <TextInput 
                         value={inputNick} 
                         onChangeText={setInputNick}
-                        placeholder="2글자 이상 입력해 주세요"
+                        onFocus={() => {setInputNick('')}}
+                        placeholder="닉네임 변경은 월 1회 가능합니다."
                         style={styles.settingInput}
                         maxLength={9}
+                        editable={editable}
                         />
-                </View>
-                <Text>월 1회 변경 가능합니다.</Text>
-                <Text>횟수 없을 시 인풋창 비활성화, 클릭 시 변경불가 안내 모달</Text>
+                </Pressable>
                 <Text style={styles.settingTitle}>칭호</Text>
                 <ScrollView style={styles.settingCrownListArea}>
                     <Text>칭호1</Text>
