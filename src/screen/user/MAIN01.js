@@ -28,6 +28,7 @@ import commonStyles from "../../Components/Style";
 import Loading from "../../Components/Loading";
 // 모달
 import ChargeCard from "../../Components/ChargeCard";
+import CommonModal from "../../Components/CommonModal";
 
 export default ({ navigation }) => {
 	const isFocused = useIsFocused();
@@ -35,6 +36,8 @@ export default ({ navigation }) => {
 	const winHeight = Dimensions.get("window").height;
 	// 카드 충전 모달
 	const [visibleChargeCard, setVisibleChargeCard] = useState(false);
+	// 모달
+	const [visibleCommonModal, setVisibleCommonModal] = useState(false);
 	// 유저 정보
 	const userInfo = useRef({});
 	// 로그인 여부 확인
@@ -399,11 +402,18 @@ export default ({ navigation }) => {
 							/>
 						</Pressable>
 					</View>
+					<Pressable onPress={() => {setVisibleCommonModal(true)}}>
+						<Text>테스트</Text>
+					</Pressable>
 
 					<ChargeCard
 						modalVisible={visibleChargeCard}
 						setModalVisible={setVisibleChargeCard}
 						setLoadingVisible={setLoadingVisible}
+					/>
+					<CommonModal
+						modalVisible={visibleCommonModal}
+						setModalVisible={setVisibleCommonModal}
 					/>
 				</AnimatedBackgroundColorView>
 			)}

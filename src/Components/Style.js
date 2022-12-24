@@ -129,4 +129,23 @@ export default StyleSheet.create({
 		borderTopLeftRadius: 15,
 		borderTopRightRadius: 15
 	},
+    // 공통 모달
+    commonModalTitle: {
+        fontSize: 16,
+        fontWeight: 'bold'
+    },
+    commonModalText: {
+        fontSize: 12,
+        textAlign: 'center',
+        paddingBottom: 20
+    },
+    commonModalBtn: {
+        flexGrow: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: 15
+    },
+    commonModalBtnText: {
+        fontWeight: 'bold'
+    }
 })
