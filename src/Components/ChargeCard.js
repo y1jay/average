@@ -95,13 +95,13 @@ export default ({
 			setVisible={setModalVisible}
 		>
 			<Pressable
-				style={styles.modalBody}
+				style={commonStyles.modalBody}
 				onPress={() => {
 					setModalVisible(false);
 				}}
 			>
-				<Pressable style={styles.modalArea}>
-					<Text style={styles.modalTitle}>카드 구매</Text>
+				<Pressable style={commonStyles.modalArea}>
+					<Text style={commonStyles.modalTitle}>카드 구매</Text>
 					<View style={styles.chargeCardBtnArea}>
 						<Pressable
 							onPress={() => {
@@ -144,41 +144,16 @@ export default ({
 							</Text>
 						</Pressable>
 					</View>
-					<Pressable
-						onPress={() => {
-							setModalVisible(false);
-						}}
-						style={styles.modalCloseBtn}
-					>
-						<Image source={require("../Images/black_x.png")} />
-					</Pressable>
 				</Pressable>
 			</Pressable>
 		</Modal>
 	);
 };
 const styles = StyleSheet.create({
-	modalBody: {
-		backgroundColor: "rgba(0, 0, 0, 0.5)",
-		flexGrow: 1,
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	modalArea: {
-		width: "90%",
-		backgroundColor: "#F8F8F8",
-		borderRadius: 15,
-		padding: "5%",
-	},
-	modalTitle: {
-		fontSize: 16,
-		textAlign: "center",
-		fontWeight: "bold",
-		marginBottom: "5%",
-	},
 	chargeCardBtnArea: {
 		flexDirection: "row",
 		justifyContent: "space-between",
+		padding: 15
 	},
 	chargeCardBtn: {
 		width: "48%",
@@ -206,24 +181,5 @@ const styles = StyleSheet.create({
 	chargeCardText: {
 		fontSize: 18,
 		fontFamily: "UhBeecharming",
-	},
-	modalCloseBtn: {
-		width: 40,
-		height: 40,
-		backgroundColor: "#fff",
-		borderRadius: 15,
-		position: "absolute",
-		top: -10,
-		right: -10,
-		shadowColor: "#212121",
-		shadowOpacity: 0.2,
-		shadowRadius: 3,
-		shadowOffset: {
-			height: 2,
-			width: 0,
-		},
-		elevation: 3,
-		alignItems: "center",
-		justifyContent: "center",
 	},
 });

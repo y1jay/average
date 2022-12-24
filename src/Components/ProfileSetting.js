@@ -223,7 +223,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                         </ImageBackground>
                         <View 
                             style={styles.myInfoCamera}>
-                            <Image source={require('../Images/pencil.png')}/>
+                            <Image style={styles.myInfoCameraImg} resizeMode={'contain'} source={require('../Images/camera.png')}/>
                         </View>
                     </Pressable>
                 </View>
@@ -310,7 +310,7 @@ const styles = StyleSheet.create({
 	myInfoCamera: {
 		width: 26, 
 		height: 26, 
-		backgroundColor: 'rgba(255,255,255,0.8)', 
+		backgroundColor: 'rgba(255,255,255,0.9)', 
 		borderRadius: 13,
 		alignItems: 'center',
 		justifyContent:'center',
@@ -326,6 +326,9 @@ const styles = StyleSheet.create({
 		},
 		elevation: 3,
 	},
+    myInfoCameraImg: {
+        width: '60%'
+    },
     settingInputArea: {
         paddingLeft: 20,
         paddingRight: 20,

@@ -103,5 +103,30 @@ export default StyleSheet.create({
         marginBottom: 15,
         alignItems: 'center',
         justifyContent: 'center',
-    }
+    },
+
+    // 모달
+	modalBody: {
+		backgroundColor: "rgba(0, 0, 0, 0.5)",
+		flexGrow: 1,
+		alignItems: "center",
+		justifyContent: "center",
+	},
+	modalArea: {
+		width: "90%",
+		backgroundColor: "#F8F8F8",
+		borderRadius: 15,
+		// padding: "5%",
+	},
+	modalTitle: {
+		fontSize: 16,
+		textAlign: "center",
+		fontWeight: "bold",
+		borderBottomWidth: 1,
+		borderColor: '#E8E5E5',
+		padding: 12,
+		backgroundColor: '#FFF',
+		borderTopLeftRadius: 15,
+		borderTopRightRadius: 15
+	},
 })

@@ -70,6 +70,7 @@ export default () => {
 				console.log(e, "e2");
 			});
 	};
+	// 카드 이력 아이템
 	const cardHistoryRenderItem = ({item, index}) => (
 		<View 
 			key={index}
