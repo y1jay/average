@@ -37,6 +37,10 @@ export default ({ navigation }) => {
 	// 카드 충전 모달
 	const [visibleChargeCard, setVisibleChargeCard] = useState(false);
 	// 모달
+	const [modalTitle, setModalTitle] = useState('');
+	const [modalText, setModalText] = useState('');
+	const [modalType, setModalType] = useState(0);
+	const modalAction = useRef();
 	const [visibleCommonModal, setVisibleCommonModal] = useState(false);
 	// 유저 정보
 	const userInfo = useRef({});
@@ -402,7 +406,14 @@ export default ({ navigation }) => {
 							/>
 						</Pressable>
 					</View>
-					<Pressable onPress={() => {setVisibleCommonModal(true)}}>
+					<Pressable 
+						onPress={() => {
+							setModalTitle('테스트 제목')
+							setModalText('테스트 내용')
+							setModalType(1)
+							modalAction.current = () => navigation.navigate("MEMB01", { screen: "MEMB01" })
+							setVisibleCommonModal(true)
+							}}>
 						<Text>테스트</Text>
 					</Pressable>
 
@@ -414,6 +425,10 @@ export default ({ navigation }) => {
 					<CommonModal
 						modalVisible={visibleCommonModal}
 						setModalVisible={setVisibleCommonModal}
+						modalTitle={modalTitle}
+						modalText={modalText}
+						modalType={modalType}
+						modalAction={modalAction.current}
 					/>
 				</AnimatedBackgroundColorView>
 			)}

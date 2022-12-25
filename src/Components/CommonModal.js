@@ -28,13 +28,20 @@ export default ({
 	navigation,
 	modalVisible,
 	setModalVisible,
-	// 타입
-	// 제목
-	// 내용
+	modalTitle,
+	modalText,
+	modalType,
+	modalAction,
 	}) => {
 		const type = [
-			// 
-			{titleIcon: 'require("../Images/safe.png")', color: '#0FC558'},
+			// 안내
+			{titleIcon: '', color: '#0FC558'},
+			// 완료
+			{titleIcon: require("../Images/safe.png"), color: '#0FC558'},
+			// 주의
+			{titleIcon: require("../Images/care.png"), color: '#F59300'},
+			// 경고
+			{titleIcon: require("../Images/warn.png"), color: '#E50000'},
 		]
 	return (
 		<Modal
@@ -51,18 +58,18 @@ export default ({
 			>
 				<View style={commonStyles.modalArea}>
 					<View style={[commonStyles.flexCenter, {flexDirection: 'row', padding: 35}]}>
-						<Image source={require("../Images/safe.png")} style={{marginRight: 10}}/>
-						<Text style={commonStyles.commonModalTitle}>모달 제목</Text>
+						{type[modalType].titleIcon !== '' && <Image source={type[modalType].titleIcon} style={{marginRight: 10}}/>}
+						<Text style={commonStyles.commonModalTitle}>{modalTitle}</Text>
 					</View>
-					<Text style={commonStyles.commonModalText}>모달 내용</Text>
-					<View style={{flexDirection: 'row'}}>
-						<Pressable style={commonStyles.commonModalBtn}>
+					{modalText !== '' && <Text style={commonStyles.commonModalText}>{modalText}</Text>}
+					{modalAction !== undefined && <View style={{flexDirection: 'row'}}>
+						<Pressable onPress={() => setModalVisible(false)} style={commonStyles.commonModalBtn}>
 							<Text style={commonStyles.commonModalBtnText}>닫기</Text>
 						</Pressable>
-						<Pressable style={commonStyles.commonModalBtn}>
-							<Text style={commonStyles.commonModalBtnText}>확인</Text>
+						<Pressable onPress={modalAction} style={commonStyles.commonModalBtn}>
+							<Text style={[commonStyles.commonModalBtnText, {color: type[modalType].color}]}>확인</Text>
 						</Pressable>
-					</View>
+					</View>}
 				</View>
 			</Pressable>
 		</Modal>
