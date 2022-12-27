@@ -42,6 +42,8 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 	const [crownListData, setCrownListData] = useState("");
 	// 선택된 칭호
 	const [selectedCrown, setSelectedCrown] = useState("");
+
+	const [imgFile, setimgFile] = useState([]);
 	const [selectedCrownIdx, setSelectedCrownIdx] = useState("");
 	const bookMarkCrownIdx = useRef("");
 	// 유저 정보
@@ -49,6 +51,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 	// 로그인 여부 확인
 	const [isLogin, setIsLogin] = useState();
 	const [change, setChange] = useState(true);
+	const [imageChange, setImageChange] = useState(false);
 	useEffect(() => {
 		const Load = async () => {
 			userInfo.current = "";
@@ -89,23 +92,27 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 			storageOptions: {
 				skipBackup: true,
 				path: "images",
+				includeBase64: false,
+				maxHeight: 3000,
+				maxWidth: 2000,
 			},
 		};
-		launchImageLibrary(options, (response) => {
+		launchImageLibrary(options, (res) => {
 			// Use launchImageLibrary to open image gallery
-			console.log("Response = ", response);
+			console.log("Response = ", res);
 
-			if (response.didCancel) {
+			if (res.didCancel) {
 				console.log("User cancelled image picker");
-			} else if (response.error) {
-				console.log("ImagePicker Error: ", response.error);
-			} else if (response.customButton) {
-				console.log(
-					"User tapped custom button: ",
-					response.customButton
-				);
+			} else if (res.error) {
+				console.log("ImagePicker Error: ", res.error);
+			} else if (res.customButton) {
+				console.log("User tapped custom button: ", res.customButton);
 			} else {
-				const source = { uri: response.uri };
+				let firstFile = res.assets[0];
+				console.log(firstFile, "22");
+				setimgFile(firstFile);
+				setImageChange(true);
+				const source = { uri: firstFile.uri };
 
 				// You can also display the image using data:
 				// const source = { uri: 'data:image/jpeg;base64,' + response.data };
@@ -204,6 +211,41 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 				console.log(e, "e");
 			});
 	};
+	const memberProfileUpdate = async () => {
+		let result = null;
+
+		try {
+			const formData = new FormData();
+			formData.append("member_idx", userInfo.current.member_idx);
+			formData.append("type", "profile");
+			formData.append("uploading", {
+				type: imgFile.type,
+				name: imgFile.fileName,
+				uri:
+					// Platform.OS === 'ios' ? imgFile.uri.replace('file://', '') :
+					imgFile.uri,
+			});
+			const options = {
+				method: "POST",
+				headers: {
+					"content-type": "multipart/form-data",
+				},
+				body: formData,
+			};
+			result = await fetch(
+				`${config.apiUrl}/user/member/userProfile`,
+				options
+			);
+			// result = await axios.post(
+			// 	`${config.apiUrl}/user/member/userProfile`,
+			// 	// `http://192.168.0.11:15000/user/member/info/memberFirstNickUpdate`,
+			// 	options
+			// );
+			console.log(result.data, "@@@@@@@");
+		} catch (e) {
+			console.log("error==>", e);
+		}
+	};
 	// 저장하기 버튼 클릭
 	const memberInfoUpdate = async () => {
 		// 닉네임이 변경된 경우
@@ -272,11 +314,20 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 						setModalVisible(false);
 					}}
 				>
-					<Image
-						style={{ width: 20, height: 20 }}
-						source={require("../Images/back_arrow.png")}
-						resizeMode={"contain"}
-					/>
+					{imageChange !== false ? (
+						<Image
+							style={{ width: 20, height: 20 }}
+							source={require("../Images/back_arrow.png")}
+							resizeMode={"contain"}
+						/>
+					) : (
+						<Image
+							style={{ width: 20, height: 20 }}
+							source={{ uri: imgFile.uri }}
+							resizeMode={"contain"}
+						/>
+					)}
+
 					<Text style={styles.profileSettingTitle}>프로필 설정</Text>
 				</Pressable>
 				<View style={styles.myInfoImgArea}>
@@ -334,7 +385,8 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 				<View style={styles.absoluteBtnArea}>
 					<Pressable
 						onPress={() => {
-							memberInfoUpdate();
+							// memberInfoUpdate();
+							memberProfileUpdate();
 						}}
 						style={styles.absoluteBtn}
 					>
