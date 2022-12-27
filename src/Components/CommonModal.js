@@ -33,6 +33,7 @@ export default ({
 	modalType,
 	modalAction,
 	}) => {
+		// const modalType = 3
 		const type = [
 			// 안내
 			{titleIcon: '', color: '#0FC558'},

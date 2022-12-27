@@ -23,6 +23,8 @@ import { UserGetter, UserSetter, UserRemover } from "../User/UserInfo";
 import { useIsFocused } from "@react-navigation/native";
 import commonStyles from './Style';
 import { FlatList, TextInput } from "react-native-gesture-handler";
+// import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import * as ImagePicker from "react-native-image-picker"
 
 export default ({navigation, modalVisible, setModalVisible}) => {
 	const isFocused = useIsFocused();
@@ -74,6 +76,34 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 				console.log(e, "e2");
 			});
 	};
+    // 프로필 이미지 변경
+    const openPicker =()=>{
+        const options = {
+            title: 'Load Photo',
+            storageOptions: {
+              skipBackup: true,
+              path: 'images',
+            },
+          };
+          launchImageLibrary(options, (response) => { // Use launchImageLibrary to open image gallery
+            console.log('Response = ', response);
+        
+            if (response.didCancel) {
+            console.log('User cancelled image picker');
+            } else if (response.error) {
+            console.log('ImagePicker Error: ', response.error);
+            } else if (response.customButton) {
+            console.log('User tapped custom button: ', response.customButton);
+            } else {
+            const source = { uri: response.uri };
+        
+            // You can also display the image using data:
+            // const source = { uri: 'data:image/jpeg;base64,' + response.data };
+        
+            console.log(source)
+            }
+        });
+    }
     // 닉네임 변경 횟수 체크
 	const nickCount = async () => {
 		await axios
@@ -215,7 +245,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                     <Text style={styles.profileSettingTitle}>프로필 설정</Text>
                 </Pressable>
                 <View style={styles.myInfoImgArea}>
-                    <Pressable onPress={() => {alert('프로필 이미지 설정')}}>
+                    <Pressable onPress={() => {openPicker()}}>
                         <ImageBackground 
                             source={require('../Images/profile.png')}
                             style={styles.myInfoImg}

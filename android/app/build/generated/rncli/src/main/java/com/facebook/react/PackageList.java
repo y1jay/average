@@ -21,6 +21,8 @@ import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 import com.dooboolab.kakaologins.RNKakaoLoginsPackage;
 // react-native-gesture-handler
 import com.swmansion.gesturehandler.RNGestureHandlerPackage;
+// react-native-image-picker
+import com.imagepicker.ImagePickerPackage;
 // react-native-pager-view
 import com.reactnativepagerview.PagerViewPackage;
 // react-native-safe-area-context
@@ -85,6 +87,7 @@ public class PackageList {
       new ReactNativeFirebaseAppPackage(),
       new RNKakaoLoginsPackage(),
       new RNGestureHandlerPackage(),
+      new ImagePickerPackage(),
       new PagerViewPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
