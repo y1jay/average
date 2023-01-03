@@ -218,6 +218,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 			const formData = new FormData();
 			formData.append("member_idx", userInfo.current.member_idx);
 			formData.append("type", "profile");
+			formData.append("fileLength", 1);
 			formData.append("uploading", {
 				type: imgFile.type,
 				name: imgFile.fileName,
@@ -232,16 +233,17 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 				},
 				body: formData,
 			};
-			result = await fetch(
+			const response = await fetch(
 				`${config.apiUrl}/user/member/userProfile`,
 				options
 			);
+			result = await response.json();
 			// result = await axios.post(
 			// 	`${config.apiUrl}/user/member/userProfile`,
 			// 	// `http://192.168.0.11:15000/user/member/info/memberFirstNickUpdate`,
 			// 	options
 			// );
-			console.log(result.data, "@@@@@@@");
+			console.log(result, "@@@@@@@");
 		} catch (e) {
 			console.log("error==>", e);
 		}
