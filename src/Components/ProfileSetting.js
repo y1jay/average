@@ -30,7 +30,9 @@ import { useIsFocused } from "@react-navigation/native";
 import commonStyles from "./Style";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
-// import * as ImagePicker from "react-native-image-picker"
+import KeyboardSpacer from 'react-native-keyboard-spacer'
+
+import CommonModal from "../Components/CommonModal";
 
 export default ({ navigation, modalVisible, setModalVisible }) => {
 	const isFocused = useIsFocused();
@@ -52,6 +54,13 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 	const [isLogin, setIsLogin] = useState();
 	const [change, setChange] = useState(true);
 	const [imageChange, setImageChange] = useState(false);
+	// 모달
+	const [modalTitle, setModalTitle] = useState('');
+	const [modalText, setModalText] = useState('');
+	const [modalType, setModalType] = useState(0);
+	const modalAction = useRef();
+	const [visibleCommonModal, setVisibleCommonModal] = useState(false);
+
 	useEffect(() => {
 		const Load = async () => {
 			userInfo.current = "";
@@ -169,13 +178,18 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 					flexDirection: "row",
 					alignItems: "center",
 					justifyContent: "space-between",
-					borderWidth: 1,
-					marginBottom: 20,
+					// borderWidth: 1,
+                    // borderColor: '#dadada',
+					// backgroundColor: '#F8F8F8',
+					marginBottom: 5,
+                    borderRadius: 5,
+                    padding: 15
 				},
-				selectedCrown == item.crown && { borderColor: "red" },
+				selectedCrown == item.crown && { backgroundColor: '#F8F8F8' },
 			]}
 		>
-			<Text>{item.crown}</Text>
+			<Image source={selectedCrown == item.crown ? require('../Images/crown_check.png') : require('../Images/crown_check_gray.png')} />
+			<Text style={[{flexGrow: 1, marginLeft: 15}, selectedCrown == item.crown && {color: '#116C89', fontWeight: 'bold'}]}>{item.crown}</Text>
 			<Pressable
 				onPress={() => {
 					bookMarkCrownIdx.current = item.crown_idx;
@@ -183,6 +197,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 				}}
 			>
 				<Image
+                style={{width: 20, height: 20}}
 					source={
 						item.bookmark == 0
 							? require("../Images/Star_gray.png")
@@ -194,8 +209,6 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 	);
 	// 칭호 즐겨찾기
 	const crownBookMark = async (bookmarkYn) => {
-		console.log("0000000000000000000000000", bookMarkCrownIdx.current);
-		console.log("0000000000000000000000000", bookmarkYn == 0 ? 1 : 0);
 		await axios
 			.post(`${config.apiUrl}/user/member/userCrownBookMark`, {
 				member_idx: userInfo.current.member_idx,
@@ -211,6 +224,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 				console.log(e, "e");
 			});
 	};
+	// 프로필 이미지 변경
 	const memberProfileUpdate = async () => {
 		let result = null;
 
@@ -301,6 +315,13 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 					console.log(e, "e");
 				});
 		}
+		
+		if (inputNick !== userInfo.current.nick || selectedCrown !== userInfo.current.crown) {
+			setModalTitle('프로필 설정 완료');
+			setModalType(1);
+			modalAction.current = () => {setModalVisible(false)}
+			setVisibleCommonModal(true)
+		}
 	};
 	return (
 		<Modal
@@ -316,20 +337,11 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 						setModalVisible(false);
 					}}
 				>
-					{imageChange !== false ? (
-						<Image
+					<Image
 							style={{ width: 20, height: 20 }}
 							source={require("../Images/back_arrow.png")}
 							resizeMode={"contain"}
 						/>
-					) : (
-						<Image
-							style={{ width: 20, height: 20 }}
-							source={{ uri: imgFile.uri }}
-							resizeMode={"contain"}
-						/>
-					)}
-
 					<Text style={styles.profileSettingTitle}>프로필 설정</Text>
 				</Pressable>
 				<View style={styles.myInfoImgArea}>
@@ -339,7 +351,10 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 						}}
 					>
 						<ImageBackground
-							source={require("../Images/profile.png")}
+							source={
+								imageChange == false ?
+								require("../Images/profile.png") : { uri: imgFile.uri }
+							}
 							style={styles.myInfoImg}
 							resizeMode="cover"
 						></ImageBackground>
@@ -372,6 +387,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 					/>
 				</Pressable>
 				<Text style={styles.settingTitle}>칭호</Text>
+				<Text style={styles.settingText}>별표를 눌러 즐겨찾기 해보세요.</Text>
 				<FlatList
 					style={{ padding: 20, paddingTop: 10, paddingBottom: 10 }}
 					data={crownListData}
@@ -387,15 +403,25 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 				<View style={styles.absoluteBtnArea}>
 					<Pressable
 						onPress={() => {
-							// memberInfoUpdate();
-							memberProfileUpdate();
+							imageChange !== false && memberProfileUpdate();
+							memberInfoUpdate();
 						}}
 						style={styles.absoluteBtn}
 					>
 						<Text style={styles.absoluteBtnText}>저장하기</Text>
 					</Pressable>
 				</View>
+				{/* <KeyboardSpacer /> */}
 			</View>
+			
+			<CommonModal
+				modalVisible={visibleCommonModal}
+				setModalVisible={setVisibleCommonModal}
+				modalTitle={modalTitle}
+				modalText={modalText}
+				modalType={modalType}
+				modalAction={modalAction.current}
+			/>
 		</Modal>
 	);
 };
@@ -409,7 +435,7 @@ const styles = StyleSheet.create({
 	profileSettingTitle: {
 		fontWeight: "bold",
 		marginLeft: 15,
-		fontSize: 14,
+		fontSize: 18,
 	},
 	settingTitle: {
 		padding: 10,
@@ -417,6 +443,13 @@ const styles = StyleSheet.create({
 		paddingRight: 20,
 		fontWeight: "bold",
 		marginTop: 20,
+		fontSize: 16,
+	},
+	settingText: {
+		paddingLeft: 20,
+		paddingRight: 20,
+        color: '#999',
+        fontSize: 12
 	},
 	settingItemArea: {
 		padding: 20,
@@ -468,10 +501,15 @@ const styles = StyleSheet.create({
 		paddingRight: 20,
 	},
 	settingInput: {
-		backgroundColor: "#f8f8f8",
-		padding: 10,
-		borderRadius: 10,
-		fontSize: 16,
+		// backgroundColor: "#f8f8f8",
+		// textAlign: 'center',
+		padding: 5,
+		borderRadius: 5,
+		fontSize: 14,
+		color: '#212121',
+		// borderWidth:1,
+		borderBottomWidth: 2,
+		borderColor: '#D9D9D9'
 	},
 	settingCrownListArea: {
 		paddingLeft: 20,
