@@ -89,18 +89,30 @@ export default () => {
 		
 	)
 
+	// 내역이 없는 경우
+	const noList = () => {
+		return (
+			<View style={{height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+				<Image source={require('../Images/warn_gray.png')} style={{marginBottom: 10}}/>
+				<Text>
+					내역이 없습니다
+				</Text>
+			</View>
+		)
+	}
 	const Card = () => {
 			return (
 			<View style={{paddingLeft: '3%', paddingRight: '3%'}}>
 				{cardHistoryData !== '' && 
 				<FlatList
+				style={{height: '100%'}}
 					data={cardHistoryData}
 					renderItem={cardHistoryRenderItem}
-					// keyExtractor={item => item.what_history_idx}
 					numColumns={3}
 					columnWrapperStyle={{justifyContent: 'space-between'}}
 					ListHeaderComponent={<View style={{height: 15}}></View>}
-					ListEmptyComponent={<Text>아모것도업서</Text>}
+					ListEmptyComponent={noList()}
+					contentContainerStyle={{ flex: 1, alignItems: 'center'}}
 					showsVerticalScrollIndicator ={false}
 					showsHorizontalScrollIndicator={false}
 				/>}

@@ -271,9 +271,13 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 			// 이모지가 있는 경우
 			var emoji_pattern = /([\u2700-\u27BF]|[\uE000-\uF8FF]|\uD83C[\uDC00-\uDFFF]|\uD83D[\uDC00-\uDFFF]|[\u2011-\u26FF]|\uD83E[\uDD10-\uDDFF])/g;
 			if (blank_pattern.test(inputNick) == true) {
-				alert("공백이 입력되었습니다.");
+				setModalTitle('공백이 입력되었습니다');
+				setModalType(2);
+				setVisibleCommonModal(true)
 			} else if (emoji_pattern.test(inputNick) == true) {
-				alert("특수문자가 입력되었습니다.");
+				setModalTitle('특수문자가 입력되었습니다');
+				setModalType(2);
+				setVisibleCommonModal(true)
 			} else {
 				await axios
 					.post(`${config.apiUrl}/user/member/userNickUpdate`, {
@@ -283,7 +287,6 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 					})
 					.then(async (res) => {
 						if (res.data.CODE == 20) {
-							alert(res.data.MSG);
 							memberInfo();
 							// 10 : 사용 불가 닉네임
 							// 11 : 닉네임 변경 횟수 초과
@@ -291,10 +294,13 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 							// 13: 닉네임 변경 실패
 							// 14: 변경 히스토리 오류
 							// 20 : after_nick (으)로 변경이 완료되었습니다
+							setModalType(1);
 						} else {
-							alert(res.data.MSG);
 							memberInfo();
+							setModalType(2);
 						}
+						setModalTitle(res.data.MSG);
+						setVisibleCommonModal(true)
 					})
 					.catch((e) => {
 						console.log(e, "e");
@@ -323,6 +329,18 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 			setVisibleCommonModal(true)
 		}
 	};
+
+	// 내역이 없는 경우
+	const noList = () => {
+		return (
+			<View style={{height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+				<Image source={require('../Images/warn_gray.png')} style={{marginBottom: 10}}/>
+				<Text>
+					내역이 없습니다
+				</Text>
+			</View>
+		)
+	}
 	return (
 		<Modal
 			animationType="slide"
@@ -370,7 +388,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 				<Text style={styles.settingTitle}>닉네임</Text>
 				<Pressable
 					onPress={() => {
-						!editable && alert("닉네임 변경횟수를 초과하셨습니다.");
+						!editable && (setModalTitle('닉네임 변경 횟수를 초과하였습니다'), setModalType(3), setVisibleCommonModal(true));
 					}}
 					style={styles.settingInputArea}
 				>
@@ -389,13 +407,14 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 				<Text style={styles.settingTitle}>칭호</Text>
 				<Text style={styles.settingText}>별표를 눌러 즐겨찾기 해보세요.</Text>
 				<FlatList
-					style={{ padding: 20, paddingTop: 10, paddingBottom: 10 }}
+					style={{ padding: 20, paddingTop: 10, paddingBottom: 10}}
 					data={crownListData}
 					renderItem={crownListRenderItem}
 					// numColumns={3}
 					// columnWrapperStyle={{justifyContent: 'space-between'}}
 					// ListHeaderComponent={<View style={{height: 15}}></View>}
-					ListEmptyComponent={<Text>아모것도업서</Text>}
+					ListEmptyComponent={noList()}
+					contentContainerStyle={{ flex: 1, alignItems: 'center' }}
 					showsVerticalScrollIndicator={false}
 					showsHorizontalScrollIndicator={false}
 				/>
