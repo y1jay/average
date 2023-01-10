@@ -41,6 +41,7 @@ export default ({
 			rewarded.onAdEvent(async (type, error, reward) => {
 				if (error) {
 					console.log(error, reward);
+					setLoadingVisible(false);
 				}
 				if (type === RewardedAdEventType.LOADED) {
 					// 동영상 로드 완료
@@ -153,7 +154,7 @@ const styles = StyleSheet.create({
 	chargeCardBtnArea: {
 		flexDirection: "row",
 		justifyContent: "space-between",
-		padding: 15
+		padding: 15,
 	},
 	chargeCardBtn: {
 		width: "48%",
