@@ -70,11 +70,12 @@ export default () => {
 				console.log(e, "e2");
 			});
 	};
+	
 	// 카드 이력 아이템
 	const cardHistoryRenderItem = ({item, index}) => (
 		<View 
 			key={index}
-			style={[styles.historyCard, {width: winWidth*0.3, height: winWidth*0.36, marginBottom: winWidth*0.02, padding: winWidth*0.02}]}>
+			style={[styles.historyCard, {width: winWidth*0.3, height: winWidth*0.36, marginRight: winWidth*0.02 , marginBottom: winWidth*0.02, padding: winWidth*0.02}]}>
 			<Pressable style={{height: winWidth*0.05, padding: winWidth*0.01}} onPress={() => {}}>
 				<Image style={{height: '100%'}} resizeMode={'contain'} source={item.favorite == 0
 				? require("../Images/heart_gray.png")
@@ -92,7 +93,7 @@ export default () => {
 	// 내역이 없는 경우
 	const noList = () => {
 		return (
-			<View style={{height: '100%', alignItems: 'center', justifyContent: 'center'}}>
+			<View style={{alignItems: 'center', justifyContent: 'center'}}>
 				<Image source={require('../Images/warn_gray.png')} style={{marginBottom: 10}}/>
 				<Text>
 					내역이 없습니다
@@ -109,10 +110,10 @@ export default () => {
 					data={cardHistoryData}
 					renderItem={cardHistoryRenderItem}
 					numColumns={3}
-					columnWrapperStyle={{justifyContent: 'space-between'}}
+					// columnWrapperStyle={{justifyContent: 'space-between'}}
 					ListHeaderComponent={<View style={{height: 15}}></View>}
 					ListEmptyComponent={noList()}
-					contentContainerStyle={{ flex: 1, alignItems: 'center'}}
+					contentContainerStyle={cardHistoryData.length == 0 && { flex: 1, alignItems: 'center'}}
 					showsVerticalScrollIndicator ={false}
 					showsHorizontalScrollIndicator={false}
 				/>}

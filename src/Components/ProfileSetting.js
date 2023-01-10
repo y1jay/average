@@ -31,6 +31,7 @@ import commonStyles from "./Style";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import KeyboardSpacer from 'react-native-keyboard-spacer'
+import LinearGradient from 'react-native-linear-gradient';
 
 import CommonModal from "../Components/CommonModal";
 
@@ -167,6 +168,12 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 	};
 	// 칭호 리스트 아이템
 	const crownListRenderItem = ({ item, index }) => (
+		selectedCrown == item.crown ? 
+		(<LinearGradient colors={['#1AA1BF', '#18A8C8', '#12D097']}  start={{x: 0, y: 0}} end={{x: 1, y: 0}}
+			style={{
+				marginBottom: 5,
+				borderRadius: 25,
+			}}>
 		<Pressable
 			onPress={() => {
 				setSelectedCrown(item.crown);
@@ -178,18 +185,12 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 					flexDirection: "row",
 					alignItems: "center",
 					justifyContent: "space-between",
-					// borderWidth: 1,
-                    // borderColor: '#dadada',
-					// backgroundColor: '#F8F8F8',
-					marginBottom: 5,
-                    borderRadius: 5,
-                    padding: 15
+					padding: 15
 				},
-				selectedCrown == item.crown && { backgroundColor: '#F8F8F8' },
 			]}
 		>
-			<Image source={selectedCrown == item.crown ? require('../Images/crown_check.png') : require('../Images/crown_check_gray.png')} />
-			<Text style={[{flexGrow: 1, marginLeft: 15}, selectedCrown == item.crown && {color: '#116C89', fontWeight: 'bold'}]}>{item.crown}</Text>
+			<Image source={selectedCrown == item.crown ? require('../Images/crown_check_white.png') : require('../Images/crown_check_gray.png')} />
+			<Text style={[{flexGrow: 1, marginLeft: 15}, selectedCrown == item.crown && {color: '#FFF', fontWeight: 'bold'}]}>{item.crown}</Text>
 			<Pressable
 				onPress={() => {
 					bookMarkCrownIdx.current = item.crown_idx;
@@ -206,6 +207,42 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 				/>
 			</Pressable>
 		</Pressable>
+		</LinearGradient>) : (
+		<Pressable
+			onPress={() => {
+				setSelectedCrown(item.crown);
+				setSelectedCrownIdx(item.crown_idx);
+			}}
+			key={index}
+			style={[
+				{
+					flexDirection: "row",
+					alignItems: "center",
+					justifyContent: "space-between",
+					padding: 15,
+					marginBottom: 5,
+					borderRadius: 25,
+				},
+			]}
+		>
+			<Image source={selectedCrown == item.crown ? require('../Images/crown_check_white.png') : require('../Images/crown_check_gray.png')} />
+			<Text style={[{flexGrow: 1, marginLeft: 15}, selectedCrown == item.crown && {color: '#FFF', fontWeight: 'bold'}]}>{item.crown}</Text>
+			<Pressable
+				onPress={() => {
+					bookMarkCrownIdx.current = item.crown_idx;
+					crownBookMark(item.bookmark);
+				}}
+			>
+				<Image
+                style={{width: 20, height: 20}}
+					source={
+						item.bookmark == 0
+							? require("../Images/Star_gray.png")
+							: require("../Images/Star_yellow.png")
+					}
+				/>
+			</Pressable>
+		</Pressable>)
 	);
 	// 칭호 즐겨찾기
 	const crownBookMark = async (bookmarkYn) => {
@@ -407,17 +444,22 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 				<Text style={styles.settingTitle}>칭호</Text>
 				<Text style={styles.settingText}>별표를 눌러 즐겨찾기 해보세요.</Text>
 				<FlatList
-					style={{ padding: 20, paddingTop: 10, paddingBottom: 10}}
+					style={{ padding: 20, paddingTop: 0, paddingBottom: 10, marginTop: 15}}
 					data={crownListData}
 					renderItem={crownListRenderItem}
 					// numColumns={3}
 					// columnWrapperStyle={{justifyContent: 'space-between'}}
 					// ListHeaderComponent={<View style={{height: 15}}></View>}
 					ListEmptyComponent={noList()}
-					contentContainerStyle={{ flex: 1, alignItems: 'center' }}
+					contentContainerStyle={crownListData.length == 0 && { flex: 1, alignItems: 'center' }}
 					showsVerticalScrollIndicator={false}
 					showsHorizontalScrollIndicator={false}
 				/>
+				<View style={{width: '106%', height: 15, position: 'absolute', top: 0, left: 0, opacity: 0.6}}>
+					<Image 
+					style={{width: '100%', height: '100%',}} 
+					source={require('../Images/list_shadow.png')}/>
+				</View>
 				<View style={styles.absoluteBtnBlank}></View>
 				<View style={styles.absoluteBtnArea}>
 					<Pressable
@@ -549,7 +591,7 @@ const styles = StyleSheet.create({
 	},
 	absoluteBtn: {
 		height: 50,
-		backgroundColor: "#18A8C8",
+		backgroundColor: "#116C89",
 		borderRadius: 10,
 		alignItems: "center",
 		justifyContent: "center",

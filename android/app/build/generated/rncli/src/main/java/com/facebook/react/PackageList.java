@@ -23,6 +23,8 @@ import com.dooboolab.kakaologins.RNKakaoLoginsPackage;
 import com.swmansion.gesturehandler.RNGestureHandlerPackage;
 // react-native-image-picker
 import com.imagepicker.ImagePickerPackage;
+// react-native-linear-gradient
+import com.BV.LinearGradient.LinearGradientPackage;
 // react-native-pager-view
 import com.reactnativepagerview.PagerViewPackage;
 // react-native-safe-area-context
@@ -88,6 +90,7 @@ public class PackageList {
       new RNKakaoLoginsPackage(),
       new RNGestureHandlerPackage(),
       new ImagePickerPackage(),
+      new LinearGradientPackage(),
       new PagerViewPackage(),
       new SafeAreaContextPackage(),
       new RNScreensPackage(),
