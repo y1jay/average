@@ -300,7 +300,26 @@ export default ({ navigation }) => {
 						await memberInfo();
 					} else if (res.CODE < 0) {
 						// 중복로그인
-						navigation.navigate("MEMB01", { screen: "MEMB01" });
+						setModalTitle("중복로그인 제한");
+						setModalText(res.MSG);
+						setModalType(2);
+						modalAction.current = () => {
+							navigation.navigate("MEMB01", {
+								screen: "MEMB01",
+							});
+							setVisibleCommonModal(false);
+						};
+						setVisibleCommonModal(true);
+					} else {
+						setModalTitle("오류");
+						setModalText(res.MSG);
+						setModalType(2);
+						modalAction.current = () => {
+							navigation.navigate("MEMB01", {
+								screen: "MEMB01",
+							});
+							setVisibleCommonModal(false);
+						};
 					}
 				})
 				.catch((e) => {
