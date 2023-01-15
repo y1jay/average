@@ -10,7 +10,6 @@ import {
 	Pressable,
 } from "react-native";
 
-import axios from "axios";
 import config from "../../Libs/Config";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
@@ -24,7 +23,7 @@ import RNShake from "react-native-shake";
 import { AnimatedBackgroundColorView } from "react-native-animated-background-color-view";
 import { UserGetter, UserSetter } from "../../User/UserInfo";
 import commonStyles from "../../Components/Style";
-
+import api from "../../Libs/Api";
 import Loading from "../../Components/Loading";
 // 모달
 import ChargeCard from "../../Components/ChargeCard";
@@ -37,8 +36,8 @@ export default ({ navigation }) => {
 	// 카드 충전 모달
 	const [visibleChargeCard, setVisibleChargeCard] = useState(false);
 	// 모달
-	const [modalTitle, setModalTitle] = useState('');
-	const [modalText, setModalText] = useState('');
+	const [modalTitle, setModalTitle] = useState("");
+	const [modalText, setModalText] = useState("");
 	const [modalType, setModalType] = useState(0);
 	const modalAction = useRef();
 	const [visibleCommonModal, setVisibleCommonModal] = useState(false);
@@ -61,22 +60,6 @@ export default ({ navigation }) => {
 		};
 		Load();
 	}, [isFocused, loadingVisible]);
-
-	const memberInfo = async () => {
-		await axios
-			.get(`${config.apiUrl}/user/member/userInfoSelect`, {
-				params: {
-					member_idx: userInfo.current.member_idx,
-				},
-			})
-			.then(async (res) => {
-				await UserSetter(res.data, null);
-				userInfo.current = await UserGetter();
-			})
-			.catch((e) => {
-				console.log(e, "e2");
-			});
-	};
 
 	// 공통 컬러코드
 	const colorListMain = ["#007A31", "#F59300"];
@@ -300,28 +283,45 @@ export default ({ navigation }) => {
 		} else {
 			const url =
 				type == 0 ? "/user/what/whatAction" : "/user/what/whatEat";
-			await axios
-				.get(`${config.apiUrl}${url}`, {
-					params: {
-						taste: 1,
-						member_idx: userInfo.current.member_idx,
-						use_count: 1,
-					},
-				})
+
+			api.get(url, {
+				taste: 1,
+				member_idx: userInfo.current.member_idx,
+				use_count: 1,
+			})
 				.then(async (res) => {
-					type == 0 ? setDoCardState(1) : setEatCardState(1);
-					// 성공 doResult
-					type == 0
-						? setDoResult(res.data.DATA)
-						: setEatResult(res.data.DATA);
-					memberInfo();
+					console.log("res===>", res);
+					if (res.CODE == 20) {
+						type == 0 ? setDoCardState(1) : setEatCardState(1);
+						// 성공 doResult
+						type == 0
+							? setDoResult(res.DATA)
+							: setEatResult(res.DATA);
+						await memberInfo();
+					} else if (res.CODE < 0) {
+						// 중복로그인
+						navigation.navigate("MEMB01", { screen: "MEMB01" });
+					}
 				})
 				.catch((e) => {
 					console.log(e, "e2");
 				});
+			// console.log("3333====>res", res);
 		}
 	};
-
+	const memberInfo = async () => {
+		api.get(`/user/member/userInfoSelect`, {
+			member_idx: userInfo.current.member_idx,
+		})
+			.then(async (res) => {
+				console.log("UserRes===>", res);
+				await UserSetter(res, null);
+				userInfo.current = await UserGetter();
+			})
+			.catch((e) => {
+				console.log(e, "e2");
+			});
+	};
 	return (
 		<View style={{ flexGrow: 1 }}>
 			{loadingVisible == true ? (
@@ -406,14 +406,18 @@ export default ({ navigation }) => {
 							/>
 						</Pressable>
 					</View>
-					<Pressable 
+					<Pressable
 						onPress={() => {
-							setModalTitle('테스트 제목')
-							setModalText('테스트 내용')
-							setModalType(1)
-							modalAction.current = () => navigation.navigate("MEMB01", { screen: "MEMB01" })
-							setVisibleCommonModal(true)
-							}}>
+							setModalTitle("테스트 제목");
+							setModalText("테스트 내용");
+							setModalType(1);
+							modalAction.current = () =>
+								navigation.navigate("MEMB01", {
+									screen: "MEMB01",
+								});
+							setVisibleCommonModal(true);
+						}}
+					>
 						<Text>테스트</Text>
 					</Pressable>
 

@@ -2,13 +2,18 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const UserSetter = async (userInfo, token) => {
 	// console.log('Setter : ', userInfo)
-	if (userInfo == null) {return;}
+	if (userInfo == null) {
+		return;
+	}
 	let result;
 	if (userInfo.free_count != undefined && userInfo.free_count != null) {
 		await AsyncStorage.setItem(
 			"user_fc",
 			JSON.stringify(userInfo.free_count)
 		);
+	}
+	if (userInfo.uid != undefined && userInfo.uid != null) {
+		await AsyncStorage.setItem("user_uid", userInfo.uid);
 	}
 	if (userInfo.paid_count != undefined && userInfo.paid_count != null) {
 		await AsyncStorage.setItem(
@@ -59,10 +64,12 @@ export const UserGetter = async () => {
 	let token = await AsyncStorage.getItem("user_tk");
 	let nick = await AsyncStorage.getItem("user_nick");
 	let crown = await AsyncStorage.getItem("crown");
+	let uid = await AsyncStorage.getItem("user_uid");
 	data = {
 		free_count: free_count,
 		paid_count: paid_count,
 		join_type: join_type,
+		uid: uid,
 		member_idx: member_idx,
 		state_code: state_code,
 		token: token,
@@ -80,6 +87,7 @@ export const UserRemover = async () => {
 	await AsyncStorage.removeItem("user_tk");
 	await AsyncStorage.removeItem("user_nick");
 	await AsyncStorage.removeItem("crown");
+	await AsyncStorage.removeItem("user_uid");
 };
 
 module.exports = {

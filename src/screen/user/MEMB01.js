@@ -65,25 +65,25 @@ export default ({ navigation }) => {
 		Load();
 	}, [isFocused, modalVisibleSetting, modalVisibleProfileSetting]);
 
-	const memberInfo = async () => {
-		await axios
-			.get(`${config.apiUrl}/user/member/userInfoSelect`, {
-				params: {
-					member_idx: userInfo.current.member_idx,
-				},
-			})
-			.then(async (res) => {
-				await UserSetter(res.data, null);
-				userInfo.current = await UserGetter();
-				console.log(
-					"memberInfo!!!!!!!!!!!!!!!!",
-					userInfo.current.paid_count
-				);
-			})
-			.catch((e) => {
-				console.log(e, "e2");
-			});
-	};
+	// const memberInfo = async () => {
+	// 	await axios
+	// 		.get(`${config.apiUrl}/user/member/userInfoSelect`, {
+	// 			params: {
+	// 				member_idx: userInfo.current.member_idx,
+	// 			},
+	// 		})
+	// 		.then(async (res) => {
+	// 			await UserSetter(res.data, null);
+	// 			userInfo.current = await UserGetter();
+	// 			console.log(
+	// 				"memberInfo!!!!!!!!!!!!!!!!",
+	// 				userInfo.current.paid_count
+	// 			);
+	// 		})
+	// 		.catch((e) => {
+	// 			console.log(e, "e2");
+	// 		});
+	// };
 
 	// 공통 컬러코드
 	const colorListMain = ["#F1F528", "#116C89"];
@@ -120,7 +120,7 @@ export default ({ navigation }) => {
 				console.log(res.data.CODE, "로그인 성공");
 				if (res.data.CODE == 10) {
 					// ERROR ERROR ERROR ERROR ERROR
-				} else {
+				} else if (res.data.CODE >= 20) {
 					logIn(token, uid, type);
 				}
 			})
