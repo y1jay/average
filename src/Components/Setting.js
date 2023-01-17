@@ -27,8 +27,8 @@ export default ({navigation, modalVisible, setModalVisible}) => {
             setVisible={setModalVisible}
             >
             <View
-                style={styles.modalBody}>
-                <Pressable style={styles.settingItemArea} onPress={() => {setModalVisible(false)}}>
+                style={[commonStyles.modalBody, {backgroundColor: '#F8F8F8'}]}>
+                <Pressable style={commonStyles.commonModalTopArea} onPress={() => {setModalVisible(false)}}>
                     <Image style={{width: 20, height: 20}} source={require('../Images/back_arrow.png')} resizeMode={'contain'}/>
                 </Pressable>
                 {/* <Text style={styles.settingTitle}>계정</Text>
@@ -49,11 +49,6 @@ export default ({navigation, modalVisible, setModalVisible}) => {
     )
 }
 const styles = StyleSheet.create({
-    modalBody: {
-        backgroundColor: '#F8F8F8',
-        flexGrow: 1,
-
-    },
     settingTitle: {
         padding: 10,
         paddingLeft: 20,

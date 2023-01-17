@@ -173,40 +173,42 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 			style={{
 				marginBottom: 5,
 				borderRadius: 25,
+				position: 'relative'
 			}}>
-		<Pressable
-			onPress={() => {
-				setSelectedCrown(item.crown);
-				setSelectedCrownIdx(item.crown_idx);
-			}}
-			key={index}
-			style={[
-				{
-					flexDirection: "row",
-					alignItems: "center",
-					justifyContent: "space-between",
-					padding: 15
-				},
-			]}
-		>
-			<Image source={selectedCrown == item.crown ? require('../Images/crown_check_white.png') : require('../Images/crown_check_gray.png')} />
-			<Text style={[{flexGrow: 1, marginLeft: 15}, selectedCrown == item.crown && {color: '#FFF', fontWeight: 'bold'}]}>{item.crown}</Text>
+			<View style={{width: '100%', height: '50%', position: 'absolute', backgroundColor: 'rgba(255, 255, 255, 0.1)'}}></View>
 			<Pressable
 				onPress={() => {
-					bookMarkCrownIdx.current = item.crown_idx;
-					crownBookMark(item.bookmark);
+					setSelectedCrown(item.crown);
+					setSelectedCrownIdx(item.crown_idx);
 				}}
+				key={index}
+				style={[
+					{
+						flexDirection: "row",
+						alignItems: "center",
+						justifyContent: "space-between",
+						padding: 15
+					},
+				]}
 			>
-				<Image
-                style={{width: 20, height: 20}}
-					source={
-						item.bookmark == 0
-							? require("../Images/Star_gray.png")
-							: require("../Images/Star_yellow.png")
-					}
-				/>
+				<Image source={selectedCrown == item.crown ? require('../Images/crown_check_white.png') : require('../Images/crown_check_gray.png')} />
+				<Text style={[{flexGrow: 1, marginLeft: 15}, selectedCrown == item.crown && {color: '#FFF', fontWeight: 'bold'}]}>{item.crown}</Text>
+				<Pressable
+					onPress={() => {
+						bookMarkCrownIdx.current = item.crown_idx;
+						crownBookMark(item.bookmark);
+					}}
+				>
+					<Image
+					style={{width: 20, height: 20}}
+						source={
+							item.bookmark == 0
+								? require("../Images/Star_gray.png")
+								: require("../Images/Star_yellow.png")
+						}
+					/>
+				</Pressable>
 			</Pressable>
-		</Pressable>
 		</LinearGradient>) : (
 		<Pressable
 			onPress={() => {
@@ -385,9 +387,9 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 			visible={modalVisible}
 			setVisible={setModalVisible}
 		>
-			<View style={styles.modalBody}>
+			<View style={commonStyles.modalBody}>
 				<Pressable
-					style={styles.settingItemArea}
+					style={commonStyles.commonModalTopArea}
 					onPress={() => {
 						setModalVisible(false);
 					}}
@@ -397,7 +399,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 							source={require("../Images/back_arrow.png")}
 							resizeMode={"contain"}
 						/>
-					<Text style={styles.profileSettingTitle}>프로필 설정</Text>
+					<Text style={commonStyles.commonModalTopTitle}>프로필 설정</Text>
 				</Pressable>
 				<View style={styles.myInfoImgArea}>
 					<Pressable
@@ -487,17 +489,6 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 	);
 };
 const styles = StyleSheet.create({
-	modalBody: {
-		height: "100%",
-		backgroundColor: "#FFF",
-		flexGrow: 1,
-		flexShrink: 0,
-	},
-	profileSettingTitle: {
-		fontWeight: "bold",
-		marginLeft: 15,
-		fontSize: 18,
-	},
 	settingTitle: {
 		padding: 10,
 		paddingLeft: 20,

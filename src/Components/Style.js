@@ -130,6 +130,21 @@ export default StyleSheet.create({
 		borderTopRightRadius: 15
 	},
     // 공통 모달
+    modalBody: {
+		height: "100%",
+		backgroundColor: "#FFF",
+    },
+	commonModalTopArea: {
+		padding: 20,
+		flexDirection: "row",
+		alignItems: "center",
+        backgroundColor: '#FFF'
+	},
+    commonModalTopTitle: {
+		fontWeight: "bold",
+		marginLeft: 15,
+		fontSize: 18,
+    },
     commonModalTitle: {
         fontSize: 16,
         fontWeight: 'bold'

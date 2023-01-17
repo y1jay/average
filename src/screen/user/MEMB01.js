@@ -33,6 +33,7 @@ import {
 import MyNavigation from "../../Navigations/MyNavigation";
 import Setting from "../../Components/Setting";
 import ProfileSetting from "../../Components/ProfileSetting";
+import TypeTest from "../../Components/TypeTest";
 import Loading from "../../Components/Loading";
 import commonStyles from "../../Components/Style";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
@@ -46,10 +47,12 @@ export default ({ navigation }) => {
 	const [isLogin, setIsLogin] = useState();
 	const [change, setChange] = useState(true);
 	// 설정모달
-	const [modalVisibleSetting, setModalVisibleSetting] = useState(false);
+	const [visibleSetting, setVisibleSetting] = useState(false);
+	// 유형검사모달
+	const [visibleTypeTest, setVisibleTypeTest] = useState(false);
 	const [
-		modalVisibleProfileSetting,
-		setModalVisibleProfileSetting,
+		visibleProfileSetting,
+		setVisibleProfileSetting,
 	] = useState(false);
 	useEffect(() => {
 		const Load = async () => {
@@ -63,7 +66,7 @@ export default ({ navigation }) => {
 			setChange(!change);
 		};
 		Load();
-	}, [isFocused, modalVisibleSetting, modalVisibleProfileSetting]);
+	}, [isFocused, visibleSetting, visibleProfileSetting]);
 
 	// const memberInfo = async () => {
 	// 	await axios
@@ -329,7 +332,7 @@ export default ({ navigation }) => {
 						</Pressable>
 						<Pressable
 							onPress={async () => {
-								setModalVisibleSetting(true);
+								setVisibleSetting(true);
 							}}
 							style={styles.myInfoMoreBtn}
 						>
@@ -341,7 +344,7 @@ export default ({ navigation }) => {
 					<View style={{ flexDirection: "row" }}>
 						<Pressable
 							onPress={() => {
-								setModalVisibleProfileSetting(true);
+								setVisibleProfileSetting(true);
 							}}
 						>
 							<ImageBackground
@@ -383,9 +386,11 @@ export default ({ navigation }) => {
 											: "0"}
 									</Text>
 								</Text>
-								<Text style={styles.myInfoGoTest}>
-									유형검사 하러가기 {">"}
-								</Text>
+								<Pressable onPress={() => {setVisibleTypeTest(true)}}>
+									<Text style={styles.myInfoGoTest}>
+										유형검사 하러가기 {">"}
+									</Text>
+								</Pressable>
 							</View>
 						</View>
 					</View>
@@ -430,12 +435,16 @@ export default ({ navigation }) => {
 				</View>
 				{/* 모달 */}
 				<Setting
-					modalVisible={modalVisibleSetting}
-					setModalVisible={setModalVisibleSetting}
+					modalVisible={visibleSetting}
+					setModalVisible={setVisibleSetting}
 				/>
 				<ProfileSetting
-					modalVisible={modalVisibleProfileSetting}
-					setModalVisible={setModalVisibleProfileSetting}
+					modalVisible={visibleProfileSetting}
+					setModalVisible={setVisibleProfileSetting}
+				/>
+				<TypeTest
+					modalVisible={visibleTypeTest}
+					setModalVisible={setVisibleTypeTest}
 				/>
 			</View>
 		);
@@ -510,6 +519,7 @@ const styles = StyleSheet.create({
 		color: "#FFF",
 		fontSize: 11,
 		textAlign: "right",
+		padding: 5,
 	},
 	myInfoCntArea: {
 		backgroundColor: "rgba(255,255,255,0.2)",
