@@ -387,7 +387,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 			visible={modalVisible}
 			setVisible={setModalVisible}
 		>
-			<View style={commonStyles.modalBody}>
+			<View style={commonStyles.modalBodyFull}>
 				<Pressable
 					style={commonStyles.commonModalTopArea}
 					onPress={() => {

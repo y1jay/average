@@ -130,7 +130,7 @@ export default StyleSheet.create({
 		borderTopRightRadius: 15
 	},
     // 공통 모달
-    modalBody: {
+    modalBodyFull: {
 		height: "100%",
 		backgroundColor: "#FFF",
     },

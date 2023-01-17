@@ -325,11 +325,11 @@ export default ({ navigation }) => {
 			<View style={commonStyles.body}>
 				<View style={styles.myInfoArea}>
 					<View style={styles.myInfoMoreArea}>
-						<Pressable style={styles.myInfoMoreBtn}>
+						{/* <Pressable style={styles.myInfoMoreBtn}>
 							<Image
 								source={require("../../Images/notice_white.png")}
 							/>
-						</Pressable>
+						</Pressable> */}
 						<Pressable
 							onPress={async () => {
 								setVisibleSetting(true);

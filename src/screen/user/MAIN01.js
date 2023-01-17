@@ -425,20 +425,6 @@ export default ({ navigation }) => {
 							/>
 						</Pressable>
 					</View>
-					<Pressable
-						onPress={() => {
-							setModalTitle("테스트 제목");
-							setModalText("테스트 내용");
-							setModalType(1);
-							modalAction.current = () =>
-								navigation.navigate("MEMB01", {
-									screen: "MEMB01",
-								});
-							setVisibleCommonModal(true);
-						}}
-					>
-						<Text>테스트</Text>
-					</Pressable>
 
 					<ChargeCard
 						modalVisible={visibleChargeCard}
@@ -452,7 +438,7 @@ export default ({ navigation }) => {
 						modalText={modalText}
 						modalType={modalType}
 						modalAction={modalAction.current}
-					/>
+			/>
 				</AnimatedBackgroundColorView>
 			)}
 		</View>

@@ -27,7 +27,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
             setVisible={setModalVisible}
             >
             <View
-                style={[commonStyles.modalBody, {backgroundColor: '#F8F8F8'}]}>
+                style={[commonStyles.modalBodyFull, {backgroundColor: '#F8F8F8'}]}>
                 <Pressable style={commonStyles.commonModalTopArea} onPress={() => {setModalVisible(false)}}>
                     <Image style={{width: 20, height: 20}} source={require('../Images/back_arrow.png')} resizeMode={'contain'}/>
                 </Pressable>
