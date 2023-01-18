@@ -25,7 +25,46 @@ export default StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
     },
-
+    // 카드 구매
+	chargeCardBtnArea: {
+		flexDirection: "row",
+		justifyContent: "space-between",
+		padding: 15,
+	},
+	chargeCardBtn: {
+		width: "48%",
+		backgroundColor: "#FFF",
+		borderRadius: 15,
+		alignItems: "center",
+		padding: "3%",
+		shadowColor: "#212121",
+		shadowOpacity: 0.2,
+		shadowRadius: 3,
+		shadowOffset: {
+			height: 2,
+			width: 0,
+		},
+		elevation: 3,
+	},
+	chargeCardBtn2: {
+		width: "48%",
+		backgroundColor: "#FFF",
+		borderRadius: 15,
+		alignItems: "center",
+		padding: "3%",
+	},
+	chargeCardCnt: {
+		fontSize: 14,
+		color: "#757575",
+	},
+	chargeCardImg: {
+		marginTop: 5,
+		marginBottom: 5,
+	},
+	chargeCardText: {
+		fontSize: 18,
+		fontFamily: "UhBeecharming",
+	},
     // 하단 네비게이션
     bottomNav: {
         height: 50,

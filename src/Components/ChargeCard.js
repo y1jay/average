@@ -103,21 +103,21 @@ export default ({
 			>
 				<Pressable style={commonStyles.modalArea}>
 					<Text style={commonStyles.modalTitle}>카드 구매</Text>
-					<View style={styles.chargeCardBtnArea}>
+					<View style={commonStyles.chargeCardBtnArea}>
 						<Pressable
 							onPress={() => {
 								alert("결제!");
 							}}
-							style={styles.chargeCardBtn}
+							style={commonStyles.chargeCardBtn}
 						>
-							<Text style={styles.chargeCardCnt}>x 3</Text>
+							<Text style={commonStyles.chargeCardCnt}>x 3</Text>
 							<Image
-								style={styles.chargeCardImg}
+								style={commonStyles.chargeCardImg}
 								source={require("../Images/chargeCard_pay.png")}
 							/>
 							<Text
 								style={[
-									styles.chargeCardText,
+									commonStyles.chargeCardText,
 									{ color: "#F59300" },
 								]}
 							>
@@ -128,16 +128,16 @@ export default ({
 							onPress={() => {
 								getAds();
 							}}
-							style={styles.chargeCardBtn}
+							style={commonStyles.chargeCardBtn}
 						>
-							<Text style={styles.chargeCardCnt}>x 1</Text>
+							<Text style={commonStyles.chargeCardCnt}>x 1</Text>
 							<Image
-								style={styles.chargeCardImg}
+								style={commonStyles.chargeCardImg}
 								source={require("../Images/chargeCard_free.png")}
 							/>
 							<Text
 								style={[
-									styles.chargeCardText,
+									commonStyles.chargeCardText,
 									{ color: "#007A31" },
 								]}
 							>
@@ -150,37 +150,3 @@ export default ({
 		</Modal>
 	);
 };
-const styles = StyleSheet.create({
-	chargeCardBtnArea: {
-		flexDirection: "row",
-		justifyContent: "space-between",
-		padding: 15,
-	},
-	chargeCardBtn: {
-		width: "48%",
-		backgroundColor: "#FFF",
-		borderRadius: 15,
-		alignItems: "center",
-		padding: "3%",
-		shadowColor: "#212121",
-		shadowOpacity: 0.2,
-		shadowRadius: 3,
-		shadowOffset: {
-			height: 2,
-			width: 0,
-		},
-		elevation: 3,
-	},
-	chargeCardCnt: {
-		fontSize: 14,
-		color: "#757575",
-	},
-	chargeCardImg: {
-		marginTop: 5,
-		marginBottom: 5,
-	},
-	chargeCardText: {
-		fontSize: 18,
-		fontFamily: "UhBeecharming",
-	},
-});

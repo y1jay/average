@@ -22,6 +22,9 @@ import {
 } from 'react-native';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 
+// 컴포넌트
+import NoList from "../Components/NoList"
+
 import axios from "axios";
 import config from "../Libs/Config";
 import commonStyles from '../Components/Style';
@@ -36,7 +39,7 @@ export default () => {
 	const winWidth = Dimensions.get("window").width;
 	const winHeight = Dimensions.get("window").height;
 	// 카드 이력
-	const [cardHistoryData, setCardHistoryData] = useState('')
+	const [cardHistoryData, setCardHistoryData] = useState([])
 
 	// 유저 정보
 	const userInfo = useRef({});
@@ -63,8 +66,7 @@ export default () => {
 				params: { member_idx: userInfo.current.member_idx },
 			})
 			.then(async (res) => {
-				setCardHistoryData(res.data)
-				console.log(res.data[0])
+				res.data !== null && setCardHistoryData(res.data)
 			})
 			.catch((e) => {
 				console.log(e, "e2");
@@ -89,22 +91,9 @@ export default () => {
 		</View>
 		
 	)
-
-	// 내역이 없는 경우
-	const noList = () => {
-		return (
-			<View style={{alignItems: 'center', justifyContent: 'center'}}>
-				<Image source={require('../Images/warn_gray.png')} style={{marginBottom: 10}}/>
-				<Text>
-					내역이 없습니다
-				</Text>
-			</View>
-		)
-	}
 	const Card = () => {
 			return (
 			<View style={{paddingLeft: '3%', paddingRight: '3%'}}>
-				{cardHistoryData !== '' && 
 				<FlatList
 				style={{height: '100%'}}
 					data={cardHistoryData}
@@ -112,11 +101,11 @@ export default () => {
 					numColumns={3}
 					// columnWrapperStyle={{justifyContent: 'space-between'}}
 					ListHeaderComponent={<View style={{height: 15}}></View>}
-					ListEmptyComponent={noList()}
-					contentContainerStyle={cardHistoryData.length == 0 && { flex: 1, alignItems: 'center'}}
+					ListEmptyComponent={NoList}
+					// contentContainerStyle={cardHistoryData == [] && { flex: 1, alignItems: 'center'}}
 					showsVerticalScrollIndicator ={false}
 					showsHorizontalScrollIndicator={false}
-				/>}
+				/>
 				<View style={{width: '106%', height: 15, position: 'absolute', top: 0, left: 0, opacity: 0.6}}>
 					<Image 
 					style={{width: '100%', height: '100%',}} 

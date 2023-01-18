@@ -28,10 +28,56 @@ export default ({navigation, modalVisible, setModalVisible}) => {
     }
     const testStartArea = () => {
         return (
-            <View>
-                <Pressable onPress={() => {testStart()}}>
-                    <Text>유형검사 시작하기</Text>
-                </Pressable>
+            <View style={[styles.typeTestArea, {justifyContent: 'center'}]}>
+                <View style={{alignItems: 'center', height: '60%'}}>
+                <Image style={{width: 100, height: 100, marginBottom: 10}} resizeMode={'contain'} source={require('../Images/type_test_00.png')}/>
+                <Text style={styles.typeTestQText}>유형검사 시작하기</Text>
+                <View style={[commonStyles.chargeCardBtnArea, {width: '80%'}]}>
+                    <Pressable
+                        onPress={() => {
+                            alert("결제!");
+                        }}
+                        style={commonStyles.chargeCardBtn2}
+                    >
+                        <Image
+                            style={commonStyles.chargeCardImg}
+                            source={require("../Images/chargeTest_pay.png")}
+                        />
+                        <Text
+                            style={[
+                                commonStyles.chargeCardText,
+                                { color: "#F59300" },
+                            ]}
+                        >
+                            ₩1000
+                        </Text>
+                    </Pressable>
+                    <Pressable
+                        onPress={() => {
+                            alert("광고!");
+                            // getAds();
+                        }}
+                        style={commonStyles.chargeCardBtn2}
+                    >
+                        <Image
+                            style={commonStyles.chargeCardImg}
+                            source={require("../Images/chargeTest_free.png")}
+                        />
+                        <Text
+                            style={[
+                                commonStyles.chargeCardText,
+                                { color: "#007A31" },
+                            ]}
+                        >
+                            무료
+                        </Text>
+                    </Pressable>
+                </View>
+                </View>
+                <View style={{alignItems: 'center', height: '20%'}}>
+                <Text style={{fontSize: 16, fontFamily: "UhBeecharming" }}>아직 검사 기록이 없네요!</Text>
+                <Text style={{fontSize: 12}}>유형검사를 하면 취향에 맞게 추천 해줘요!</Text>
+                </View>
             </View>
         )
     }

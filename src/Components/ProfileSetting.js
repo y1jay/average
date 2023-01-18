@@ -27,13 +27,15 @@ import axios from "axios";
 import config from "../Libs/Config";
 import { UserGetter, UserSetter, UserRemover } from "../User/UserInfo";
 import { useIsFocused } from "@react-navigation/native";
-import commonStyles from "./Style";
 import { FlatList, TextInput } from "react-native-gesture-handler";
 import { launchCamera, launchImageLibrary } from "react-native-image-picker";
 import KeyboardSpacer from 'react-native-keyboard-spacer'
 import LinearGradient from 'react-native-linear-gradient';
 
+// 컴포넌트
+import NoList from "./NoList"
 import CommonModal from "../Components/CommonModal";
+import commonStyles from "./Style";
 
 export default ({ navigation, modalVisible, setModalVisible }) => {
 	const isFocused = useIsFocused();
@@ -368,18 +370,6 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 			setVisibleCommonModal(true)
 		}
 	};
-
-	// 내역이 없는 경우
-	const noList = () => {
-		return (
-			<View style={{height: '100%', alignItems: 'center', justifyContent: 'center'}}>
-				<Image source={require('../Images/warn_gray.png')} style={{marginBottom: 10}}/>
-				<Text>
-					내역이 없습니다
-				</Text>
-			</View>
-		)
-	}
 	return (
 		<Modal
 			animationType="slide"
@@ -452,7 +442,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 					// numColumns={3}
 					// columnWrapperStyle={{justifyContent: 'space-between'}}
 					// ListHeaderComponent={<View style={{height: 15}}></View>}
-					ListEmptyComponent={noList()}
+					ListEmptyComponent={NoList}
 					contentContainerStyle={crownListData.length == 0 && { flex: 1, alignItems: 'center' }}
 					showsVerticalScrollIndicator={false}
 					showsHorizontalScrollIndicator={false}
