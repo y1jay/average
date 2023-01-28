@@ -1,5 +1,5 @@
 import "react-native-gesture-handler";
-import React, { Fragment, useEffect, useState, useCallback } from "react";
+import React, { Fragment, useEffect, useState, useRef } from "react";
 import {
 	SafeAreaView,
 	StatusBar,
@@ -7,25 +7,46 @@ import {
 	StyleSheet,
 	Text,
 	Keyboard,
-	KeyboardEvent,
+	Dimensions,
 	Button,
 	Alert,
 	Image,
 	Pressable,
     Modal,
+    Animated
 } from "react-native";
-
 import { UserGetter, UserSetter, UserRemover } from "../User/UserInfo";
+// 컴포넌트
 import commonStyles from './Style';
+// 라이브러리
+import Swiper from "react-native-swiper";
 
 export default ({navigation, modalVisible, setModalVisible}) => {
-    const [testProgress, setTestProgress] = useState(0)
+	const winWidth = Dimensions.get("window").width;
+	const winHeight = Dimensions.get("window").height;
+    const [testProgress, setTestProgress] = useState(-1);
+    const testProgressRef = useRef(0)
     const testStart = () => {
         // 테스트 실행 시 카드 차감 or 광고재생?
         // 실행 불가 시 실행 불가 팝업생성 or 구매 팝업 연결
         // 테스트 화면으로 이동
-        setTestProgress(1)
+        setTestProgress(0)
     }
+    // 검사지 슬라이드 애니메이션 구현
+    const slideAnim = useRef(new Animated.Value(0)).current;
+    const slide = (item) => {
+        if (item < 0 && 0 >= testProgressRef.current) {return;}
+        testProgressRef.current = testProgressRef.current + item
+        setTestProgress(testProgressRef.current)
+        console.log('item ======================>', item)
+        console.log('testProgressRef.current ======================>', testProgressRef.current)
+        Animated.timing(slideAnim, {
+          toValue: - (winWidth * testProgressRef.current),
+          duration: 500,
+          useNativeDriver: true,
+        }).start();
+      };
+
     const testStartArea = () => {
         return (
             <View style={[styles.typeTestArea, {justifyContent: 'center'}]}>
@@ -56,6 +77,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                         onPress={() => {
                             alert("광고!");
                             // getAds();
+                            testStart();
                         }}
                         style={commonStyles.chargeCardBtn2}
                     >
@@ -82,33 +104,62 @@ export default ({navigation, modalVisible, setModalVisible}) => {
         )
     }
     const testArea = () => {
+        //TODO: 100%를 테스트 문항의 총 개수로 나눈 값에 testProgress를 곱해야함.
+        const progressPercent = (testProgressRef.current * 10)+ '%';
         return (
-            <View style={styles.typeTestArea}>
-                <Text style={styles.typeTestTitle}>0 / 10</Text>
-                <View style={styles.typeTestProgressBarArea}>
-                    <View style={styles.typeTestProgressBar}></View>
-                    <View style={styles.typeTestProgressCircle}></View>
+                <View style={styles.typeTestArea}>
+                    <Text style={styles.typeTestTitle}>{progressPercent} / 10</Text>
+                    <View style={styles.typeTestProgressBarArea}>
+                        <View style={styles.typeTestProgressBar}></View>
+                        <View style={[styles.typeTestProgressCircle, {left: progressPercent}]}></View>
+                    </View>
+
+                    <View style={{width: '100%', flexGrow: 1, justifyContent: 'center'}}>
+                    <Animated.View style={[styles.slideArea, {transform: [{translateX: slideAnim}]}]}>
+                        <View style={[styles.typeTestQArea, {width: winWidth}]}>
+                            <Image source={require('../Images/type_test_01.png')}/>
+                            <Text style={styles.typeTestQText}>1</Text>
+                            <Text style={[styles.typeTestQText, {fontSize: 36, top: -10}]}>내</Text>
+                        </View>
+                        <View style={[styles.typeTestQArea, {width: winWidth}]}>
+                            <Image source={require('../Images/type_test_01.png')}/>
+                            <Text style={styles.typeTestQText}>2</Text>
+                            <Text style={[styles.typeTestQText, {fontSize: 36, top: -10}]}>가</Text>
+                        </View>
+                        <View style={[styles.typeTestQArea, {width: winWidth}]}>
+                            <Image source={require('../Images/type_test_01.png')}/>
+                            <Text style={styles.typeTestQText}>3</Text>
+                            <Text style={[styles.typeTestQText, {fontSize: 36, top: -10}]}>이</Text>
+                        </View>
+                        <View style={[styles.typeTestQArea, {width: winWidth}]}>
+                            <Image source={require('../Images/type_test_01.png')}/>
+                            <Text style={styles.typeTestQText}>4</Text>
+                            <Text style={[styles.typeTestQText, {fontSize: 36, top: -10}]}>걸</Text>
+                        </View>
+                        <View style={[styles.typeTestQArea, {width: winWidth}]}>
+                            <Image source={require('../Images/type_test_01.png')}/>
+                            <Text style={styles.typeTestQText}>5</Text>
+                            <Text style={[styles.typeTestQText, {fontSize: 36, top: -10}]}>만들었다!</Text>
+                        </View>
+                    </Animated.View>
+                    </View>
+                    
+                    <View style={styles.typeTestAArea}>
+                        <Pressable style={styles.typeTestA}>
+                            <Image style={styles.typeTestAImg} resizeMode={'contain'} source={require('../Images/type_test_O.png')}/>
+                        </Pressable>
+                        <Pressable 
+                            onPress={() => {slide(1)}}
+                            style={styles.typeTestA}>
+                            <Image style={styles.typeTestAImg} resizeMode={'contain'} source={require('../Images/type_test_X.png')}/>
+                        </Pressable>
+                    </View>
+                    <View style={styles.typeTestReternArea}>
+                       {testProgress > 0 && <Pressable onPress={() => {slide(-1)}}>
+                            <Text>{'<'} 이전</Text>
+                        </Pressable>}
+                    </View>
                 </View>
-                <View style={styles.typeTestQArea}>
-                    <Image source={require('../Images/type_test_01.png')}/>
-                    <Text style={styles.typeTestQText}>밥 먹고 나서</Text>
-                    <Text style={[styles.typeTestQText, {fontSize: 36, top: -10}]}>디저트 먹을거야?</Text>
-                </View>
-                <View style={styles.typeTestAArea}>
-                    <Pressable style={styles.typeTestA}>
-                        <Image style={styles.typeTestAImg} resizeMode={'contain'} source={require('../Images/type_test_O.png')}/>
-                    </Pressable>
-                    <Pressable style={styles.typeTestA}>
-                        <Image style={styles.typeTestAImg} resizeMode={'contain'} source={require('../Images/type_test_X.png')}/>
-                    </Pressable>
-                </View>
-                
-                <View style={styles.typeTestReternArea}>
-                    <Pressable onPress={() => {setTestProgress(testProgress -1)}}>
-                        <Text>{'<'} 이전</Text>
-                    </Pressable>
-                </View>
-            </View>
         )
     }
 	return (
@@ -133,7 +184,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 						/>
         			<Text style={commonStyles.commonModalTopTitle}>유형검사</Text>
 				</Pressable>
-                {0 >= testProgress ? testStartArea() : testArea()}
+                {0 > testProgress ? testStartArea() : testArea()}
             </View>
         </Modal>
     )
@@ -170,8 +221,11 @@ const styles = StyleSheet.create({
         transform: [{translateX: -10}],
         left: '0%',
     },
+    slideArea: {
+        flexDirection: 'row',
+        justifyContent: 'flex-start'
+    },
     typeTestQArea: {
-        flexGrow: 1,
         alignItems: 'center',
         justifyContent: 'center',
     },

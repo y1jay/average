@@ -344,7 +344,7 @@ export default ({ navigation }) => {
 	return (
 		<View style={{ flexGrow: 1 }}>
 			{loadingVisible == true ? (
-				<Loading loadingVisible={loadingVisible} />
+				<Loading type={0}/>
 			) : (
 				<AnimatedBackgroundColorView
 					color={bgColorList[swipeIndex]}
