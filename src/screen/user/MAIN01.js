@@ -47,6 +47,7 @@ export default ({ navigation }) => {
 	const [isLogin, setIsLogin] = useState();
 	const [change, setChange] = useState(true);
 	const [loadingVisible, setLoadingVisible] = useState(false);
+	const [loadingType, setLoadingType] = useState(0);
 	useEffect(() => {
 		const Load = async () => {
 			userInfo.current = "";
@@ -344,7 +345,7 @@ export default ({ navigation }) => {
 	return (
 		<View style={{ flexGrow: 1 }}>
 			{loadingVisible == true ? (
-				<Loading type={0}/>
+				<Loading type={loadingType}/>
 			) : (
 				<AnimatedBackgroundColorView
 					color={bgColorList[swipeIndex]}
@@ -430,6 +431,7 @@ export default ({ navigation }) => {
 						modalVisible={visibleChargeCard}
 						setModalVisible={setVisibleChargeCard}
 						setLoadingVisible={setLoadingVisible}
+						setLoadingType={setLoadingType}
 					/>
 					<CommonModal
 						modalVisible={visibleCommonModal}

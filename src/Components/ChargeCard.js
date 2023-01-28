@@ -29,9 +29,11 @@ export default ({
 	modalVisible,
 	setModalVisible,
 	setLoadingVisible,
+	setLoadingType,
 }) => {
 	const getAds = () => {
 		setModalVisible(false);
+		setLoadingType(1)
 		setLoadingVisible(true);
 		try {
 			const rewarded = RewardedAd.createForAdRequest(TestIds.REWARDED, {
