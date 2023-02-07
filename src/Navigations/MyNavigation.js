@@ -39,8 +39,9 @@ export default () => {
 	const winWidth = Dimensions.get("window").width;
 	const winHeight = Dimensions.get("window").height;
 	// 카드 이력
-	const [cardHistoryData, setCardHistoryData] = useState([])
-
+	// const [cardHistoryData, setCardHistoryData] = useState([])
+	const [cardHistoryData, setCardHistoryData] = useState({isLoading: false, data: [], page: 1})
+	const [getDataYN, setGetDataYN] = useState(true)
 	// 유저 정보
 	const userInfo = useRef({});
 	// 로그인 여부 확인
@@ -59,20 +60,34 @@ export default () => {
 		};
 		Load();
 	}, [isFocused]);
-
+	// 카드 이력 연동
 	const getCardHistory = async () => {
+		// 더 이상 가져올 데이터 없는 경우 종료
+		if(!getDataYN) {return;}
+		const page = cardHistoryData.page ? cardHistoryData.page++ : 1;
+		setCardHistoryData({...cardHistoryData, page:page, isLoading: true})
 		await axios
 			.get(`${config.apiUrl}/user/member/userCardResult`, {
-				params: { member_idx: userInfo.current.member_idx },
+				params: {page:page, member_idx: userInfo.current.member_idx },
 			})
 			.then(async (res) => {
-				res.data !== null && setCardHistoryData(res.data)
+				// res.data !== null && setCardHistoryData({isLoading: false, data: res.data, page: page})
+				console.log('page ===========================> ',page)
+				console.log('length ===========================> ',res.data.length)
+				if(res.data.length == 0) {
+					setCardHistoryData({isLoading: false, data: [...cardHistoryData.data], page: cardHistoryData.page})
+					setGetDataYN(false)
+				} else if (res.data.length > 0 && 15 > res.data.length) {
+					setCardHistoryData({isLoading: false, data: [...cardHistoryData.data, ...res.data], page: cardHistoryData.page})
+					setGetDataYN(false)
+				} else {
+					setCardHistoryData({isLoading: false, data: [...cardHistoryData.data, ...res.data], page: cardHistoryData.page})
+				}
 			})
 			.catch((e) => {
 				console.log(e, "e2");
 			});
 	};
-	
 	// 카드 이력 아이템
 	const cardHistoryRenderItem = ({item, index}) => (
 		<View 
@@ -89,22 +104,59 @@ export default () => {
 			</View>
 			<Text style={{color: '#BDBDBD', fontSize: 10}}>{item.reg_date.toString().replace(/^(\d{4})(\d\d)(\d\d)(\d\d)(\d\d)(\d\d)$/, '$1.$2.$3 $4:$5:$6').slice(0,10)}</Text>
 		</View>
-		
 	)
+	// 리스트 끝 도달 시 호출
+	const onEndReached = () => {
+		getCardHistory()
+	}
+	// 리스트 초기화
+	const resettingRef = useRef(false)
+	const listReset = () => {
+		resettingRef.current = true;
+		setGetDataYN(true)
+		setCardHistoryData({isLoading: false, data: [], page: 1})
+	}
+	useEffect(() => {
+		const Load = async () => {
+			if (resettingRef.current) {
+				resettingRef.current = false;
+				getCardHistory()
+			}
+		}
+		Load()
+	}, [cardHistoryData])
+	// pull down refresh
+	const [isFetching, setIsFetching] = useState(false)
+	const fetchData = () => {
+		listReset();
+		setIsFetching(false)
+	}
+	const onRefresh = () => {
+		setIsFetching(true);
+		fetchData();
+	}
+	// 카드 이력 탭
 	const Card = () => {
 			return (
 			<View style={{paddingLeft: '3%', paddingRight: '3%'}}>
 				<FlatList
 				style={{height: '100%'}}
-					data={cardHistoryData}
+					data={cardHistoryData.data}
 					renderItem={cardHistoryRenderItem}
 					numColumns={3}
-					// columnWrapperStyle={{justifyContent: 'space-between'}}
 					ListHeaderComponent={<View style={{height: 15}}></View>}
 					ListEmptyComponent={NoList}
-					// contentContainerStyle={cardHistoryData == [] && { flex: 1, alignItems: 'center'}}
 					showsVerticalScrollIndicator ={false}
 					showsHorizontalScrollIndicator={false}
+					onEndReached={onEndReached}
+					onEndReachedThreshold={0.3}
+					// refreshing={false}
+					ListFooterComponent={
+						<>{cardHistoryData.isLoading && <Text>Loading...</Text>}</>
+					}
+					// pull down refresh
+					onRefresh={onRefresh}
+					refreshing={isFetching}
 				/>
 				<View style={{width: '106%', height: 15, position: 'absolute', top: 0, left: 0, opacity: 0.6}}>
 					<Image 
