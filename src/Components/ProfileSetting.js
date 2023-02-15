@@ -53,6 +53,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 	const bookMarkCrownIdx = useRef("");
 	// 유저 정보
 	const userInfo = useRef({});
+	const [userProfileImg, setUserProfileImg] = useState()
 	// 로그인 여부 확인
 	const [isLogin, setIsLogin] = useState();
 	const [change, setChange] = useState(true);
@@ -78,6 +79,7 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 			nickCount();
 			crownList();
 			setSelectedCrown(userInfo.current.crown);
+			setUserProfileImg(userInfo.current.profile_image.replace( /"/gi, ''))
 		};
 		Load();
 	}, [modalVisible]);
@@ -399,8 +401,12 @@ export default ({ navigation, modalVisible, setModalVisible }) => {
 					>
 						<ImageBackground
 							source={
-								imageChange == false ?
-								require("../Images/profile.png") : { uri: imgFile.uri }
+								imageChange == true ?
+									{ uri: imgFile.uri }
+									:
+									userInfo.current.profile_image == undefined || userInfo.current.profile_image == '' || userInfo.current.profile_image == null ?
+									require("../Images/profile.png") : {uri:`${config.apiUrl}${userProfileImg}` }
+
 							}
 							style={styles.myInfoImg}
 							resizeMode="cover"

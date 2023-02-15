@@ -42,6 +42,9 @@ export const UserSetter = async (userInfo, token) => {
 	if (userInfo.crown != undefined && userInfo.crown != null) {
 		await AsyncStorage.setItem("crown", JSON.stringify(userInfo.crown));
 	}
+	if (userInfo.profile_image != undefined && userInfo.profile_image != null) {
+		await AsyncStorage.setItem("profile_image", JSON.stringify(userInfo.profile_image));
+	}
 
 	if (userInfo == null) {
 		result = 10;
@@ -65,6 +68,7 @@ export const UserGetter = async () => {
 	let nick = await AsyncStorage.getItem("user_nick");
 	let crown = await AsyncStorage.getItem("crown");
 	let uid = await AsyncStorage.getItem("user_uid");
+	let profile_image = await AsyncStorage.getItem("profile_image");
 	data = {
 		free_count: free_count,
 		paid_count: paid_count,
@@ -75,6 +79,7 @@ export const UserGetter = async () => {
 		token: token,
 		nick: nick,
 		crown: JSON.parse(crown),
+		profile_image: profile_image,
 	};
 	return data;
 };
@@ -88,6 +93,7 @@ export const UserRemover = async () => {
 	await AsyncStorage.removeItem("user_nick");
 	await AsyncStorage.removeItem("crown");
 	await AsyncStorage.removeItem("user_uid");
+	await AsyncStorage.removeItem("profile_image");
 };
 
 module.exports = {

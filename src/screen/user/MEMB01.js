@@ -43,6 +43,7 @@ export default ({ navigation }) => {
 	const isFocused = useIsFocused();
 	// 유저 정보
 	const userInfo = useRef({});
+	const [userProfileImg, setUserProfileImg] = useState()
 	// 로그인 여부 확인
 	const [isLogin, setIsLogin] = useState();
 	const [change, setChange] = useState(true);
@@ -64,6 +65,7 @@ export default ({ navigation }) => {
 					userInfo.current.member_idx !== undefined
 			);
 			setChange(!change);
+			setUserProfileImg(userInfo.current.profile_image.replace( /"/gi, ''))
 		};
 		Load();
 	}, [isFocused, visibleSetting, visibleProfileSetting]);
@@ -348,7 +350,10 @@ export default ({ navigation }) => {
 							}}
 						>
 							<ImageBackground
-								source={require("../../Images/profile.png")}
+								source={
+									userInfo.current.profile_image == undefined || userInfo.current.profile_image == '' || userInfo.current.profile_image == null ?
+									require("../../Images/profile.png") : {uri:`${config.apiUrl}${userProfileImg}` }
+								}
 								style={styles.myInfoImg}
 								resizeMode="cover"
 							></ImageBackground>
