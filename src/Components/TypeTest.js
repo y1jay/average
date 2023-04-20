@@ -21,7 +21,7 @@ import commonStyles from './Style';
 // 라이브러리
 import Swiper from "react-native-swiper";
 
-export default ({navigation, modalVisible, setModalVisible}) => {
+export default ({navigation, modalVisible, setModalVisible, setVisibleChargeCard}) => {
 	const winWidth = Dimensions.get("window").width;
 	const winHeight = Dimensions.get("window").height;
     const [testProgress, setTestProgress] = useState(-1);
@@ -50,49 +50,23 @@ export default ({navigation, modalVisible, setModalVisible}) => {
     const testStartArea = () => {
         return (
             <View style={[styles.typeTestArea, {justifyContent: 'center'}]}>
-                <View style={{alignItems: 'center', height: '60%'}}>
+                <View style={{alignItems: 'center', height: '60%', justifyContent: 'space-around'}}>
                 <Image style={{width: 100, height: 100, marginBottom: 10}} resizeMode={'contain'} source={require('../Images/type_test_00.png')}/>
                 <Text style={styles.typeTestQText}>유형검사 시작하기</Text>
                 <View style={[commonStyles.chargeCardBtnArea, {width: '80%'}]}>
+                {/* <View style={commonStyles.chargeCardBtnArea}> */}
                     <Pressable
                         onPress={() => {
-                            alert("결제!");
-                        }}
-                        style={commonStyles.chargeCardBtn2}
-                    >
-                        <Image
-                            style={commonStyles.chargeCardImg}
-                            source={require("../Images/chargeTest_pay.png")}
-                        />
-                        <Text
-                            style={[
-                                commonStyles.chargeCardText,
-                                { color: "#F59300" },
-                            ]}
-                        >
-                            ₩1000
-                        </Text>
-                    </Pressable>
-                    <Pressable
-                        onPress={() => {
-                            alert("광고!");
-                            // getAds();
+                            // setVisibleChargeCard(true);
                             testStart();
                         }}
-                        style={commonStyles.chargeCardBtn2}
+                        style={commonStyles.chargeCardBtn}
                     >
+						<Text style={commonStyles.chargeCardCnt}>x 3</Text>
                         <Image
                             style={commonStyles.chargeCardImg}
-                            source={require("../Images/chargeTest_free.png")}
+                            source={require("../Images/chargeCard_pay.png")}
                         />
-                        <Text
-                            style={[
-                                commonStyles.chargeCardText,
-                                { color: "#007A31" },
-                            ]}
-                        >
-                            무료
-                        </Text>
                     </Pressable>
                 </View>
                 </View>
@@ -105,7 +79,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
     }
     const testArea = () => {
         //TODO: 100%를 테스트 문항의 총 개수로 나눈 값에 testProgress를 곱해야함.
-        const progressPercent = (testProgressRef.current * 10)+ '%';
+        const progressPercent = (testProgressRef.current * 10);
         return (
                 <View style={styles.typeTestArea}>
                     <Text style={styles.typeTestTitle}>{progressPercent} / 10</Text>
@@ -115,11 +89,17 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                     </View>
 
                     <View style={{width: '100%', flexGrow: 1, justifyContent: 'center'}}>
+                    <Text style={styles.typeTestQText}>디저트 유형</Text>
                     <Animated.View style={[styles.slideArea, {transform: [{translateX: slideAnim}]}]}>
                         <View style={[styles.typeTestQArea, {width: winWidth}]}>
                             <Image source={require('../Images/type_test_01.png')}/>
-                            <Text style={styles.typeTestQText}>1</Text>
-                            <Text style={[styles.typeTestQText, {fontSize: 36, top: -10}]}>내</Text>
+                            <Pressable onPress={() => slide(1)} style={{width: '80%', padding: 30, borderWidth: 1, borderColor: '#EDEDED', borderRadius: 30}}>
+                                <Text style={styles.typeTestQText}>녹차</Text>
+                            </Pressable>
+                            <Text style={[styles.typeTestQText, {color: '#F6D629'}]}>VS</Text>
+                            <Pressable onPress={() => slide(1)} style={{width: '80%', padding: 30, borderWidth: 1, borderColor: '#EDEDED', borderRadius: 30}}>
+                                <Text style={styles.typeTestQText}>요구르트</Text>
+                            </Pressable>
                         </View>
                         <View style={[styles.typeTestQArea, {width: winWidth}]}>
                             <Image source={require('../Images/type_test_01.png')}/>
@@ -144,7 +124,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                     </Animated.View>
                     </View>
                     
-                    <View style={styles.typeTestAArea}>
+                    {/* <View style={styles.typeTestAArea}>
                         <Pressable style={styles.typeTestA}>
                             <Image style={styles.typeTestAImg} resizeMode={'contain'} source={require('../Images/type_test_O.png')}/>
                         </Pressable>
@@ -153,7 +133,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
                             style={styles.typeTestA}>
                             <Image style={styles.typeTestAImg} resizeMode={'contain'} source={require('../Images/type_test_X.png')}/>
                         </Pressable>
-                    </View>
+                    </View> */}
                     <View style={styles.typeTestReternArea}>
                        {testProgress > 0 && <Pressable onPress={() => {slide(-1)}}>
                             <Text>{'<'} 이전</Text>
@@ -192,7 +172,7 @@ export default ({navigation, modalVisible, setModalVisible}) => {
 const styles = StyleSheet.create({
     typeTestArea: {
         alignItems: 'center',
-        flexGrow: 1
+        flexGrow: 1,
     },
     typeTestTitle: {
         textAlign: 'center',
@@ -201,7 +181,7 @@ const styles = StyleSheet.create({
         marginBottom: 10
     },
     typeTestProgressBarArea: {
-        width: '30%',
+        width: '20%',
         height: 20,
         justifyContent: 'center',
     },
@@ -231,8 +211,9 @@ const styles = StyleSheet.create({
     },
     typeTestQText: {
 		fontFamily: "UhBeecharming",
-        fontSize: 28,
-        color: '#212121'
+        fontSize: 22,
+        color: '#212121',
+        textAlign: 'center'
     },
     typeTestAArea: {
         width: '90%',

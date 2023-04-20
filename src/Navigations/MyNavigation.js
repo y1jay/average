@@ -39,8 +39,8 @@ export default () => {
 	const winWidth = Dimensions.get("window").width;
 	const winHeight = Dimensions.get("window").height;
 	// 카드 이력
-	// const [cardHistoryData, setCardHistoryData] = useState([])
-	const [cardHistoryData, setCardHistoryData] = useState({isLoading: false, data: [], page: 1})
+	const [cardHistoryData, setCardHistoryData] = useState([])
+	const [cardHistoryPage, setCardHistoryPage] = useState(1)
 	const [getDataYN, setGetDataYN] = useState(true)
 	// 유저 정보
 	const userInfo = useRef({});
@@ -64,24 +64,23 @@ export default () => {
 	const getCardHistory = async () => {
 		// 더 이상 가져올 데이터 없는 경우 종료
 		if(!getDataYN) {return;}
-		const page = cardHistoryData.page ? cardHistoryData.page++ : 1;
-		setCardHistoryData({...cardHistoryData, page:page, isLoading: true})
 		await axios
 			.get(`${config.apiUrl}/user/member/userCardResult`, {
-				params: {page:page, member_idx: userInfo.current.member_idx },
+				params: {page:cardHistoryPage, member_idx: userInfo.current.member_idx },
 			})
 			.then(async (res) => {
-				// res.data !== null && setCardHistoryData({isLoading: false, data: res.data, page: page})
-				console.log('page ===========================> ',page)
-				console.log('length ===========================> ',res.data.length)
+				if (res.data == null) {
+					return;
+				}
+				setCardHistoryPage(cardHistoryPage + 1)
 				if(res.data.length == 0) {
-					setCardHistoryData({isLoading: false, data: [...cardHistoryData.data], page: cardHistoryData.page})
+					setCardHistoryData([...cardHistoryData])
 					setGetDataYN(false)
 				} else if (res.data.length > 0 && 15 > res.data.length) {
-					setCardHistoryData({isLoading: false, data: [...cardHistoryData.data, ...res.data], page: cardHistoryData.page})
+					setCardHistoryData([...cardHistoryData, ...res.data])
 					setGetDataYN(false)
 				} else {
-					setCardHistoryData({isLoading: false, data: [...cardHistoryData.data, ...res.data], page: cardHistoryData.page})
+					setCardHistoryData([...cardHistoryData, ...res.data])
 				}
 			})
 			.catch((e) => {
@@ -114,7 +113,8 @@ export default () => {
 	const listReset = () => {
 		resettingRef.current = true;
 		setGetDataYN(true)
-		setCardHistoryData({isLoading: false, data: [], page: 1})
+		setCardHistoryData([])
+		setCardHistoryPage(1)
 	}
 	useEffect(() => {
 		const Load = async () => {
@@ -138,10 +138,10 @@ export default () => {
 	// 카드 이력 탭
 	const Card = () => {
 			return (
-			<View style={{paddingLeft: '3%', paddingRight: '3%'}}>
+			<View style={{paddingLeft: '3%', paddingRight: '3%', flex: 1}}>
 				<FlatList
 				style={{height: '100%'}}
-					data={cardHistoryData.data}
+					data={cardHistoryData}
 					renderItem={cardHistoryRenderItem}
 					numColumns={3}
 					ListHeaderComponent={<View style={{height: 15}}></View>}
@@ -149,11 +149,11 @@ export default () => {
 					showsVerticalScrollIndicator ={false}
 					showsHorizontalScrollIndicator={false}
 					onEndReached={onEndReached}
-					onEndReachedThreshold={0.3}
+					onEndReachedThreshold={0.1}
 					// refreshing={false}
-					ListFooterComponent={
-						<>{cardHistoryData.isLoading && <Text>Loading...</Text>}</>
-					}
+					// ListFooterComponent={
+					// 	<>{<Text>Loading...</Text>}</>
+					// }
 					// pull down refresh
 					onRefresh={onRefresh}
 					refreshing={isFetching}

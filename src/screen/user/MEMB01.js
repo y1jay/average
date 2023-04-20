@@ -38,6 +38,7 @@ import Loading from "../../Components/Loading";
 import commonStyles from "../../Components/Style";
 import { get } from "react-native/Libraries/Utilities/PixelRatio";
 import Util from "../../Libs/Util";
+import ChargeCard from "../../Components/ChargeCard";
 
 export default ({ navigation }) => {
 	const isFocused = useIsFocused();
@@ -55,6 +56,10 @@ export default ({ navigation }) => {
 		visibleProfileSetting,
 		setVisibleProfileSetting,
 	] = useState(false);
+	// 카드 충전 모달
+	const [visibleChargeCard, setVisibleChargeCard] = useState(false);
+	const [loadingVisible, setLoadingVisible] = useState(false);
+	const [loadingType, setLoadingType] = useState(0);
 	useEffect(() => {
 		const Load = async () => {
 			userInfo.current = "";
@@ -450,6 +455,13 @@ export default ({ navigation }) => {
 				<TypeTest
 					modalVisible={visibleTypeTest}
 					setModalVisible={setVisibleTypeTest}
+					setVisibleChargeCard={setVisibleChargeCard}
+				/>
+				<ChargeCard
+					modalVisible={visibleChargeCard}
+					setModalVisible={setVisibleChargeCard}
+					setLoadingVisible={setLoadingVisible}
+					setLoadingType={setLoadingType}
 				/>
 			</View>
 		);
