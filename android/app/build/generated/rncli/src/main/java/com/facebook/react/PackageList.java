@@ -19,6 +19,8 @@ import io.invertase.firebase.admob.ReactNativeFirebaseAdmobPackage;
 import io.invertase.firebase.app.ReactNativeFirebaseAppPackage;
 // @react-native-seoul/kakao-login
 import com.dooboolab.kakaologins.RNKakaoLoginsPackage;
+// react-native-device-info
+import com.learnium.RNDeviceInfo.RNDeviceInfo;
 // react-native-gesture-handler
 import com.swmansion.gesturehandler.RNGestureHandlerPackage;
 // react-native-image-picker
@@ -88,6 +90,7 @@ public class PackageList {
       new ReactNativeFirebaseAdmobPackage(),
       new ReactNativeFirebaseAppPackage(),
       new RNKakaoLoginsPackage(),
+      new RNDeviceInfo(),
       new RNGestureHandlerPackage(),
       new ImagePickerPackage(),
       new LinearGradientPackage(),

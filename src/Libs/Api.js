@@ -48,6 +48,7 @@ const post = async (url, params) => {
 	const deviceUuid = await Util.deviceUuid();
 	let res = null;
 	console.log("userInfo====>>", userInfo);
+	console.log(params, "@@@");
 	if (
 		userInfo.uid != null &&
 		userInfo.join_type != null &&
@@ -64,10 +65,11 @@ const post = async (url, params) => {
 			}
 		);
 		if (duplicate.data.CODE == 20) {
-			let resonse = await axios.post(`${url}`, {
-				params,
+			let response = await axios.post(`${config.apiUrl}${url}`, {
+				params: params,
 			});
-			res = resonse.data;
+			console.log(response, "@@@@");
+			res = response.data;
 		} else {
 			res = { CODE: -700, MSG: "중복로그인 되어 로그아웃 됩니다." };
 			await UserRemover();
