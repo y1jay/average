@@ -32,6 +32,14 @@ export default ({navigation, modalVisible, setModalVisible, setVisibleChargeCard
         // 테스트 화면으로 이동
         setTestProgress(0)
     }
+    // 검사 종류
+    const testTitle = [{title:'디저트 유형', img: require('../Images/type_test_01.png')}, {title:'음식 유형'}, {title:'취미 유형'}]
+    const testDessertA = ['녹차', '아메리카노', '쌍화차']   // 부장님 입맛
+    const testDessertB = ['요구르트', '라떼', '스무디']     // 단거 처돌이
+    const testFoodA = ['라면', '파스타', '우동']            // 면 성애자
+    const testFoodB = ['햄버거', '치킨', '스테이크']        // 육식파
+    const testFoodC = ['짬뽕', '비빔냉면', '불닭볶음면']    // 소화기관 고문가
+
     // 검사지 슬라이드 애니메이션 구현
     const slideAnim = useRef(new Animated.Value(0)).current;
     const slide = (item) => {
@@ -89,37 +97,29 @@ export default ({navigation, modalVisible, setModalVisible, setVisibleChargeCard
                     </View>
 
                     <View style={{width: '100%', flexGrow: 1, justifyContent: 'center'}}>
-                    <Text style={styles.typeTestQText}>디저트 유형</Text>
+                    <Text style={styles.typeTestQText}>{testTitle[0].title}</Text>
                     <Animated.View style={[styles.slideArea, {transform: [{translateX: slideAnim}]}]}>
+                        {/* 디저트 유형 */}
                         <View style={[styles.typeTestQArea, {width: winWidth}]}>
-                            <Image source={require('../Images/type_test_01.png')}/>
+                            <Image source={testTitle[0].img}/>
                             <Pressable onPress={() => slide(1)} style={{width: '80%', padding: 30, borderWidth: 1, borderColor: '#EDEDED', borderRadius: 30}}>
-                                <Text style={styles.typeTestQText}>녹차</Text>
+                                <Text style={styles.typeTestQText}>{testDessertA[0]}</Text>
                             </Pressable>
                             <Text style={[styles.typeTestQText, {color: '#F6D629'}]}>VS</Text>
                             <Pressable onPress={() => slide(1)} style={{width: '80%', padding: 30, borderWidth: 1, borderColor: '#EDEDED', borderRadius: 30}}>
-                                <Text style={styles.typeTestQText}>요구르트</Text>
+                                <Text style={styles.typeTestQText}>{testDessertB[0]}</Text>
                             </Pressable>
                         </View>
+                        {/* 음식 유형 */}
                         <View style={[styles.typeTestQArea, {width: winWidth}]}>
                             <Image source={require('../Images/type_test_01.png')}/>
-                            <Text style={styles.typeTestQText}>2</Text>
-                            <Text style={[styles.typeTestQText, {fontSize: 36, top: -10}]}>가</Text>
-                        </View>
-                        <View style={[styles.typeTestQArea, {width: winWidth}]}>
-                            <Image source={require('../Images/type_test_01.png')}/>
-                            <Text style={styles.typeTestQText}>3</Text>
-                            <Text style={[styles.typeTestQText, {fontSize: 36, top: -10}]}>이</Text>
-                        </View>
-                        <View style={[styles.typeTestQArea, {width: winWidth}]}>
-                            <Image source={require('../Images/type_test_01.png')}/>
-                            <Text style={styles.typeTestQText}>4</Text>
-                            <Text style={[styles.typeTestQText, {fontSize: 36, top: -10}]}>걸</Text>
-                        </View>
-                        <View style={[styles.typeTestQArea, {width: winWidth}]}>
-                            <Image source={require('../Images/type_test_01.png')}/>
-                            <Text style={styles.typeTestQText}>5</Text>
-                            <Text style={[styles.typeTestQText, {fontSize: 36, top: -10}]}>만들었다!</Text>
+                            <Pressable onPress={() => slide(1)} style={{width: '80%', padding: 30, borderWidth: 1, borderColor: '#EDEDED', borderRadius: 30}}>
+                                <Text style={styles.typeTestQText}>{testFoodA[0]}</Text>
+                            </Pressable>
+                            <Text style={[styles.typeTestQText, {color: '#F6D629'}]}>VS</Text>
+                            <Pressable onPress={() => slide(1)} style={{width: '80%', padding: 30, borderWidth: 1, borderColor: '#EDEDED', borderRadius: 30}}>
+                                <Text style={styles.typeTestQText}>{testFoodB[0]}</Text>
+                            </Pressable>
                         </View>
                     </Animated.View>
                     </View>
